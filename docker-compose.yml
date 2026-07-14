@@ -1,0 +1,32 @@
+services:
+  api:
+    build:
+      context: ./server
+    container_name: ce50-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ce50-data:/data
+    environment:
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      ADMIN_SECRET: ${ADMIN_SECRET:-change-me}
+      DB_PATH: /data/ce50.db
+      UPLOAD_DIR: /data/uploads
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      args:
+        # Baked into the JS bundle at build time (NEXT_PUBLIC_*).
+        # On a VPS, rebuild with the API's public URL, e.g. http://<host>:8000
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+    container_name: ce50-web
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  ce50-data:

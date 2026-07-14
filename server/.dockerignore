@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+*.pyo
+*.db
+ce50.db
+static/uploads/*
+!static/uploads/.gitkeep
+.venv
+Dockerfile
+.dockerignore

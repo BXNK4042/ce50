@@ -63,6 +63,22 @@ python3 -m venv .venv
 .venv/bin/uvicorn main:app --reload --app-dir server   # → http://localhost:8000/docs
 ```
 
+## 🐳 Docker (คำสั่งเดียว)
+
+รันทั้งสองบริการพร้อมกัน (ส่วนหน้า :3000 + ส่วนหลัง :8000) ด้วยคำสั่งเดียว
+เหมาะสำหรับ onboarding และ deploy บน VPS:
+
+```bash
+docker compose up --build      # → http://localhost:3000  (API ที่ http://localhost:8000)
+```
+
+- ข้อมูล SQLite และรูปที่อัปโหลดเก็บใน named volume `ce50-data` (อยู่ที่ `/data` ในคอนเทนเนอร์) — ไม่หายเมื่อ redeploy
+- `NEXT_PUBLIC_API_URL` เป็น **build-time** (ฝังใน bundle ตอน build) — บน VPS ให้ set ค่าเป็น URL สาธารณะของ API แล้ว build ใหม่:
+  ```bash
+  NEXT_PUBLIC_API_URL=http://<vps-host>:8000 docker compose up --build
+  ```
+- หยุดรัน: `docker compose down` (เก็บข้อมูล) หรือ `docker compose down -v` (ลบข้อมูลด้วย)
+
 ## ⚙️ ตัวแปรสภาพแวดล้อม
 
 | ตัวแปร | ฝั่ง | หน้าที่ |
@@ -113,13 +129,15 @@ Schema อยู่ที่ `server/schema.sql` (สร้างอัตโน
 
 ## ☁️ Deployment
 
-**ส่วนหน้า (Next.js):** แนะนำ Vercel — เชื่อม repo แล้วตั้ง `NEXT_PUBLIC_API_URL`
-ใน Environment Variables ของโปรเจกต์
+**VPS (แนะนำ):** ใช้ `docker-compose.yml` ที่มาพร้อมโปรเจกต์ — เหมาะกับการรันทั้งสองบริการบนเครื่องเดียว
+```bash
+NEXT_PUBLIC_API_URL=http://<vps-host>:8000 ADMIN_SECRET=<secret> docker compose up --build -d
+```
 
-**ส่วนหลัง (FastAPI):** ตัวเลือกที่แนะนำ
-- **Render / Railway / Fly.io** — รัน `uvicorn main:app` ได้เลย พร้อม persistent volume ให้ `ce50.db` และ `static/uploads/`
-- **VPS (เช่น DigitalOcean Droplet)** — รันผ่าน `systemd` หรือ `docker compose`
-- **Docker** — สร้าง image จาก `python:3.12-slim` ติดตั้ง `server/requirements.txt` แล้ว expose port 8000
+**ทางเลือกอื่น**
+- **ส่วนหน้า (Next.js):** Vercel — เชื่อม repo แล้วตั้ง `NEXT_PUBLIC_API_URL` ใน Environment Variables
+- **ส่วนหลัง (FastAPI):** Render / Railway / Fly.io — รัน `uvicorn main:app` พร้อม persistent volume ให้ `ce50.db` และ `uploads/`
+
 
 > หมายเหตุ: เนื่องจากใช้ SQLite ต้องมั่นใจว่าไฟล์ `.db` และ `uploads/` อยู่บน persistent storage มิฉะนั้นข้อมูลจะหายเมื่อ deploy ใหม่
 
