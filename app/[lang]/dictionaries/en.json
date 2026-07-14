@@ -13,6 +13,32 @@
     "title": "Computer Engineering",
     "subtitle": "Public information and news site"
   },
+  "people": {
+    "title": "People",
+    "teachers": "Teachers",
+    "students": "Students",
+    "subtitle": "Teachers & students of Computer Engineering"
+  },
+  "works": {
+    "title": "Works",
+    "subtitle": "Browse student works by academic year"
+  },
+  "news": {
+    "title": "News",
+    "subtitle": "News, competitions, and scholarships"
+  },
+  "schedule": {
+    "title": "Class/Exam Schedule",
+    "subtitle": "Timetables for classes and examinations"
+  },
+  "rooms": {
+    "title": "CE Rooms",
+    "subtitle": "Room information, e.g. Classroom 113, Server room"
+  },
+  "internship": {
+    "title": "Internship",
+    "subtitle": "Internship topics and details grouped by host branch"
+  },
   "footer": {
     "rights": "All rights reserved"
   }

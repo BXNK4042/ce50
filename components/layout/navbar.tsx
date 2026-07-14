@@ -1,20 +1,23 @@
 import Link from "next/link";
+import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
 
-export default function Navbar({ lang }: { lang: string }) {
+export default async function Navbar({ lang }: { lang: string }) {
+  const dict = await getDictionary(lang as Locale);
   const links: { href: string; label: string }[] = [
-    { href: `/${lang}/people`, label: "People" },
-    { href: `/${lang}/works`, label: "Works" },
-    { href: `/${lang}/news`, label: "News" },
-    { href: `/${lang}/schedule`, label: "Schedule" },
-    { href: `/${lang}/rooms`, label: "Rooms" },
-    { href: `/${lang}/internship`, label: "Internship" },
+    { href: `/${lang}/people`, label: dict.nav.people },
+    { href: `/${lang}/works`, label: dict.nav.works },
+    { href: `/${lang}/news`, label: dict.nav.news },
+    { href: `/${lang}/schedule`, label: dict.nav.schedule },
+    { href: `/${lang}/rooms`, label: dict.nav.rooms },
+    { href: `/${lang}/internship`, label: dict.nav.internship },
   ];
   const other = lang === "th" ? "en" : "th";
   return (
     <header className="border-b border-black/10 dark:border-white/10">
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-        <Link href={`/${lang}`} className="font-semibold">
-          CE
+        <Link href={`/${lang}`} className="flex items-center gap-2 font-semibold">
+          <img src="/CE.webp" alt="CE Logo" className="h-8 w-8 object-contain" />
+          <span>CE</span>
         </Link>
         <ul className="flex items-center gap-5 text-sm">
           {links.map((l) => (
@@ -37,3 +40,4 @@ export default function Navbar({ lang }: { lang: string }) {
     </header>
   );
 }
+

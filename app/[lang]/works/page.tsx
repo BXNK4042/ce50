@@ -1,8 +1,16 @@
-export default function WorksPage() {
+import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
+
+export default async function WorksPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang as Locale);
   return (
     <section className="mx-auto max-w-5xl px-6 py-16">
-      <h1 className="text-3xl font-semibold">Works — ผลงาน</h1>
-      <p className="mt-2 text-zinc-500">Browse works by year.</p>
+      <h1 className="text-3xl font-semibold">{dict.works.title}</h1>
+      <p className="mt-2 text-zinc-500">{dict.works.subtitle}</p>
     </section>
   );
 }
