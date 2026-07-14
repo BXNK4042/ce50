@@ -1,0 +1,7 @@
+export default function StudentsPage() {
+  return (
+    <section className="mx-auto max-w-5xl px-6 py-16">
+      <h1 className="text-3xl font-semibold">Students — นักศึกษา</h1>
+    </section>
+  );
+}
