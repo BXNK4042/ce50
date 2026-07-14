@@ -1,8 +1,78 @@
-import Link from "next/link";
-import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
+"use client";
 
-export default async function Navbar({ lang }: { lang: string }) {
-  const dict = await getDictionary(lang as Locale);
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+
+export default function Navbar({
+  lang,
+  dict,
+  initialTheme = "dark",
+}: {
+  lang: string;
+  dict: any;
+  initialTheme?: "light" | "dark";
+}) {
+  const [theme, setTheme] = useState<"light" | "dark">(initialTheme);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const [activeLang, setActiveLang] = useState(lang);
+
+  useEffect(() => {
+    setActiveLang(lang);
+  }, [lang]);
+
+  useEffect(() => {
+    if (document.documentElement.classList.contains("dark")) {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    setShouldAnimate(true);
+    if (theme === "light") {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      document.cookie = "theme=dark; path=/; max-age=31536000";
+      setTheme("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      document.cookie = "theme=light; path=/; max-age=31536000";
+      setTheme("light");
+    }
+  };
+
+  const getLanguageLink = (targetLang: string) => {
+    if (!pathname) return `/${targetLang}`;
+    const segments = pathname.split("/");
+    if (segments[1] === "th" || segments[1] === "en") {
+      segments[1] = targetLang;
+    } else {
+      segments.splice(1, 0, targetLang);
+    }
+    return segments.join("/");
+  };
+
+  const handleLanguageChange = (e: React.MouseEvent<HTMLAnchorElement>, targetLang: string) => {
+    e.preventDefault();
+    if (activeLang === targetLang) {
+      const nextLang = targetLang === "th" ? "en" : "th";
+      setActiveLang(nextLang);
+      setTimeout(() => {
+        router.push(getLanguageLink(nextLang));
+      }, 500);
+    } else {
+      setActiveLang(targetLang);
+      setTimeout(() => {
+        router.push(getLanguageLink(targetLang));
+      }, 500);
+    }
+  };
+
   const links: { href: string; label: string }[] = [
     { href: `/${lang}/people`, label: dict.nav.people },
     { href: `/${lang}/works`, label: dict.nav.works },
@@ -11,14 +81,17 @@ export default async function Navbar({ lang }: { lang: string }) {
     { href: `/${lang}/rooms`, label: dict.nav.rooms },
     { href: `/${lang}/internship`, label: dict.nav.internship },
   ];
-  const other = lang === "th" ? "en" : "th";
+
   return (
-    <header className="border-b border-black/10 dark:border-white/10">
+    <header className="border-b border-black/10 dark:border-white/10 bg-background text-foreground transition-colors duration-300">
       <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-        <Link href={`/${lang}`} className="flex items-center gap-2 font-semibold">
+        {/* Left Section: Logo */}
+        <Link href={`/${lang}`} className="flex items-center gap-2 font-semibold shrink-0">
           <img src="/CE.webp" alt="CE Logo" className="h-8 w-8 object-contain" />
           <span>CE</span>
         </Link>
+
+        {/* Center Section: Navigation Links */}
         <ul className="flex items-center gap-5 text-sm">
           {links.map((l) => (
             <li key={l.href}>
@@ -27,17 +100,100 @@ export default async function Navbar({ lang }: { lang: string }) {
               </Link>
             </li>
           ))}
-          <li>
-            <Link
-              href={`/${other}`}
-              className="rounded border border-black/10 px-2 py-1 dark:border-white/10"
-            >
-              {other.toUpperCase()}
-            </Link>
-          </li>
         </ul>
+
+        {/* Right Section: Language Control & Theme Switcher (Stable Width/Position) */}
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="relative flex items-center rounded-md border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-100 dark:bg-zinc-900 p-0.5 w-24 h-7">
+            {/* Sliding Background */}
+            <div
+              className={`absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-2px)] bg-white dark:bg-zinc-800 rounded-sm shadow-xs transition-transform duration-800 [transition-timing-function:cubic-bezier(0.25,1.15,0.5,1)] ${
+                activeLang === "th" ? "translate-x-0" : "translate-x-full"
+              }`}
+            />
+            
+            <Link
+              href={lang === "th" ? getLanguageLink("en") : getLanguageLink("th")}
+              onClick={(e) => handleLanguageChange(e, "th")}
+              className={`relative z-10 w-1/2 text-center text-xs font-semibold py-1 transition-colors duration-300 ${
+                activeLang === "th"
+                  ? "text-zinc-900 dark:text-zinc-100"
+                  : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+              }`}
+            >
+              TH
+            </Link>
+            <Link
+              href={lang === "en" ? getLanguageLink("th") : getLanguageLink("en")}
+              onClick={(e) => handleLanguageChange(e, "en")}
+              className={`relative z-10 w-1/2 text-center text-xs font-semibold py-1 transition-colors duration-300 ${
+                activeLang === "en"
+                  ? "text-zinc-900 dark:text-zinc-100"
+                  : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+              }`}
+            >
+              EN
+            </Link>
+          </div>
+          
+          <button
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+            className="relative flex items-center justify-center rounded-lg p-2 hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer w-9 h-9 overflow-hidden"
+          >
+            <div className="relative h-5 w-5">
+              <div
+                className={`absolute inset-0 transform ${
+                  shouldAnimate ? "transition-all duration-500 ease-out" : ""
+                } ${
+                  theme === "dark"
+                    ? "rotate-0 scale-100 opacity-100"
+                    : "rotate-90 scale-0 opacity-0"
+                }`}
+              >
+                <svg
+                  className="h-5 w-5 text-zinc-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                  />
+                </svg>
+              </div>
+              <div
+                className={`absolute inset-0 transform ${
+                  shouldAnimate ? "transition-all duration-500 ease-out" : ""
+                } ${
+                  theme === "light"
+                    ? "rotate-0 scale-100 opacity-100"
+                    : "-rotate-90 scale-0 opacity-0"
+                }`}
+              >
+                <svg
+                  className="h-5 w-5 text-yellow-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </button>
+        </div>
       </nav>
     </header>
   );
 }
+
 
