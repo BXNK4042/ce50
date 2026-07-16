@@ -70,9 +70,19 @@ export default function Footer({ lang }: { lang: string }) {
             <li className="flex items-start gap-2">
               <span className="text-zinc-500 shrink-0">📍</span>
               <span>
-                {isTh
-                  ? "สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง วิทยาเขตชุมพรเขตรอุดมศักดิ์ ตั้งอยู่ที่ 17/1 หมู่ 6 ตำบลชุมโค อำเภอปะทิว จังหวัดชุมพร 86160"
-                  : "King Mongkut's Institute of Technology Ladkrabang, Chumphon Khet Udomsak Campus, 17/1 Moo 6, Chum Kho, Pathio, Chumphon 86160"}
+                {isTh ? (
+                  <>
+                    สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง วิทยาเขตชุมพรเขตรอุดมศักดิ์
+                    <br />
+                    ตั้งอยู่ที่ 17/1 หมู่ 6 ตำบลชุมโค อำเภอปะทิว จังหวัดชุมพร 86160
+                  </>
+                ) : (
+                  <>
+                    King Mongkut's Institute of Technology Ladkrabang, Chumphon Khet Udomsak Campus
+                    <br />
+                    17/1 Moo 6, Chum Kho, Pathio, Chumphon 86160
+                  </>
+                )}
               </span>
             </li>
             <li className="flex items-center gap-2">
