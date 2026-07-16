@@ -1,11 +1,152 @@
+import Link from "next/link";
+
 export default function Footer({ lang }: { lang: string }) {
+  const isTh = lang === "th";
+
   return (
-    <footer className="border-t border-black/10 px-6 py-6 text-center text-sm text-zinc-500 dark:border-white/10">
-      <p>
-        {lang === "th"
-          ? "WE ARE CE · สงวนลิขสิทธิ์"
-          : "WE ARE CE · All rights reserved"}
-      </p>
+    <footer className="bg-zinc-950 text-zinc-400 border-t border-zinc-900 pt-16 pb-8 transition-colors duration-300">
+      <div className="mx-auto max-w-7xl px-6 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-10">
+        
+        {/* Column 1: Brand & Bio */}
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <span className="w-1.5 h-6 bg-blue-600 dark:bg-sky-500 rounded-full animate-pulse" />
+            <h3 className="text-xl font-extrabold text-white tracking-tight select-none">
+              WE ARE CE
+            </h3>
+          </div>
+          <p className="text-sm leading-relaxed text-zinc-400">
+            {isTh
+              ? "ภาควิชาวิศวกรรมคอมพิวเตอร์ มุ่งเน้นการวิจัยและการเรียนการสอนด้านเทคโนโลยีซอฟต์แวร์ ฮาร์ดแวร์ ระบบเครือข่าย และปัญญาประดิษฐ์เพื่อสร้างผู้นำทางเทคโนโลยีในอนาคต"
+              : "The Computer Engineering Department focuses on research and education in software, hardware, networking, and AI to nurture future tech leaders."}
+          </p>
+        </div>
+
+        {/* Column 2: Navigation Links */}
+        <div className="flex flex-col gap-4">
+          <h4 className="text-sm font-semibold text-white uppercase tracking-wider">
+            {isTh ? "ลิงก์ด่วน" : "Quick Links"}
+          </h4>
+          <ul className="grid grid-cols-2 gap-2 text-sm">
+            <li>
+              <Link href={`/${lang}/news`} className="hover:text-white hover:underline transition-colors">
+                {isTh ? "ข่าวสาร" : "News"}
+              </Link>
+            </li>
+            <li>
+              <Link href={`/${lang}/people`} className="hover:text-white hover:underline transition-colors">
+                {isTh ? "บุคลากร" : "People"}
+              </Link>
+            </li>
+            <li>
+              <Link href={`/${lang}/works`} className="hover:text-white hover:underline transition-colors">
+                {isTh ? "ผลงาน" : "Works"}
+              </Link>
+            </li>
+            <li>
+              <Link href={`/${lang}/schedule`} className="hover:text-white hover:underline transition-colors">
+                {isTh ? "ตารางเรียน" : "Schedule"}
+              </Link>
+            </li>
+            <li>
+              <Link href={`/${lang}/internship`} className="hover:text-white hover:underline transition-colors">
+                {isTh ? "ฝึกงาน" : "Internship"}
+              </Link>
+            </li>
+            <li>
+              <Link href={`/${lang}/rooms`} className="hover:text-white hover:underline transition-colors">
+                {isTh ? "ห้องปฏิบัติการ" : "Rooms"}
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Column 3: Contact Info */}
+        <div className="flex flex-col gap-4">
+          <h4 className="text-sm font-semibold text-white uppercase tracking-wider">
+            {isTh ? "ติดต่อเรา" : "Contact"}
+          </h4>
+          <ul className="flex flex-col gap-2.5 text-sm">
+            <li className="flex items-start gap-2">
+              <span className="text-zinc-500 shrink-0">📍</span>
+              <span>
+                {isTh
+                  ? "อาคารวิศวกรรมศาสตร์ คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเทคโนโลยี"
+                  : "Engineering Building, Faculty of Engineering, Tech University"}
+              </span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-zinc-500">📞</span>
+              <span>+66 2 123 4567</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-zinc-500">✉️</span>
+              <a href="mailto:ce@university.ac.th" className="hover:text-white hover:underline transition-colors">
+                ce@university.ac.th
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        {/* Column 4: Social Connect */}
+        <div className="flex flex-col gap-4">
+          <h4 className="text-sm font-semibold text-white uppercase tracking-wider">
+            {isTh ? "ติดตามเรา" : "Follow Us"}
+          </h4>
+          <div className="flex items-center gap-3">
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noreferrer"
+              className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:text-white transition-colors cursor-pointer"
+              title="Facebook"
+            >
+              FB
+            </a>
+            <a
+              href="https://youtube.com"
+              target="_blank"
+              rel="noreferrer"
+              className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:text-white transition-colors cursor-pointer"
+              title="YouTube"
+            >
+              YT
+            </a>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noreferrer"
+              className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:text-white transition-colors cursor-pointer"
+              title="GitHub"
+            >
+              GH
+            </a>
+          </div>
+          <div className="mt-2 text-xs">
+            <Link
+              href={`/${lang}/admin/login`}
+              className="inline-block px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-md hover:bg-zinc-850 hover:text-white transition-colors"
+            >
+              {isTh ? "เข้าสู่ระบบผู้ดูแล" : "Admin Panel"}
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="mx-auto max-w-7xl px-6 md:px-12 my-10 border-t border-zinc-900" />
+
+      {/* Bottom Copyright */}
+      <div className="mx-auto max-w-7xl px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+        <p>
+          &copy; {new Date().getFullYear()} WE ARE CE. {isTh ? "สงวนลิขสิทธิ์ทั้งหมด" : "All rights reserved."}
+        </p>
+        <p className="text-zinc-600">
+          {isTh
+            ? "พัฒนาด้วย Next.js และ Tailwind CSS"
+            : "Powered by Next.js & Tailwind CSS"}
+        </p>
+      </div>
     </footer>
   );
 }
