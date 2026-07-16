@@ -120,7 +120,7 @@ export default function Footer({ lang }: { lang: string }) {
               FB
             </a>
             <a
-              href="https://youtube.com"
+              href="https://www.youtube.com/channel/UCVAF-WEWNY_UzrHlNZL5jog"
               target="_blank"
               rel="noreferrer"
               className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:text-white transition-colors cursor-pointer"
