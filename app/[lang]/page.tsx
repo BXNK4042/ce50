@@ -29,7 +29,7 @@ export default async function HomePage({
       <div className="relative h-screen w-full bg-[#0a192f] p-12 md:p-16 flex flex-col gap-6">
         <h2 className="flex items-center gap-3.5 text-4xl font-extrabold text-white tracking-tight select-none">
           <span className="inline-block w-1.5 h-[0.9em] bg-sky-500 rounded-full shrink-0" />
-          NEWS
+          {dict.home.news}
         </h2>
 
         {/* 3 Blocks Grid Layout */}
