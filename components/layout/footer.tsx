@@ -27,7 +27,7 @@ export default function Footer({ lang }: { lang: string }) {
           <h4 className="text-sm font-semibold text-white uppercase tracking-wider">
             {isTh ? "ลิงก์ด่วน" : "Quick Links"}
           </h4>
-          <ul className="grid grid-cols-2 gap-x-[15px] gap-y-2 text-sm max-w-[240px]">
+          <ul className="grid grid-cols-2 gap-x-[5px] gap-y-2 text-sm max-w-[240px]">
             <li>
               <Link href={`/${lang}/people`} className="hover:text-white hover:underline transition-colors">
                 {isTh ? "บุคลากร" : "People"}
