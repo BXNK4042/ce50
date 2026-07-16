@@ -185,7 +185,7 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
           {duplicatedPeople.map((person, idx) => (
             <div
               key={idx}
-              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-black border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:scale-[1.03] transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group"
+              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-black border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group"
             >
               {/* Full Background Portrait Image */}
               <img
