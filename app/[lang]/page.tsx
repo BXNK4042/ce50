@@ -25,12 +25,77 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* Spacer equal to the height of the home page screen, colored dark blue with NEWS heading */}
-      <div className="relative h-screen w-full bg-[#0a192f] p-12 md:p-16">
+      {/* Spacer equal to the height of the home page screen, colored dark blue with NEWS section */}
+      <div className="relative h-screen w-full bg-[#0a192f] p-12 md:p-16 flex flex-col gap-6">
         <h2 className="flex items-center gap-3.5 text-4xl font-extrabold text-white tracking-tight select-none">
           <span className="inline-block w-1.5 h-[0.9em] bg-sky-500 rounded-full shrink-0" />
           NEWS
         </h2>
+
+        {/* 3 Blocks Grid Layout */}
+        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6 min-h-0">
+          {/* Block 1 (Largest - spans 2 columns on medium screens and above) */}
+          <div className="md:col-span-2 bg-gradient-to-br from-[#0f2142] to-[#142b54] border border-blue-900/30 rounded-2xl p-8 shadow-md shadow-black/20 hover:shadow-lg hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-between cursor-pointer select-none group">
+            <div className="flex flex-col gap-4">
+              <span className="inline-block self-start px-3 py-1 text-xs font-semibold bg-sky-500/20 text-sky-300 rounded-full border border-sky-500/30 uppercase tracking-wider">
+                {lang === "th" ? "ประชาสัมพันธ์" : "Announcement"}
+              </span>
+              <h3 className="text-2xl md:text-3xl font-bold text-white leading-tight group-hover:text-sky-300 transition-colors">
+                {lang === "th" 
+                  ? "เปิดรับสมัครนักศึกษาใหม่ระดับปริญญาตรี ปีการศึกษา 2569" 
+                  : "Undergraduate Applications Open for Academic Year 2026"}
+              </h3>
+              <p className="text-zinc-400 text-sm md:text-base line-clamp-3">
+                {lang === "th"
+                  ? "สาขาวิชาวิศวกรรมคอมพิวเตอร์เปิดรับสมัครนักเรียน ม.6 หรือเทียบเท่าเข้าศึกษาต่อในหลักสูตรวิศวกรรมศาสตรบัณฑิต ประจำปีการศึกษา 2569 รายละเอียดเกณฑ์การคัดเลือกและกำหนดการ..."
+                  : "Computer Engineering program invites high school graduates to apply for the Bachelor of Engineering program for academic year 2026. Detailed selection criteria and timeline..."}
+              </p>
+            </div>
+            <div className="flex items-center justify-between text-xs text-blue-200/50 mt-4 border-t border-blue-900/20 pt-4">
+              <span>{lang === "th" ? "16 กรกฎาคม 2569" : "July 16, 2026"}</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </div>
+          </div>
+
+          {/* Right Column Stack for Block 2 & 3 */}
+          <div className="flex flex-col gap-6">
+            {/* Block 2 */}
+            <div className="flex-1 bg-gradient-to-br from-[#0f2142] to-[#142b54] border border-blue-900/30 rounded-2xl p-6 shadow-md shadow-black/20 hover:shadow-lg hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-between cursor-pointer select-none group">
+              <div className="flex flex-col gap-3">
+                <span className="inline-block self-start px-2.5 py-0.5 text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-500/30 uppercase tracking-wider">
+                  {lang === "th" ? "การแข่งขัน" : "Competition"}
+                </span>
+                <h3 className="text-lg font-bold text-white leading-snug group-hover:text-emerald-300 transition-colors line-clamp-2">
+                  {lang === "th"
+                    ? "นักศึกษา CE คว้าเหรียญทองการแข่งขันพัฒนาซอฟต์แวร์ระดับประเทศ"
+                    : "CE Students Win Gold in National Software Contest"}
+                </h3>
+              </div>
+              <div className="flex items-center justify-between text-xs text-blue-200/50 mt-2 border-t border-blue-900/20 pt-3">
+                <span>{lang === "th" ? "14 กรกฎาคม 2569" : "July 14, 2026"}</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </div>
+
+            {/* Block 3 */}
+            <div className="flex-1 bg-gradient-to-br from-[#0f2142] to-[#142b54] border border-blue-900/30 rounded-2xl p-6 shadow-md shadow-black/20 hover:shadow-lg hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-between cursor-pointer select-none group">
+              <div className="flex flex-col gap-3">
+                <span className="inline-block self-start px-2.5 py-0.5 text-[11px] font-semibold bg-purple-500/20 text-purple-300 rounded-full border border-purple-500/30 uppercase tracking-wider">
+                  {lang === "th" ? "สัมมนาพิเศษ" : "Seminar"}
+                </span>
+                <h3 className="text-lg font-bold text-white leading-snug group-hover:text-purple-300 transition-colors line-clamp-2">
+                  {lang === "th"
+                    ? "สัมมนาพิเศษ: นวัตกรรม AI และทิศทางเทคโนโลยีในทศวรรษหน้า"
+                    : "Special Seminar: AI Innovation and Next Decade Tech Trends"}
+                </h3>
+              </div>
+              <div className="flex items-center justify-between text-xs text-blue-200/50 mt-2 border-t border-blue-900/20 pt-3">
+                <span>{lang === "th" ? "10 กรกฎาคม 2569" : "July 10, 2026"}</span>
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
