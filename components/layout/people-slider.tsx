@@ -1,7 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
+
 interface PeopleSliderProps {
   lang: string;
+  title: string;
 }
 
 const people = [
@@ -47,49 +50,144 @@ const people = [
   },
 ];
 
-export default function PeopleSlider({ lang }: PeopleSliderProps) {
-  // Duplicate list to create a seamless infinite loop marquee
-  const marqueeItems = [...people, ...people];
+export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(4);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setVisibleCount(1);
+      } else if (window.innerWidth < 1024) {
+        setVisibleCount(2);
+      } else {
+        setVisibleCount(4);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const maxIndex = Math.max(0, people.length - visibleCount);
+
+  // Keep currentIndex in bounds if visibleCount changes
+  useEffect(() => {
+    if (currentIndex > maxIndex) {
+      setCurrentIndex(maxIndex);
+    }
+  }, [maxIndex, currentIndex]);
+
+  // Auto scroll every 10 seconds (resets whenever currentIndex changes)
+  useEffect(() => {
+    if (maxIndex === 0) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+    }, 10000);
+    return () => clearInterval(timer);
+  }, [currentIndex, maxIndex]);
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+  };
+
+  const getTranslateX = () => {
+    if (visibleCount === 1) {
+      return `translateX(-calc(${currentIndex} * (100% + 24px)))`;
+    }
+    if (visibleCount === 2) {
+      return `translateX(-calc(${currentIndex} * (50% + 12px)))`;
+    }
+    return `translateX(-calc(${currentIndex} * (25% + 6px)))`;
+  };
 
   return (
-    <div className="w-full overflow-hidden py-4 relative group">
-      {/* Side gradients to smoothly fade out edges */}
-      <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
-
-      <div className="flex gap-6 animate-marquee hover:[animation-play-state:paused] w-max">
-        {marqueeItems.map((person, idx) => (
-          <div
-            key={idx}
-            className="w-[280px] shrink-0 h-[420px] bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:scale-[1.03] transition-transform duration-300 hover:shadow-lg hover:shadow-black/10 dark:hover:shadow-black/30 cursor-pointer select-none flex flex-col group/card"
+    <div className="w-full flex flex-col gap-6 min-h-0">
+      {/* Slider Header: Title + Navigation buttons */}
+      <div className="flex items-center justify-between select-none">
+        <h2 className="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+          {title}
+        </h2>
+        {/* Arrow Navigation Controls */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handlePrev}
+            className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-black/80 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-colors shadow-xs cursor-pointer"
+            aria-label="Previous slide"
           >
-            {/* Portrait Image */}
-            <div className="h-[260px] w-full overflow-hidden relative">
-              <img
-                src={person.image}
-                alt={lang === "th" ? person.nameTh : person.nameEn}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover/card:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2.5}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </button>
+          <button
+            onClick={handleNext}
+            className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-black/80 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-colors shadow-xs cursor-pointer"
+            aria-label="Next slide"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2.5}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </button>
+        </div>
+      </div>
 
-            {/* Profile Info */}
-            <div className="p-5 flex flex-col justify-between flex-1 text-left">
-              <div>
-                <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-blue-50 dark:bg-zinc-950 text-blue-600 dark:text-zinc-400 rounded-md border border-blue-100 dark:border-zinc-800 uppercase tracking-wider">
-                  {lang === "th" ? person.roleTh : person.roleEn}
-                </span>
-                <h3 className="text-base font-bold text-zinc-900 dark:text-white mt-2 group-hover/card:text-blue-600 dark:group-hover/card:text-sky-300 transition-colors line-clamp-1">
-                  {lang === "th" ? person.nameTh : person.nameEn}
-                </h3>
+      {/* Cards Viewport Wrapper */}
+      <div className="w-full overflow-hidden py-2 relative">
+        <div
+          className="flex gap-6 transition-transform duration-[1500ms] ease-in-out"
+          style={{ transform: getTranslateX() }}
+        >
+          {people.map((person, idx) => (
+            <div
+              key={idx}
+              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:scale-[1.03] transition-all duration-300 hover:shadow-lg hover:shadow-black/10 dark:hover:shadow-black/30 cursor-pointer select-none flex flex-col group"
+            >
+              {/* Portrait Image */}
+              <div className="h-[260px] w-full overflow-hidden relative">
+                <img
+                  src={person.image}
+                  alt={lang === "th" ? person.nameTh : person.nameEn}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </div>
-              <div className="text-xs text-zinc-500 dark:text-zinc-500 mt-2 border-t border-zinc-100 dark:border-zinc-900 pt-3 flex items-center justify-between">
-                <span className="truncate">{person.email}</span>
-                <span className="group-hover/card:translate-x-1 transition-transform">→</span>
+
+              {/* Profile Info */}
+              <div className="p-5 flex flex-col justify-between flex-1 text-left">
+                <div>
+                  <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-blue-50 dark:bg-zinc-950 text-blue-600 dark:text-zinc-400 rounded-md border border-blue-100 dark:border-zinc-800 uppercase tracking-wider">
+                    {lang === "th" ? person.roleTh : person.roleEn}
+                  </span>
+                  <h3 className="text-base font-bold text-zinc-900 dark:text-white mt-2 group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors line-clamp-1">
+                    {lang === "th" ? person.nameTh : person.nameEn}
+                  </h3>
+                </div>
+                <div className="text-xs text-zinc-500 dark:text-zinc-500 mt-2 border-t border-zinc-100 dark:border-zinc-900 pt-3 flex items-center justify-between">
+                  <span className="truncate">{person.email}</span>
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

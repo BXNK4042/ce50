@@ -95,10 +95,7 @@ export default async function HomePage({
 
       {/* Section 3: Equal size to Section 2, matching Section 1 background in all themes */}
       <div className="relative h-screen w-full bg-background p-12 md:p-16 flex flex-col gap-6">
-        <h2 className="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight select-none">
-          {dict.home.people}
-        </h2>
-        <PeopleSlider lang={lang} />
+        <PeopleSlider lang={lang} title={dict.home.people} />
       </div>
     </>
   );
