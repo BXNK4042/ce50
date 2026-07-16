@@ -25,8 +25,12 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* Spacer equal to the height of the home page screen, colored dark blue */}
-      <div className="h-screen w-full bg-[#0a192f]" />
+      {/* Spacer equal to the height of the home page screen, colored dark blue with NEWS heading */}
+      <div className="relative h-screen w-full bg-[#0a192f] p-12 md:p-16">
+        <h2 className="text-4xl font-extrabold text-white tracking-tight select-none">
+          NEWS
+        </h2>
+      </div>
     </>
   );
 }
