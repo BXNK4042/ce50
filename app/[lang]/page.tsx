@@ -26,9 +26,9 @@ export default async function HomePage({
       </section>
 
       {/* Spacer equal to the height of the home page screen, colored dark blue with NEWS section */}
-      <div className="relative h-screen w-full bg-[#cad9f0] p-12 md:p-16 flex flex-col gap-6">
-        <h2 className="flex items-center gap-3.5 text-4xl font-extrabold text-blue-950 tracking-tight select-none">
-          <span className="inline-block w-1.5 h-[0.9em] bg-blue-600 rounded-full shrink-0" />
+      <div className="relative h-screen w-full bg-[#cad9f0] dark:bg-[#0a192f] p-12 md:p-16 flex flex-col gap-6 transition-colors duration-300">
+        <h2 className="flex items-center gap-3.5 text-4xl font-extrabold text-blue-950 dark:text-white tracking-tight select-none">
+          <span className="inline-block w-1.5 h-[0.9em] bg-blue-600 dark:bg-sky-500 rounded-full shrink-0" />
           {dict.home.news}
         </h2>
 
