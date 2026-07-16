@@ -1,47 +1,62 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
-export default function HeroVideo({ src }: { src: string }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
+export default function HomeBackgroundVideo({ src }: { src: string }) {
+  const pathname = usePathname();
+  // Check if current page is the homepage for either language
+  const isHome = pathname === "/th" || pathname === "/en" || pathname === "/";
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    // Check if the global video element already exists in the document body
+    let video = document.getElementById("global-hero-video") as HTMLVideoElement;
 
-    const savedTime = sessionStorage.getItem("hero_video_time");
-    if (savedTime) {
-      const time = parseFloat(savedTime);
-      if (video.readyState >= 1) {
-        video.currentTime = time;
-      } else {
-        const handleLoadedMetadata = () => {
-          video.currentTime = time;
-          video.removeEventListener("loadedmetadata", handleLoadedMetadata);
-        };
-        video.addEventListener("loadedmetadata", handleLoadedMetadata);
-      }
+    if (!video) {
+      video = document.createElement("video");
+      video.id = "global-hero-video";
+      video.src = src;
+      video.autoplay = true;
+      video.loop = true;
+      video.muted = true;
+      video.setAttribute("playsinline", "");
+      
+      // Styled with fixed, full-bleed positioning, pointer-events-none, and z-index -10 to place it behind all contents
+      video.className = "fixed inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-500";
+      video.style.zIndex = "-10";
+      video.style.opacity = "0";
+      
+      document.body.appendChild(video);
+
+      // Attempt to play the video immediately
+      video.play().catch((err) => {
+        console.warn("Autoplay was prevented by browser:", err);
+      });
     }
 
-    const handleTimeUpdate = () => {
-      sessionStorage.setItem("hero_video_time", video.currentTime.toString());
-    };
+    if (isHome) {
+      // Show the video with 50% opacity
+      video.style.display = "block";
+      // Accessing offsetWidth forces a reflow, allowing the transition to trigger correctly from display: none to block
+      void video.offsetWidth;
+      video.style.opacity = "0.5";
 
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    return () => {
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-    };
-  }, []);
+      if (video.paused) {
+        video.play().catch((err) => {
+          console.warn("Video play was prevented:", err);
+        });
+      }
+    } else {
+      // Fade out the video
+      video.style.opacity = "0";
+      const handleTransitionEnd = () => {
+        if (video.style.opacity === "0") {
+          video.style.display = "none";
+        }
+      };
+      video.addEventListener("transitionend", handleTransitionEnd, { once: true });
+    }
+  }, [isHome, src]);
 
-  return (
-    <video
-      ref={videoRef}
-      src={src}
-      autoPlay
-      loop
-      muted
-      playsInline
-      className="absolute inset-0 w-full h-full object-cover opacity-50 pointer-events-none z-0"
-    />
-  );
+  return null;
 }

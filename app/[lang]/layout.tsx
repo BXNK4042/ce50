@@ -4,6 +4,7 @@ import "../globals.css";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
 import ThemeScript from "@/components/layout/theme-script";
+import HomeBackgroundVideo from "@/components/layout/hero-video";
 
 import { getDictionary, Locale } from "./dictionaries";
 import { cookies } from "next/headers";
@@ -47,8 +48,9 @@ export default async function LangLayout({
         <ThemeScript />
       </head>
       <body className="min-h-full flex flex-col transition-colors duration-300">
+        <HomeBackgroundVideo src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/Video/Footage_CE04.mp4`} />
         <Navbar lang={lang} dict={dict} initialTheme={theme as "light" | "dark"} />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 relative z-10">{children}</main>
         <Footer lang={lang} />
       </body>
     </html>
