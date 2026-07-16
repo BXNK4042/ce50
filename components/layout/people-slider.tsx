@@ -177,7 +177,7 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
       <div className="w-full overflow-hidden py-2 relative">
         <div
           className={`flex gap-6 ${
-            transitionEnabled ? "transition-transform duration-[1200ms] ease-in-out" : "transition-none"
+            transitionEnabled ? "transition-transform duration-500 ease-in-out" : "transition-none"
           }`}
           style={{ transform: getTranslateX() }}
           onTransitionEnd={handleTransitionEnd}
