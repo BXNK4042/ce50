@@ -185,31 +185,30 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
           {duplicatedPeople.map((person, idx) => (
             <div
               key={idx}
-              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:scale-[1.03] transition-all duration-300 hover:shadow-lg hover:shadow-black/10 dark:hover:shadow-black/30 cursor-pointer select-none flex flex-col group"
+              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-black border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:scale-[1.03] transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group"
             >
-              {/* Portrait Image */}
-              <div className="h-[260px] w-full overflow-hidden relative">
-                <img
-                  src={person.image}
-                  alt={lang === "th" ? person.nameTh : person.nameEn}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </div>
+              {/* Full Background Portrait Image */}
+              <img
+                src={person.image}
+                alt={lang === "th" ? person.nameTh : person.nameEn}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+              />
+              {/* Premium Dark Gradient Overlay at the bottom for readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
 
-              {/* Profile Info */}
-              <div className="p-5 flex flex-col justify-between flex-1 text-left">
+              {/* Profile Info - Floated at the bottom-left */}
+              <div className="p-6 flex flex-col gap-3 z-20 text-left w-full">
                 <div>
-                  <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-blue-50 dark:bg-zinc-950 text-blue-600 dark:text-zinc-400 rounded-md border border-blue-100 dark:border-zinc-800 uppercase tracking-wider">
+                  <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-white rounded-md border border-white/20 uppercase tracking-wider select-none">
                     {lang === "th" ? person.roleTh : person.roleEn}
                   </span>
-                  <h3 className="text-base font-bold text-zinc-900 dark:text-white mt-2 group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors line-clamp-1">
+                  <h3 className="text-lg font-bold text-white mt-2 group-hover:text-sky-300 transition-colors line-clamp-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]">
                     {lang === "th" ? person.nameTh : person.nameEn}
                   </h3>
                 </div>
-                <div className="text-xs text-zinc-500 dark:text-zinc-500 mt-2 border-t border-zinc-100 dark:border-zinc-900 pt-3 flex items-center justify-between">
-                  <span className="truncate">{person.email}</span>
-                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                <div className="text-xs text-white/70 mt-1 border-t border-white/10 pt-3 flex items-center justify-between">
+                  <span className="truncate drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">{person.email}</span>
+                  <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
                 </div>
               </div>
             </div>
