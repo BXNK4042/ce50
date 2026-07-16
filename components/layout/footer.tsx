@@ -138,14 +138,7 @@ export default function Footer({ lang }: { lang: string }) {
               LN
             </a>
           </div>
-          <div className="mt-2 text-xs">
-            <Link
-              href={`/${lang}/admin/login`}
-              className="inline-block px-3 py-1 bg-zinc-900 border border-zinc-800 rounded-md hover:bg-zinc-850 hover:text-white transition-colors"
-            >
-              {isTh ? "เข้าสู่ระบบผู้ดูแล" : "Admin Panel"}
-            </Link>
-          </div>
+
         </div>
       </div>
 
