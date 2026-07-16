@@ -91,8 +91,8 @@ export default function Footer({ lang }: { lang: string }) {
             </li>
             <li className="flex items-center gap-2">
               <span className="text-zinc-500">✉️</span>
-              <a href="mailto:ce@kmitl.ac.th" className="hover:text-white hover:underline transition-colors">
-                ce@kmitl.ac.th
+              <a href="mailto:kmitl-chumphon@kmitl.ac.th" className="hover:text-white hover:underline transition-colors">
+                kmitl-chumphon@kmitl.ac.th
               </a>
             </li>
             <li className="flex items-center gap-2">
