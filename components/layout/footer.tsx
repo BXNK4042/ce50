@@ -111,7 +111,7 @@ export default function Footer({ lang }: { lang: string }) {
           </h4>
           <div className="flex items-center gap-3">
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/KMITLPrinceofChumphon"
               target="_blank"
               rel="noreferrer"
               className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:text-white transition-colors cursor-pointer"
