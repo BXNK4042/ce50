@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getDictionary, hasLocale } from "./dictionaries";
 import PeopleSlider from "@/components/layout/people-slider";
+import HeroVideo from "@/components/layout/hero-video";
 
 export default async function HomePage({
   params,
@@ -13,14 +14,7 @@ export default async function HomePage({
     <>
       <section className="relative w-full flex flex-col items-center justify-center text-center min-h-[calc(100vh-76px)] overflow-hidden">
         {/* Background Video */}
-        <video
-          src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/Video/Footage_CE04.mp4`}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-50 pointer-events-none z-0"
-        />
+        <HeroVideo src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/Video/Footage_CE04.mp4`} />
 
         {/* Relative container for the logo and overlay text */}
         <div className="relative z-10 h-[450px] w-[450px] flex items-center justify-center transition-transform duration-300 hover:scale-105 group select-none">
