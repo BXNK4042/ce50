@@ -10,9 +10,9 @@ export default async function HomePage({
   const dict = await getDictionary(lang);
   return (
     <>
-      <section className="mx-auto max-w-5xl px-6 py-32 flex flex-col items-center justify-center text-center">
+      <section className="mx-auto max-w-5xl px-6 flex flex-col items-center justify-center text-center min-h-[calc(100vh-76px)]">
         {/* Relative container for the logo and overlay text */}
-        <div className="relative mb-10 h-[450px] w-[450px] flex items-center justify-center transition-transform duration-300 hover:scale-105 group select-none">
+        <div className="relative h-[450px] w-[450px] flex items-center justify-center transition-transform duration-300 hover:scale-105 group select-none">
           <img
             src="/CE.webp"
             alt="CE Logo"
