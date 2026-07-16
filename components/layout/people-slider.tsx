@@ -105,12 +105,12 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
 
   const getTranslateX = () => {
     if (visibleCount === 1) {
-      return `translateX(-calc(${currentIndex} * (100% + 24px)))`;
+      return `translateX(calc(-${currentIndex} * (100% + 24px)))`;
     }
     if (visibleCount === 2) {
-      return `translateX(-calc(${currentIndex} * (50% + 12px)))`;
+      return `translateX(calc(-${currentIndex} * (50% + 12px)))`;
     }
-    return `translateX(-calc(${currentIndex} * (25% + 6px)))`;
+    return `translateX(calc(-${currentIndex} * (25% + 6px)))`;
   };
 
   return (
