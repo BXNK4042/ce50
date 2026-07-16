@@ -29,11 +29,6 @@ export default function Footer({ lang }: { lang: string }) {
           </h4>
           <ul className="grid grid-cols-2 gap-2 text-sm">
             <li>
-              <Link href={`/${lang}/news`} className="hover:text-white hover:underline transition-colors">
-                {isTh ? "ข่าวสาร" : "News"}
-              </Link>
-            </li>
-            <li>
               <Link href={`/${lang}/people`} className="hover:text-white hover:underline transition-colors">
                 {isTh ? "บุคลากร" : "People"}
               </Link>
@@ -44,18 +39,23 @@ export default function Footer({ lang }: { lang: string }) {
               </Link>
             </li>
             <li>
+              <Link href={`/${lang}/news`} className="hover:text-white hover:underline transition-colors">
+                {isTh ? "ข่าวสาร" : "News"}
+              </Link>
+            </li>
+            <li>
               <Link href={`/${lang}/schedule`} className="hover:text-white hover:underline transition-colors">
-                {isTh ? "ตารางเรียน" : "Schedule"}
+                {isTh ? "ตารางสอน/สอบ" : "Schedule"}
+              </Link>
+            </li>
+            <li>
+              <Link href={`/${lang}/rooms`} className="hover:text-white hover:underline transition-colors">
+                {isTh ? "ห้อง CE" : "CE Rooms"}
               </Link>
             </li>
             <li>
               <Link href={`/${lang}/internship`} className="hover:text-white hover:underline transition-colors">
                 {isTh ? "ฝึกงาน" : "Internship"}
-              </Link>
-            </li>
-            <li>
-              <Link href={`/${lang}/rooms`} className="hover:text-white hover:underline transition-colors">
-                {isTh ? "ห้องปฏิบัติการ" : "Rooms"}
               </Link>
             </li>
           </ul>
