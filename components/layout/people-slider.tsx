@@ -48,19 +48,13 @@ const people = [
     email: "waranya.p@ce.ac.th",
     image: "/teacher_waranya.jpg",
   },
-  {
-    nameTh: "ดร. พลวัต ดิจิทัล",
-    nameEn: "Dr. Polawat Digital",
-    roleTh: "อาจารย์ประจำสาขา",
-    roleEn: "Lecturer",
-    email: "polawat.d@ce.ac.th",
-    image: "/teacher_polawat.jpg",
-  },
 ];
 
 export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(4);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -77,31 +71,50 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const maxIndex = Math.max(0, people.length - visibleCount);
-
-  // Keep currentIndex in bounds if visibleCount changes
-  useEffect(() => {
-    if (currentIndex > maxIndex) {
-      setCurrentIndex(maxIndex);
-    }
-  }, [maxIndex, currentIndex]);
-
-  // Auto scroll every 10 seconds (resets whenever currentIndex changes)
-  useEffect(() => {
-    if (maxIndex === 0) return;
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-    }, 10000);
-    return () => clearInterval(timer);
-  }, [currentIndex, maxIndex]);
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
-  };
+  const maxIndex = people.length; // 5
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setTransitionEnabled(true);
+    setCurrentIndex((prev) => prev + 1);
   };
+
+  const handlePrev = () => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    if (currentIndex === 0) {
+      // Snap instantly to the duplicate index at the end
+      setTransitionEnabled(false);
+      setCurrentIndex(maxIndex);
+
+      // Slide smoothly to the previous real index (maxIndex - 1 = 4) in the next frame
+      setTimeout(() => {
+        setTransitionEnabled(true);
+        setCurrentIndex(maxIndex - 1);
+      }, 30);
+    } else {
+      setTransitionEnabled(true);
+      setCurrentIndex((prev) => prev - 1);
+    }
+  };
+
+  const handleTransitionEnd = () => {
+    setIsTransitioning(false);
+    if (currentIndex >= maxIndex) {
+      // Snap instantly back to start (index 0)
+      setTransitionEnabled(false);
+      setCurrentIndex(0);
+    }
+  };
+
+  // Auto scroll every 10 seconds (resets whenever currentIndex or visibleCount changes)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      handleNext();
+    }, 10000);
+    return () => clearInterval(timer);
+  }, [currentIndex, visibleCount, isTransitioning]);
 
   const getTranslateX = () => {
     if (visibleCount === 1) {
@@ -112,6 +125,9 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
     }
     return `translateX(calc(-${currentIndex} * (25% + 6px)))`;
   };
+
+  // Duplicate items at the end of the array to create a seamless looping effect
+  const duplicatedPeople = [...people, ...people.slice(0, visibleCount)];
 
   return (
     <div className="w-full flex flex-col gap-6 min-h-0">
@@ -160,10 +176,13 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
       {/* Cards Viewport Wrapper */}
       <div className="w-full overflow-hidden py-2 relative">
         <div
-          className="flex gap-6 transition-transform duration-[1500ms] ease-in-out"
+          className={`flex gap-6 ${
+            transitionEnabled ? "transition-transform duration-[1200ms] ease-in-out" : "transition-none"
+          }`}
           style={{ transform: getTranslateX() }}
+          onTransitionEnd={handleTransitionEnd}
         >
-          {people.map((person, idx) => (
+          {duplicatedPeople.map((person, idx) => (
             <div
               key={idx}
               className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden hover:scale-[1.03] transition-all duration-300 hover:shadow-lg hover:shadow-black/10 dark:hover:shadow-black/30 cursor-pointer select-none flex flex-col group"
