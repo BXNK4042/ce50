@@ -35,7 +35,7 @@ export default async function HomePage({
         {/* 3 Blocks Grid Layout */}
         <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6 min-h-0">
           {/* Block 1 (Largest - spans 2 columns on medium screens and above) */}
-          <div className="md:col-span-2 bg-gradient-to-br from-[#0f2142] to-[#142b54] border border-blue-900/30 rounded-2xl p-8 shadow-md shadow-black/20 hover:shadow-lg hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-4 cursor-pointer select-none group">
+          <div className="md:col-span-2 bg-black border border-zinc-800/50 rounded-2xl p-8 shadow-md shadow-black/20 hover:shadow-lg hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-4 cursor-pointer select-none group">
             <span className="inline-block px-3 py-1 text-xs font-semibold bg-sky-500/20 text-sky-300 rounded-full border border-sky-500/30 uppercase tracking-wider">
               {lang === "th" ? "ประชาสัมพันธ์" : "Announcement"}
             </span>
@@ -49,7 +49,7 @@ export default async function HomePage({
                 ? "สาขาวิชาวิศวกรรมคอมพิวเตอร์เปิดรับสมัครนักเรียน ม.6 หรือเทียบเท่าเข้าศึกษาต่อในหลักสูตรวิศวกรรมศาสตรบัณฑิต ประจำปีการศึกษา 2569 รายละเอียดเกณฑ์การคัดเลือกและกำหนดการ..."
                 : "Computer Engineering program invites high school graduates to apply for the Bachelor of Engineering program for academic year 2026. Detailed selection criteria and timeline..."}
             </p>
-            <div className="w-full flex items-center justify-between text-xs text-blue-200/50 mt-2 border-t border-blue-900/20 pt-4">
+            <div className="w-full flex items-center justify-between text-xs text-blue-200/50 mt-2 border-t border-zinc-800/30 pt-4">
               <span>{lang === "th" ? "16 กรกฎาคม 2569" : "July 16, 2026"}</span>
               <span className="group-hover:translate-x-1 transition-transform">→</span>
             </div>
@@ -58,7 +58,7 @@ export default async function HomePage({
           {/* Right Column Stack for Block 2 & 3 */}
           <div className="flex flex-col gap-6">
             {/* Block 2 */}
-            <div className="flex-1 bg-gradient-to-br from-[#0f2142] to-[#142b54] border border-blue-900/30 rounded-2xl p-6 shadow-md shadow-black/20 hover:shadow-lg hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-3 cursor-pointer select-none group">
+            <div className="flex-1 bg-black border border-zinc-800/50 rounded-2xl p-6 shadow-md shadow-black/20 hover:shadow-lg hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-3 cursor-pointer select-none group">
               <span className="inline-block px-2.5 py-0.5 text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 rounded-full border border-emerald-500/30 uppercase tracking-wider">
                 {lang === "th" ? "การแข่งขัน" : "Competition"}
               </span>
@@ -67,14 +67,14 @@ export default async function HomePage({
                   ? "นักศึกษา CE คว้าเหรียญทองการแข่งขันพัฒนาซอฟต์แวร์ระดับประเทศ"
                   : "CE Students Win Gold in National Software Contest"}
               </h3>
-              <div className="w-full flex items-center justify-between text-xs text-blue-200/50 mt-1 border-t border-blue-900/20 pt-3">
+              <div className="w-full flex items-center justify-between text-xs text-blue-200/50 mt-1 border-t border-zinc-800/30 pt-3">
                 <span>{lang === "th" ? "14 กรกฎาคม 2569" : "July 14, 2026"}</span>
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>
             </div>
 
             {/* Block 3 */}
-            <div className="flex-1 bg-gradient-to-br from-[#0f2142] to-[#142b54] border border-blue-900/30 rounded-2xl p-6 shadow-md shadow-black/20 hover:shadow-lg hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-3 cursor-pointer select-none group">
+            <div className="flex-1 bg-black border border-zinc-800/50 rounded-2xl p-6 shadow-md shadow-black/20 hover:shadow-lg hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-3 cursor-pointer select-none group">
               <span className="inline-block px-2.5 py-0.5 text-[11px] font-semibold bg-purple-500/20 text-purple-300 rounded-full border border-purple-500/30 uppercase tracking-wider">
                 {lang === "th" ? "สัมมนาพิเศษ" : "Seminar"}
               </span>
@@ -83,7 +83,7 @@ export default async function HomePage({
                   ? "สัมมนาพิเศษ: นวัตกรรม AI และทิศทางเทคโนโลยีในทศวรรษหน้า"
                   : "Special Seminar: AI Innovation and Next Decade Tech Trends"}
               </h3>
-              <div className="w-full flex items-center justify-between text-xs text-blue-200/50 mt-1 border-t border-blue-900/20 pt-3">
+              <div className="w-full flex items-center justify-between text-xs text-blue-200/50 mt-1 border-t border-zinc-800/30 pt-3">
                 <span>{lang === "th" ? "10 กรกฎาคม 2569" : "July 10, 2026"}</span>
                 <span className="group-hover:translate-x-1 transition-transform">→</span>
               </div>
