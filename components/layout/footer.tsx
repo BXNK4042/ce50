@@ -137,14 +137,9 @@ export default function Footer({ lang }: { lang: string }) {
       <div className="mx-auto max-w-7xl px-6 md:px-12 my-10 border-t border-zinc-900" />
 
       {/* Bottom Copyright */}
-      <div className="mx-auto max-w-7xl px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+      <div className="mx-auto max-w-7xl px-6 md:px-12 flex justify-center text-center text-xs">
         <p>
           &copy; {new Date().getFullYear()} WE ARE CE. {isTh ? "สงวนลิขสิทธิ์ทั้งหมด" : "All rights reserved."}
-        </p>
-        <p className="text-zinc-600">
-          {isTh
-            ? "พัฒนาด้วย Next.js และ Tailwind CSS"
-            : "Powered by Next.js & Tailwind CSS"}
         </p>
       </div>
     </footer>
