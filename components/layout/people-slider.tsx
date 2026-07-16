@@ -45,14 +45,6 @@ const people = [
     email: "waranya.p@ce.ac.th",
     image: "/teacher_waranya.jpg",
   },
-  {
-    nameTh: "ดร. พลวัต ดิจิทัล",
-    nameEn: "Dr. Polawat Digital",
-    roleTh: "อาจารย์ประจำสาขา",
-    roleEn: "Lecturer",
-    email: "polawat.d@ce.ac.th",
-    image: "/teacher_polawat.jpg",
-  },
 ];
 
 export default function PeopleSlider({ lang }: PeopleSliderProps) {
