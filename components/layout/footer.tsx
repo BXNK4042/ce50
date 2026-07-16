@@ -139,7 +139,7 @@ export default function Footer({ lang }: { lang: string }) {
       {/* Bottom Copyright */}
       <div className="mx-auto max-w-7xl px-6 md:px-12 flex justify-center text-center text-xs">
         <p>
-          &copy; {new Date().getFullYear()} WE ARE CE. {isTh ? "สงวนลิขสิทธิ์ทั้งหมด" : "All rights reserved."}
+          &copy; {new Date().getFullYear()} COMPUTER ENGINEERING KMITL PCC. {isTh ? "สงวนลิขสิทธิ์ทั้งหมด" : "All rights reserved."}
         </p>
       </div>
     </footer>
