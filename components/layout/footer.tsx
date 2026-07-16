@@ -117,7 +117,9 @@ export default function Footer({ lang }: { lang: string }) {
               className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:text-white transition-colors cursor-pointer"
               title="Facebook"
             >
-              FB
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+                <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c4.56-.93 8-4.96 8-9.75z" />
+              </svg>
             </a>
             <a
               href="https://www.youtube.com/channel/UCVAF-WEWNY_UzrHlNZL5jog"
@@ -126,7 +128,9 @@ export default function Footer({ lang }: { lang: string }) {
               className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:text-white transition-colors cursor-pointer"
               title="YouTube"
             >
-              YT
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+                <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.517 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.508 9.388.508 9.388.508s7.517 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+              </svg>
             </a>
             <a
               href="https://line.me/R/ti/p/%40134lrlhe"
@@ -135,7 +139,9 @@ export default function Footer({ lang }: { lang: string }) {
               className="w-10 h-10 rounded-full border border-zinc-800 flex items-center justify-center hover:bg-zinc-900 hover:text-white transition-colors cursor-pointer"
               title="Line"
             >
-              LN
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-5 h-5">
+                <path d="M12 2C6.48 2 2 5.82 2 10.53c0 2.76 1.51 5.21 3.93 6.78-.2.66-.73 2.39-.83 2.74-.13.43.08.42.36.23.27-.18 4.2-2.77 4.74-3.13.58.07 1.18.11 1.8.11 5.52 0 10-3.82 10-8.53S17.52 2 12 2zm-4.7 11.23h-.8c-.34 0-.6-.27-.6-.6V7.37c0-.33.26-.6.6-.6h.8c.33 0 .6.27.6.6v5.26c0 .33-.27.6-.6.6zm3.3 0H9.72c-.34 0-.6-.27-.6-.6V7.37c0-.33.26-.6.6-.6h.88c.33 0 .6.27.6.6V10.2l1.62-2.83c.18-.32.48-.6.82-.6h.87c.37 0 .49.33.25.61l-1.92 2.21 2.06 3.04c.24.36.08.6-.33.6h-.93a.9.9 0 0 1-.72-.37l-1.57-2.31V12.63c0 .33-.27.6-.6.6zm3.9-.6c0 .33-.27.6-.6.6h-.8c-.33 0-.6-.27-.6-.6V7.37c0-.33.27-.6.6-.6h.8c.33 0 .6.27.6.6v5.26zm5.8 0c0 .33-.27.6-.6.6h-2.1c-.34 0-.6-.27-.6-.6V7.37c0-.33.26-.6.6-.6h2.1c.33 0 .6.27.6.6v.77c0 .33-.27.6-.6.6h-1.3v1.07h1.17c.33 0 .6.27.6.6v.72c0 .33-.27.6-.6.6h-1.17v1.17h1.3c.33 0 .6.27.6.6v.77z" />
+              </svg>
             </a>
           </div>
 
