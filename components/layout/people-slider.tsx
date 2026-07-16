@@ -47,6 +47,14 @@ const people = [
     email: "waranya.p@ce.ac.th",
     image: "/teacher_waranya.jpg",
   },
+  {
+    nameTh: "ดร. พลวัต ดิจิทัล",
+    nameEn: "Dr. Polawat Digital",
+    roleTh: "อาจารย์ประจำสาขา",
+    roleEn: "Lecturer",
+    email: "polawat.d@ce.ac.th",
+    image: "/teacher_polawat.jpg",
+  },
 ];
 
 export default function PeopleSlider({ lang }: PeopleSliderProps) {
@@ -110,7 +118,7 @@ export default function PeopleSlider({ lang }: PeopleSliderProps) {
   return (
     <div className="w-full overflow-hidden py-4">
       <div
-        className="flex gap-6 transition-transform duration-1000 ease-in-out"
+        className="flex gap-6 transition-transform duration-[3000ms] ease-in-out"
         style={{ transform: getTranslateX() }}
       >
         {people.map((person, idx) => (
