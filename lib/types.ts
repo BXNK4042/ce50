@@ -65,3 +65,13 @@ export interface InternshipTopic {
   description?: string | null;
   year?: number | null;
 }
+
+export interface Video {
+  id: number;
+  title: string;
+  description?: string | null;
+  file_path: string;
+  thumbnail?: string | null;
+  category?: string | null;
+  year?: number | null;
+}

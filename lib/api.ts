@@ -5,6 +5,7 @@ import type {
   Schedule,
   Student,
   Teacher,
+  Video,
   Work,
 } from "./types";
 
@@ -34,4 +35,5 @@ export const api = {
   rooms: () => get<Room[]>("/rooms"),
   internship: (host_branch?: string) =>
     get<InternshipTopic[]>("/internship", host_branch ? { host_branch } : undefined),
+  videos: () => get<Video[]>("/videos"),
 };

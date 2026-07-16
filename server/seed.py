@@ -11,6 +11,12 @@ def main() -> None:
             [("113", "ห้องเรียน CE"), ("Server Room", "ห้องเซิร์ฟเวอร์สาขา")],
         )
 
+        # Seed videos
+        conn.executemany(
+            "INSERT OR IGNORE INTO videos(title, description, file_path, year) VALUES (?,?,?,?)",
+            [("Footage_CE04", "Footage ห้อง CE04", "/Video/Footage_CE04.mp4", 2025)],
+        )
+
         # Seed teachers
         teachers_data = [
             ("อาจารย์อรรถศาสตร์ นาคเทวัญ", "Athasart Narkthewan", "athasart.png", '["1"]'),
