@@ -52,6 +52,3 @@ next-env.d.ts
 # local env
 .env
 .env.local
-
-# videos
-server/Video/*.mp4
