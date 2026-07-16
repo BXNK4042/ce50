@@ -85,46 +85,8 @@ export default function Navbar({
   return (
     <header className="sticky top-0 z-50 border-b border-black/10 dark:border-white/10 bg-background/80 backdrop-blur-md text-foreground transition-colors duration-300">
       <nav className="relative flex w-full items-center justify-between px-8 py-4">
-
-        {/* Center Grid: Guaranteeing the Logo stays in the absolute center of the page */}
-        <div className="absolute inset-x-8 top-1/2 -translate-y-1/2 flex items-center justify-between pointer-events-none">
-          {/* Left Links Column (aligned right to maintain dynamic gap to logo) */}
-          <div className="flex-1 flex justify-end pr-8 xl:pr-[60px] pointer-events-auto">
-            <ul className="flex items-center gap-4 xl:gap-8 text-sm">
-              {links.slice(0, 3).map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="hover:underline">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Center Logo Column (always perfectly centered) */}
-          <div className="flex-initial pointer-events-auto">
-            <Link href={`/${lang}`} className="flex items-center gap-1.5 font-bold text-lg shrink-0">
-              <img src="/CE.webp" alt="CE Logo" className="h-11 w-11 object-contain" />
-              <span>COM EN</span>
-            </Link>
-          </div>
-
-          {/* Right Links Column (aligned left to maintain dynamic gap to logo) */}
-          <div className="flex-1 flex justify-start pl-8 xl:pl-[60px] pointer-events-auto">
-            <ul className="flex items-center gap-4 xl:gap-8 text-sm">
-              {links.slice(3).map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="hover:underline">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Right Section: Language Control, Theme Switcher & Login Button */}
-        <div className="ml-auto flex items-center gap-4 shrink-0 z-10 relative">
+        {/* Left Section: Language Control & Theme Switcher */}
+        <div className="flex items-center gap-3 shrink-0 z-10 relative">
           <div className="relative flex items-center rounded-md border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-100 dark:bg-zinc-900 p-0.5 w-24 h-7">
             {/* Sliding Background */}
             <div
@@ -211,7 +173,47 @@ export default function Navbar({
               </div>
             </div>
           </button>
+        </div>
 
+        {/* Center Grid: Guaranteeing the Logo stays in the absolute center of the page */}
+        <div className="absolute inset-x-8 top-1/2 -translate-y-1/2 flex items-center justify-between pointer-events-none">
+          {/* Left Links Column (aligned right to maintain dynamic gap to logo) */}
+          <div className="flex-1 flex justify-end pr-8 xl:pr-[60px] pointer-events-auto">
+            <ul className="flex items-center gap-4 xl:gap-8 text-sm">
+              {links.slice(0, 3).map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="hover:underline">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Center Logo Column (always perfectly centered) */}
+          <div className="flex-initial pointer-events-auto">
+            <Link href={`/${lang}`} className="flex items-center gap-1.5 font-bold text-lg shrink-0">
+              <img src="/CE.webp" alt="CE Logo" className="h-11 w-11 object-contain" />
+              <span>COM EN</span>
+            </Link>
+          </div>
+
+          {/* Right Links Column (aligned left to maintain dynamic gap to logo) */}
+          <div className="flex-1 flex justify-start pl-8 xl:pl-[60px] pointer-events-auto">
+            <ul className="flex items-center gap-4 xl:gap-8 text-sm">
+              {links.slice(3).map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="hover:underline">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Right Section: Login Button */}
+        <div className="ml-auto flex items-center shrink-0 z-10 relative">
           <Link
             href={`/${lang}/admin/login`}
             className="text-sm font-semibold hover:underline bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 w-[110px] h-9 flex items-center justify-center rounded-md transition-all duration-300 shrink-0"
