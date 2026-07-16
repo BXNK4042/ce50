@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
+import ThemeScript from "@/components/layout/theme-script";
 
 import { getDictionary, Locale } from "./dictionaries";
 import { cookies } from "next/headers";
@@ -22,9 +23,9 @@ export async function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: "สาขาวิศวกรรมคอมพิวเตอร์ | Computer Engineering",
+  title: "WE ARE CE | Computer Engineering",
   description:
-    "เว็บไซต์ประชาสัมพันธ์และสารสนเทศสาขาวิศวกรรมคอมพิวเตอร์ — Public information site for the Computer Engineering program.",
+    "เว็บไซต์ประชาสัมพันธ์และสารสนเทศ WE ARE CE — Public information site for the Computer Engineering program.",
 };
 
 export default async function LangLayout({
@@ -43,19 +44,7 @@ export default async function LangLayout({
       suppressHydrationWarning
     >
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.theme === 'light') {
-                  document.documentElement.classList.remove('dark')
-                } else {
-                  document.documentElement.classList.add('dark')
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
+        <ThemeScript />
       </head>
       <body className="min-h-full flex flex-col transition-colors duration-300">
         <Navbar lang={lang} dict={dict} initialTheme={theme as "light" | "dark"} />
