@@ -87,7 +87,7 @@ export default function Footer({ lang }: { lang: string }) {
             </li>
             <li className="flex items-center gap-2">
               <span className="text-zinc-500">📞</span>
-              <span>+66 2 123 4567</span>
+              <span>077-506422</span>
             </li>
             <li className="flex items-center gap-2">
               <span className="text-zinc-500">✉️</span>
