@@ -193,8 +193,10 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
                 alt={lang === "th" ? person.nameTh : person.nameEn}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
               />
+              {/* Vignette Overlay (cinematic darkened edges) */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_20%,rgba(0,0,0,0.85)_100%)] z-10 pointer-events-none" />
               {/* Premium Dark Gradient Overlay at the bottom for readability */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10" />
 
               {/* Profile Info - Floated at the bottom-left */}
               <div className="p-6 flex flex-col gap-3 z-20 text-left w-full">
