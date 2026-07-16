@@ -91,6 +91,9 @@ export default async function HomePage({
           </div>
         </div>
       </div>
+
+      {/* Section 3: Equal size to Section 2, matching Section 1 background in all themes */}
+      <div className="relative h-screen w-full bg-background p-12 md:p-16 flex flex-col gap-6" />
     </>
   );
 }
