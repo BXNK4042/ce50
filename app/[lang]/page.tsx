@@ -94,8 +94,7 @@ export default async function HomePage({
 
       {/* Section 3: Equal size to Section 2, matching Section 1 background in all themes */}
       <div className="relative h-screen w-full bg-background p-12 md:p-16 flex flex-col gap-6">
-        <h2 className="flex items-center gap-3.5 text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight select-none">
-          <span className="inline-block w-1.5 h-[0.9em] bg-blue-600 dark:bg-sky-500 rounded-full shrink-0" />
+        <h2 className="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight select-none">
           {dict.home.people}
         </h2>
       </div>
