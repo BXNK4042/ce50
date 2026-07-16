@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { getDictionary, hasLocale } from "./dictionaries";
+import PeopleSlider from "@/components/layout/people-slider";
 
 export default async function HomePage({
   params,
@@ -97,6 +98,7 @@ export default async function HomePage({
         <h2 className="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight select-none">
           {dict.home.people}
         </h2>
+        <PeopleSlider lang={lang} />
       </div>
     </>
   );
