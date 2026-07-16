@@ -91,8 +91,14 @@ export default function Footer({ lang }: { lang: string }) {
             </li>
             <li className="flex items-center gap-2">
               <span className="text-zinc-500">✉️</span>
-              <a href="mailto:ce@university.ac.th" className="hover:text-white hover:underline transition-colors">
-                ce@university.ac.th
+              <a href="mailto:ce@kmitl.ac.th" className="hover:text-white hover:underline transition-colors">
+                ce@kmitl.ac.th
+              </a>
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="text-zinc-500">🌐</span>
+              <a href="https://www.kmitl-chumphon.kmitl.ac.th/" target="_blank" rel="noopener noreferrer" className="hover:text-white hover:underline transition-colors truncate">
+                kmitl-chumphon.kmitl.ac.th
               </a>
             </li>
           </ul>
