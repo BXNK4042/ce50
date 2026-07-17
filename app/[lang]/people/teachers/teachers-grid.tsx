@@ -32,14 +32,9 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
           <div
             key={teacher.id}
             className="relative group w-full h-[300px]"
-            onMouseEnter={() => {
+            onClick={() => {
               if (isAthasart) {
                 setActiveOverlayId(teacher.id);
-              }
-            }}
-            onMouseLeave={() => {
-              if (isAthasart) {
-                setActiveOverlayId(null);
               }
             }}
           >
@@ -94,7 +89,10 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
             {/* Viewport Overlay for Athasart (outside overflow-hidden) */}
             {isAthasart && teacher.photo && (
               <div
-                onClick={() => setActiveOverlayId(null)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveOverlayId(null);
+                }}
                 className={`fixed inset-0 bg-black/75 flex flex-col items-center justify-center backdrop-blur-md transition-all duration-500 z-[9999] ${
                   isOverlayActive
                     ? "opacity-100 pointer-events-auto cursor-pointer"
