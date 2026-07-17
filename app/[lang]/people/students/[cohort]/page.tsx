@@ -36,8 +36,8 @@ export default async function CohortPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#cad9f0]/40 dark:bg-[#0a192f]/40 transition-colors duration-300 py-12">
-      <section className="mx-auto max-w-6xl px-6">
+    <div className="min-h-screen bg-[#cad9f0]/40 dark:bg-[#0a192f]/40 transition-colors duration-300 py-12 md:py-16">
+      <section className="mx-auto max-w-6xl px-12 md:px-16">
         {/* Breadcrumbs */}
         <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-6">
           <Link href={`/${lang}`} className="hover:underline hover:text-blue-600 dark:hover:text-sky-300">

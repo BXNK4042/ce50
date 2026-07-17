@@ -78,7 +78,7 @@ export default async function TeachersPage({
   });
 
   return (
-    <section className="w-full px-4 py-12">
+    <section className="w-full px-12 md:px-16 py-12 md:py-16">
       <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-zinc-900 dark:text-white">
         {isTh ? (
           <>
