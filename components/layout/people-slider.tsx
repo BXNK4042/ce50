@@ -14,7 +14,7 @@ const people = [
     roleTh: "หัวหน้าสาขาวิชา",
     roleEn: "Head of Program",
     email: "athasart.n@ce.ac.th",
-    image: "/image/athasart.png",
+    image: "/image/athasart.webp",
   },
   {
     nameTh: "ดร.รัตติกร สมบัติแก้ว",
@@ -22,7 +22,7 @@ const people = [
     roleTh: "รองหัวหน้าสาขาวิชา",
     roleEn: "Deputy Head of Program",
     email: "rattikorn.s@ce.ac.th",
-    image: "/image/rattikorn.png",
+    image: "/image/rattikorn.webp",
   },
   {
     nameTh: "อาจารย์นภัสรพี สิทธิวัจน์",
@@ -30,7 +30,7 @@ const people = [
     roleTh: "อาจารย์ประจำสาขา",
     roleEn: "Lecturer",
     email: "pisakorn.s@ce.ac.th",
-    image: "/image/pisakorn.png",
+    image: "/image/pisakorn.webp",
   },
   {
     nameTh: "ว่าที่ร้อยตรี ศิลา ศิริมาสกุล",
@@ -38,7 +38,7 @@ const people = [
     roleTh: "ผู้ช่วยศาสตราจารย์",
     roleEn: "Assistant Professor",
     email: "silar.s@ce.ac.th",
-    image: "/image/silar.png",
+    image: "/image/silar.webp",
   },
   {
     nameTh: "อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช",
@@ -46,7 +46,7 @@ const people = [
     roleTh: "อาจารย์และนักวิจัย",
     roleEn: "Lecturer & Researcher",
     email: "sakawkarn.p@ce.ac.th",
-    image: "/image/sakawkarn.png",
+    image: "/image/sakawkarn.webp",
   },
 ];
 
