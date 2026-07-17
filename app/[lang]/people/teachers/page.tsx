@@ -138,7 +138,7 @@ export default async function TeachersPage({
               className={`w-full h-[300px] border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer select-none flex flex-col justify-end relative group ${
                 isAthasart
                   ? "bg-gradient-to-b from-[#fbc6a9] to-[#e06e30] dark:from-[#ff7b30] dark:to-[#9c3100] hover:shadow-orange-500/20"
-                  : "bg-black hover:shadow-black/20 dark:hover:shadow-black/40"
+                  : "bg-gradient-to-b from-[#a7c7f2] to-[#2b5c9e] dark:from-[#3b7cd4] dark:to-[#12294a] hover:shadow-blue-500/20"
               }`}
             >
               {/* Full Background Portrait Image */}
