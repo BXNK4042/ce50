@@ -106,7 +106,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
           <div className="text-left">
             <a
               href="#"
-              className="text-xs font-semibold text-[#f5945c] hover:underline uppercase tracking-wider"
+              className="text-xs font-semibold text-[#f5945c] underline underline-offset-4 decoration-1 uppercase tracking-wider"
             >
               {isTh ? "ลืมรหัสผ่าน?" : "Forgot password?"}
             </a>
@@ -115,7 +115,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
           <div className="text-right">
             <a
               href="#"
-              className="text-xs font-semibold text-[#f5945c] hover:underline uppercase tracking-wider"
+              className="text-xs font-semibold text-[#f5945c] underline underline-offset-4 decoration-1 uppercase tracking-wider"
             >
               {isTh ? "สมัครสมาชิก" : "Register"}
             </a>
