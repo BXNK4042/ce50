@@ -83,21 +83,6 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
         />
       </div>
 
-      {/* Username Field */}
-      <div className="flex flex-col gap-2">
-        <label className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
-          {isTh ? "ชื่อผู้ใช้" : "Username"}
-        </label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder={isTh ? "ระบุชื่อผู้ใช้" : "Enter username"}
-          required
-          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
-        />
-      </div>
-
       {/* Email Field */}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
@@ -108,6 +93,21 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="example@gmail.com"
+          required
+          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
+        />
+      </div>
+
+      {/* Username Field */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
+          {isTh ? "ชื่อผู้ใช้" : "Username"}
+        </label>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder={isTh ? "ระบุชื่อผู้ใช้" : "Enter username"}
           required
           className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
         />
