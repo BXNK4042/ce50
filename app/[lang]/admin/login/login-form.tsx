@@ -62,17 +62,9 @@ export default function LoginForm({ lang }: LoginFormProps) {
 
       {/* Password Field */}
       <div className="flex flex-col gap-2">
-        <div className="flex justify-between items-center">
-          <label className="text-sm font-semibold text-white uppercase tracking-wider">
-            {isTh ? "รหัสผ่าน" : "Password"}
-          </label>
-          <a
-            href="#"
-            className="text-xs font-semibold text-[#e55300] hover:underline uppercase tracking-wider"
-          >
-            {isTh ? "ลืมรหัสผ่าน?" : "Forgot password?"}
-          </a>
-        </div>
+        <label className="text-sm font-semibold text-white uppercase tracking-wider">
+          {isTh ? "รหัสผ่าน" : "Password"}
+        </label>
         <input
           type="password"
           value={password}
@@ -106,6 +98,25 @@ export default function LoginForm({ lang }: LoginFormProps) {
           isTh ? "เข้าสู่ระบบ" : "Sign In"
         )}
       </button>
+
+      {/* Divider line and bottom links */}
+      <div className="flex flex-col gap-4 mt-2">
+        <div className="border-t border-zinc-200 dark:border-zinc-800/80 w-full" />
+        <div className="flex justify-between items-center px-1">
+          <a
+            href="#"
+            className="text-xs font-semibold text-[#e55300] hover:underline uppercase tracking-wider"
+          >
+            {isTh ? "ลืมรหัสผ่าน?" : "Forgot password?"}
+          </a>
+          <a
+            href="#"
+            className="text-xs font-semibold text-[#e55300] hover:underline uppercase tracking-wider"
+          >
+            {isTh ? "สมัครสมาชิก" : "Register"}
+          </a>
+        </div>
+      </div>
     </form>
   );
 }
