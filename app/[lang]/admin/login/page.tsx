@@ -15,8 +15,8 @@ export default async function AdminLoginPage({
 
       {/* Wrapper to stack elements vertically */}
       <div className="w-full max-w-md flex flex-col gap-6">
-        {/* LOGIN heading placed above/outside the card container, styled in white */}
-        <h1 className="text-4xl md:text-5xl font-extrabold tracking-wider text-center text-white uppercase drop-shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
+        {/* LOGIN heading placed above/outside the card container, dynamically responsive to light/dark themes */}
+        <h1 className="text-4xl md:text-5xl font-extrabold tracking-wider text-center text-zinc-900 dark:text-white uppercase drop-shadow-[0_4px_12px_rgba(0,0,0,0.1)]">
           LOGIN
         </h1>
 
