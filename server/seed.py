@@ -23,7 +23,8 @@ def main() -> None:
             ("ดร.รัตติกร สมบัติแก้ว", "Rattikorn Sombutkaew", "rattikorn.png", '["2"]'),
             ("อาจารย์นภัสรพี สิทธิวัจน์", "Pisakorn Sittiwatjana", "pisakorn.png", '["3"]'),
             ("ว่าที่ร้อยตรี ศิลา ศิริมาสกุล", "Silar Sirimasakul", "silar.png", '["4"]'),
-            ("อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช", "Sakawkarn Piyawitwanich", "sakawkarn.png", '["1", "2"]')
+            ("อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช", "Sakawkarn Piyawitwanich", "sakawkarn.png", '["1", "2"]'),
+            ("นายจตุรงค์ เกตุนิมิต", "Jaturong Katenimit", "jaturong.png", '[]')
         ]
 
         for name_th, name_en, photo_filename, advise_years in teachers_data:
