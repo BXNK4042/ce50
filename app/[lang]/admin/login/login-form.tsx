@@ -50,6 +50,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
       <div className="flex flex-col gap-2">
         <label className="text-sm font-semibold text-white uppercase tracking-wider">
           {isTh ? "ชื่อผู้ใช้ หรือ อีเมล" : "Username or Email"}
+          <span className="text-red-500 ml-1 font-bold">*</span>
         </label>
         <input
           type="text"
@@ -65,6 +66,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
       <div className="flex flex-col gap-2">
         <label className="text-sm font-semibold text-white uppercase tracking-wider">
           {isTh ? "รหัสผ่าน" : "Password"}
+          <span className="text-red-500 ml-1 font-bold">*</span>
         </label>
         <div className="relative">
           <input
