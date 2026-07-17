@@ -110,7 +110,7 @@ export default async function TeachersPage({
       </h1>
 
       {/* Teachers Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-[1032px] mx-auto">
         {teachers.map((teacher) => {
           const name = isTh ? teacher.name_th : (teacher.name_en || teacher.name_th);
           const initials = teacher.name_en
