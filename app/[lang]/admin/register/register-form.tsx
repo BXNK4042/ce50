@@ -195,27 +195,17 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
         )}
       </button>
 
-      {/* Divider line and bottom links */}
+      {/* Divider line and bottom helper link */}
       <div className="flex flex-col gap-4 mt-2">
         <div className="border-t border-zinc-400 dark:border-zinc-700 w-full" />
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-1">
-          <div className="text-left">
-            <a
-              href={`/${lang}/admin/login`}
-              className="text-xs font-semibold text-[#f5945c] underline underline-offset-4 decoration-1 uppercase tracking-wider"
-            >
-              {isTh ? "เข้าสู่ระบบ" : "Sign In"}
-            </a>
-          </div>
-          <div className="h-4 border-l border-zinc-400 dark:border-zinc-700" />
-          <div className="text-right">
-            <a
-              href={`/${lang}`}
-              className="text-xs font-semibold text-[#f5945c] underline underline-offset-4 decoration-1 uppercase tracking-wider"
-            >
-              {isTh ? "หน้าแรก" : "Home"}
-            </a>
-          </div>
+        <div className="text-center text-xs font-semibold text-zinc-500 dark:text-zinc-400 tracking-wider">
+          {isTh ? "มีบัญชีอยู่แล้ว? " : "Already have an account? "}
+          <a
+            href={`/${lang}/admin/login`}
+            className="text-[#f5945c] underline underline-offset-4 decoration-1 uppercase hover:text-[#c94800] transition-colors ml-1"
+          >
+            {isTh ? "เข้าสู่ระบบ" : "Log In"}
+          </a>
         </div>
       </div>
     </form>
