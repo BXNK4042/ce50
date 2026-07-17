@@ -101,7 +101,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
 
       {/* Divider line and bottom links */}
       <div className="flex flex-col gap-4 mt-2">
-        <div className="border-t border-zinc-200 dark:border-zinc-800/80 w-full" />
+        <div className="border-t border-zinc-400 dark:border-zinc-700 w-full" />
         <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 px-1">
           <div className="text-left">
             <a
@@ -111,7 +111,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
               {isTh ? "ลืมรหัสผ่าน?" : "Forgot password?"}
             </a>
           </div>
-          <div className="h-4 border-l border-zinc-300 dark:border-zinc-800/80" />
+          <div className="h-4 border-l border-zinc-400 dark:border-zinc-700" />
           <div className="text-right">
             <a
               href="#"
