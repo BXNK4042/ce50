@@ -102,13 +102,36 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                 }`}
               >
                 <div className="flex flex-col items-center justify-center max-h-screen p-4 text-center">
-                  <img
-                    src={`${teacher.photo}?v=8`}
-                    alt={name}
-                    className={`h-[65vh] w-auto object-contain transition-all duration-1000 ease-out transform drop-shadow-[0_20px_50px_rgba(245,148,92,0.4)] pointer-events-none ${
+                  <div
+                    className={`relative h-[65vh] aspect-[350/263] transition-all duration-1000 ease-out transform ${
                       isOverlayActive ? "scale-100 rotate-[-1080deg]" : "scale-0 rotate-0"
                     }`}
-                  />
+                  >
+                    <img
+                      src={`${teacher.photo}?v=8`}
+                      alt={name}
+                      className="w-full h-full object-contain drop-shadow-[0_20px_50px_rgba(245,148,92,0.4)] pointer-events-none"
+                    />
+                    
+                    {/* Left Eye Red Glow */}
+                    <div
+                      className={`absolute top-[28.5%] left-[45.2%] w-[1.5%] h-[1.5%] bg-red-500 rounded-full shadow-[0_0_12px_6px_#ff0000,0_0_24px_12px_#ff0000] opacity-0 scale-0 transition-all ease-out ${
+                        isOverlayActive
+                          ? "opacity-100 scale-100 delay-[1000ms] duration-500"
+                          : "opacity-0 scale-0 duration-300"
+                      }`}
+                    />
+
+                    {/* Right Eye Red Glow */}
+                    <div
+                      className={`absolute top-[28.5%] left-[54.8%] w-[1.5%] h-[1.5%] bg-red-500 rounded-full shadow-[0_0_12px_6px_#ff0000,0_0_24px_12px_#ff0000] opacity-0 scale-0 transition-all ease-out ${
+                        isOverlayActive
+                          ? "opacity-100 scale-100 delay-[1000ms] duration-500"
+                          : "opacity-0 scale-0 duration-300"
+                      }`}
+                    />
+                  </div>
+
                   <h2
                     className={`text-2xl md:text-4xl font-extrabold text-white mt-8 tracking-wider drop-shadow-[0_4px_12px_rgba(245,148,92,0.6)] transition-all duration-700 delay-300 ease-out transform ${
                       isOverlayActive ? "scale-100" : "scale-0"
