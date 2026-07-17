@@ -44,6 +44,14 @@ const fallbackTeachers = [
     advise_years: ["1", "2"],
     contact: "sakawkarn.p@ce.ac.th",
   },
+  {
+    id: 6,
+    name_th: "นายจตุรงค์ เกตุนิมิต",
+    name_en: "Jaturong Katenimit",
+    photo: "/image/jaturong.webp",
+    advise_years: [],
+    contact: "",
+  },
 ];
 
 export default async function TeachersPage({
@@ -136,7 +144,7 @@ export default async function TeachersPage({
               {/* Full Background Portrait Image */}
               {teacher.photo ? (
                 <img
-                  src={`${teacher.photo}?v=6`}
+                  src={`${teacher.photo}?v=7`}
                   alt={name}
                   className="absolute right-0 bottom-0 h-full w-auto object-contain object-right transition-transform duration-500 group-hover:scale-105 translate-x-[15%] z-0"
                 />

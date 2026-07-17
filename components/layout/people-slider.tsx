@@ -48,6 +48,14 @@ const people = [
     email: "sakawkarn.p@ce.ac.th",
     image: "/image/sakawkarn.webp",
   },
+  {
+    nameTh: "นายจตุรงค์ เกตุนิมิต",
+    nameEn: "Jaturong Katenimit",
+    roleTh: "อาจารย์ประจำสาขา",
+    roleEn: "Lecturer",
+    email: "",
+    image: "/image/jaturong.webp",
+  },
 ];
 
 export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
@@ -189,7 +197,7 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
             >
               {/* Full Background Portrait Image */}
               <img
-                src={`${person.image}?v=6`}
+                src={`${person.image}?v=7`}
                 alt={lang === "th" ? person.nameTh : person.nameEn}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
               />
