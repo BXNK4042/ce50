@@ -158,7 +158,9 @@ export default async function TeachersPage({
               <div className="p-6 flex flex-col gap-3 z-20 text-left w-full">
                 <div>
                   <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-white rounded-md border border-white/20 uppercase tracking-wider select-none">
-                    {isTh ? "อาจารย์ประจำสาขา" : "Faculty Member"}
+                    {teacher.id === 6
+                      ? (isTh ? "นักวิชาการคอมพิวเตอร์" : "Computer Technical Officer")
+                      : (isTh ? "อาจารย์ประจำสาขา" : "Faculty Member")}
                   </span>
                   <h3 className="text-lg font-bold text-white mt-2 group-hover:text-sky-300 transition-colors line-clamp-1">
                     {name}

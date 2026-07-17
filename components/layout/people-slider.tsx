@@ -51,8 +51,8 @@ const people = [
   {
     nameTh: "นายจตุรงค์ เกตุนิมิต",
     nameEn: "Jaturong Katenimit",
-    roleTh: "อาจารย์ประจำสาขา",
-    roleEn: "Lecturer",
+    roleTh: "นักวิชาการคอมพิวเตอร์",
+    roleEn: "Computer Technical Officer",
     email: "",
     image: "/image/jaturong.webp",
   },
