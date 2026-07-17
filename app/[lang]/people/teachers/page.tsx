@@ -1,5 +1,6 @@
 import { api } from "@/lib/api";
 import { Teacher } from "@/lib/types";
+import TeachersGrid from "./teachers-grid";
 
 export const dynamic = "force-dynamic";
 
@@ -118,89 +119,7 @@ export default async function TeachersPage({
       </h1>
 
       {/* Teachers Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12 w-full max-w-none">
-        {teachers.map((teacher) => {
-          const name = isTh ? teacher.name_th : (teacher.name_en || teacher.name_th);
-          const initials = teacher.name_en
-            ? teacher.name_en
-                .split(" ")
-                .map((n: string) => n[0])
-                .join("")
-                .slice(0, 2)
-                .toUpperCase()
-            : name.slice(0, 2);
-
-          const isAthasart = teacher.id === 1;
-
-          return (
-            <div key={teacher.id} className="relative group w-full h-[300px]">
-              {/* Actual Card Container (with overflow-hidden) */}
-              <div
-                className={`w-full h-full border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer select-none flex flex-col justify-end relative bg-gradient-to-b from-[#a7c7f2] to-[#2b5c9e] dark:from-[#3b7cd4] dark:to-[#12294a] ${
-                  isAthasart
-                    ? "hover:from-[#fbc6a9] hover:to-[#e06e30] dark:hover:from-[#ff7b30] dark:hover:to-[#9c3100] hover:shadow-orange-500/20"
-                    : "hover:shadow-blue-500/20"
-                }`}
-              >
-                {/* Full Background Portrait Image */}
-                {teacher.photo ? (
-                  <img
-                    src={`${teacher.photo}?v=8`}
-                    alt={name}
-                    className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-0"
-                  />
-                ) : (
-                  <div className="absolute inset-0 w-full h-full bg-zinc-900 flex items-center justify-center text-white text-3xl font-bold z-0">
-                    {initials}
-                  </div>
-                )}
-
-                {/* Profile Info - Floated at the bottom-left */}
-                <div className="p-6 flex flex-col gap-3 z-20 text-left w-full">
-                  <div>
-                    <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-white rounded-md border border-white/20 uppercase tracking-wider select-none">
-                      {teacher.id === 6
-                        ? (isTh ? "นักวิชาการคอมพิวเตอร์" : "Computer Technical Officer")
-                        : (isTh ? "อาจารย์ประจำสาขา" : "Faculty Member")}
-                    </span>
-                    <h3 className="text-lg font-bold text-white mt-2 group-hover:text-sky-300 transition-colors line-clamp-1">
-                      {name}
-                    </h3>
-                    {teacher.advise_years && teacher.advise_years.length > 0 && (
-                      <p className="text-xs text-white/60 mt-1 font-medium">
-                        {isTh ? "ชั้นปีที่ดูแล: " : "Advise: "}
-                        {teacher.advise_years.map((y: string) => `${isTh ? "ปี " : "Year "}${y}`).join(", ")}
-                      </p>
-                    )}
-                  </div>
-                  {teacher.contact && (
-                    <div className="text-xs text-white/70 mt-1 border-t border-white/10 pt-3 flex items-center justify-between">
-                      <span className="truncate">{teacher.contact}</span>
-                      <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Viewport Overlay for Athasart (outside overflow-hidden) */}
-              {isAthasart && teacher.photo && (
-                <div className="fixed inset-0 bg-black/75 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-[9999] flex flex-col items-center justify-center backdrop-blur-md">
-                  <div className="flex flex-col items-center justify-center max-h-screen p-4 text-center">
-                    <img
-                      src={`${teacher.photo}?v=8`}
-                      alt={name}
-                      className="h-[65vh] w-auto object-contain transition-all duration-1000 ease-out transform scale-0 rotate-0 group-hover:scale-100 group-hover:rotate-[-1080deg] drop-shadow-[0_20px_50px_rgba(245,148,92,0.4)] pointer-events-none"
-                    />
-                    <h2 className="text-2xl md:text-4xl font-extrabold text-white mt-8 tracking-wider drop-shadow-[0_4px_12px_rgba(245,148,92,0.6)] transform scale-0 group-hover:scale-100 transition-all duration-700 delay-300 ease-out">
-                      {isTh ? "ประธานสาขาวิศวกรรมคอมพิวเตอร์" : "Head of Computer Engineering Department"}
-                    </h2>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      <TeachersGrid teachers={teachers} lang={lang} />
     </section>
   );
 }
