@@ -50,7 +50,7 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
               <img
                 src="/image/CE04.png?v=8"
                 alt="CE04 Logo"
-                className="absolute top-4 left-4 w-16 h-auto z-20 object-contain pointer-events-none opacity-100"
+                className="absolute top-4 left-4 w-24 h-auto z-20 object-contain pointer-events-none filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] contrast-[1.15] brightness-[1.05]"
               />
 
               {/* Full Background Portrait Image */}
