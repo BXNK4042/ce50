@@ -62,11 +62,20 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
 
               {/* Full Background Portrait Image */}
               {teacher.photo ? (
-                <img
-                  src={`${teacher.photo}?v=8`}
-                  alt={name}
-                  className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10"
-                />
+                <div className="absolute inset-0 w-full h-full z-10 pointer-events-none">
+                  <img
+                    src={`${teacher.photo}?v=8`}
+                    alt={name}
+                    className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10"
+                  />
+                  {teacher.id === 3 && (
+                    <img
+                      src="/image/pisakorn2.webp?v=8"
+                      alt={`${name} alternative`}
+                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
+                    />
+                  )}
+                </div>
               ) : (
                 <div className="absolute inset-0 w-full h-full bg-zinc-900 flex items-center justify-center text-white text-3xl font-bold z-10">
                   {initials}
