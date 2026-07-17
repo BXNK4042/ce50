@@ -184,12 +184,17 @@ export default async function TeachersPage({
 
               {/* Viewport Overlay for Athasart (outside overflow-hidden) */}
               {isAthasart && teacher.photo && (
-                <div className="fixed inset-0 bg-black/70 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-[9999] flex items-center justify-center backdrop-blur-sm">
-                  <img
-                    src={`${teacher.photo}?v=8`}
-                    alt={name}
-                    className="h-[75vh] w-auto object-contain transition-all duration-1000 ease-out transform scale-0 rotate-0 group-hover:scale-100 group-hover:rotate-[-1080deg] drop-shadow-[0_20px_50px_rgba(245,148,92,0.4)] pointer-events-none"
-                  />
+                <div className="fixed inset-0 bg-black/75 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 z-[9999] flex flex-col items-center justify-center backdrop-blur-md">
+                  <div className="flex flex-col items-center justify-center max-h-screen p-4 text-center">
+                    <img
+                      src={`${teacher.photo}?v=8`}
+                      alt={name}
+                      className="h-[65vh] w-auto object-contain transition-all duration-1000 ease-out transform scale-0 rotate-0 group-hover:scale-100 group-hover:rotate-[-1080deg] drop-shadow-[0_20px_50px_rgba(245,148,92,0.4)] pointer-events-none"
+                    />
+                    <h2 className="text-2xl md:text-4xl font-extrabold text-white mt-8 tracking-wider drop-shadow-[0_4px_12px_rgba(245,148,92,0.6)] transform scale-0 group-hover:scale-100 transition-all duration-700 delay-300 ease-out">
+                      {isTh ? "ประธานสาขาวิศวกรรมคอมพิวเตอร์" : "Head of Computer Engineering Department"}
+                    </h2>
+                  </div>
                 </div>
               )}
             </div>
