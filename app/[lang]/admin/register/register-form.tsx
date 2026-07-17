@@ -191,7 +191,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
         {loading ? (
           <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
         ) : (
-          isTh ? "สมัครสมาชิก" : "Sign Up"
+          isTh ? "สร้างบัญชีผู้ใช้" : "CREATE ACCOUNT"
         )}
       </button>
 
