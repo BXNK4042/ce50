@@ -8,7 +8,7 @@ export default async function AdminLoginPage({
   const { lang } = await params;
 
   return (
-    <main className="w-full min-h-[85vh] flex items-center justify-center px-6 py-12 md:py-20 relative">
+    <main className="w-full min-h-[85vh] flex items-center justify-center px-6 py-12 md:py-20 relative bg-zinc-100 dark:bg-zinc-950 transition-colors duration-500">
       {/* Decorative blurred backgrounds for premium look */}
       <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-[#e55300]/20 rounded-full blur-3xl -z-10 pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-orange-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
