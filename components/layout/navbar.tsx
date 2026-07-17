@@ -228,13 +228,23 @@ export default function Navbar({
                       
                       {/* Dropdown Menu with fade-in and smooth transition */}
                       <div
-                        className={`absolute left-1/2 -translate-x-1/2 top-full pt-1.5 z-50 w-32 transition-all duration-200 ${
+                        className={`absolute left-1/2 -translate-x-1/2 top-full pt-1.5 z-50 w-36 transition-all duration-200 ${
                           isDropdownOpen 
                             ? "opacity-100 translate-y-0 visible pointer-events-auto" 
                             : "opacity-0 -translate-y-1 invisible pointer-events-none"
                         }`}
                       >
-                        <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/80 rounded-md shadow-lg py-1">
+                        <div className="bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-md shadow-xl py-1">
+                          <Link
+                            href={`/${lang}/people/teachers`}
+                            className="block px-4 py-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+                          >
+                            {dict.people.teachers}
+                          </Link>
+                          <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-1" />
+                          <div className="px-4 py-1.5 text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+                            {dict.people.students}
+                          </div>
                           <Link
                             href={`/${lang}/people/students/CE04`}
                             className="block px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
