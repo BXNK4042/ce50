@@ -42,13 +42,15 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
             <div
               className={`w-full h-full border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-500 hover:shadow-lg cursor-pointer select-none flex flex-col justify-end relative bg-gradient-to-b from-[#a7c7f2] to-[#2b5c9e] ${
                 isAthasart
-                  ? "hover:from-[#fbc6a9] hover:to-[#e06e30] hover:shadow-orange-500/20 dark:hover:shadow-blue-500/20"
+                  ? "hover:from-[#fbc6a9] hover:to-[#e06e30] hover:shadow-orange-500/20"
                   : "hover:shadow-blue-500/20"
               }`}
             >
               {/* Dark Theme Background Overlay (Cross-fades smoothly on theme changes) */}
               <div
-                className="absolute inset-0 bg-gradient-to-b from-[#3b7cd4] to-[#12294a] opacity-0 dark:opacity-100 transition-all duration-500 z-0 pointer-events-none"
+                className={`absolute inset-0 bg-gradient-to-b from-[#3b7cd4] to-[#12294a] opacity-0 dark:opacity-100 transition-all duration-500 z-0 pointer-events-none ${
+                  isAthasart ? "group-hover:from-[#ff7b30] group-hover:to-[#9c3100]" : ""
+                }`}
               />
 
               {/* CE04 logo in the top-left corner */}
