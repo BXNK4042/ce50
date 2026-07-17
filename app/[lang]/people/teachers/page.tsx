@@ -122,10 +122,16 @@ export default async function TeachersPage({
                 .toUpperCase()
             : name.slice(0, 2);
 
+          const isAthasart = teacher.id === 1;
+
           return (
             <div
               key={teacher.id}
-              className="w-full h-[300px] bg-black border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group"
+              className={`w-full h-[300px] border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer select-none flex flex-col justify-end relative group ${
+                isAthasart
+                  ? "bg-[#f5945c] hover:shadow-orange-500/20"
+                  : "bg-black hover:shadow-black/20 dark:hover:shadow-black/40"
+              }`}
             >
               {/* Full Background Portrait Image */}
               {teacher.photo ? (
