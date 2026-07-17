@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function Navbar({
@@ -19,9 +19,29 @@ export default function Navbar({
   const router = useRouter();
   const [activeLang, setActiveLang] = useState(lang);
 
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsDropdownOpen(false);
+    }, 300);
+  };
+
   useEffect(() => {
     setActiveLang(lang);
   }, [lang]);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     if (document.documentElement.classList.contains("dark")) {
@@ -180,13 +200,72 @@ export default function Navbar({
           {/* Left Links Column (aligned right to maintain dynamic gap to logo) */}
           <div className="flex-1 flex justify-end pr-8 xl:pr-[60px] pointer-events-auto">
             <ul className="flex items-center gap-4 xl:gap-8 text-sm">
-              {links.slice(0, 3).map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="hover:underline">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
+              {links.slice(0, 3).map((l) => {
+                const isPeople = l.href === `/${lang}/people`;
+                if (isPeople) {
+                  return (
+                    <li
+                      key={l.href}
+                      className="relative py-2"
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <Link href={l.href} className="hover:underline flex items-center gap-1">
+                        {l.label}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2.5}
+                          stroke="currentColor"
+                          className={`w-3 h-3 transition-transform duration-200 ${
+                            isDropdownOpen ? "rotate-180" : ""
+                          }`}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                      </Link>
+                      
+                      {/* Dropdown Menu with fade-in and smooth transition */}
+                      <div
+                        className={`absolute left-1/2 -translate-x-1/2 top-full pt-1.5 z-50 w-32 transition-all duration-200 ${
+                          isDropdownOpen 
+                            ? "opacity-100 translate-y-0 visible pointer-events-auto" 
+                            : "opacity-0 -translate-y-1 invisible pointer-events-none"
+                        }`}
+                      >
+                        <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/80 rounded-md shadow-lg py-1">
+                          <Link
+                            href={`/${lang}/people/students/CE04`}
+                            className="block px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+                          >
+                            CE04
+                          </Link>
+                          <Link
+                            href={`/${lang}/people/students/CE05`}
+                            className="block px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+                          >
+                            CE05
+                          </Link>
+                          <Link
+                            href={`/${lang}/people/students/CE06`}
+                            className="block px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+                          >
+                            CE06
+                          </Link>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                }
+                return (
+                  <li key={l.href}>
+                    <Link href={l.href} className="hover:underline">
+                      {l.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
 
