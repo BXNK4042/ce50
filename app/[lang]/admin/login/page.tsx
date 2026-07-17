@@ -22,10 +22,6 @@ export default async function AdminLoginPage({
 
         {/* Tall Rectangular Form Card Container with sharp cut corners */}
         <div className="w-full bg-white dark:bg-black/50 border border-zinc-200 dark:border-zinc-800/80 rounded-none p-8 md:p-10 shadow-2xl backdrop-blur-md">
-          <p className="text-sm text-[#e55300]/80 text-center font-semibold uppercase tracking-wide">
-            {lang === "th" ? "ยินดีต้อนรับกลับมา! กรุณากรอกข้อมูลของคุณ" : "Welcome back! Please enter your details"}
-          </p>
-
           <LoginForm lang={lang} />
         </div>
       </div>

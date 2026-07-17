@@ -38,7 +38,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-8">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {error && (
         <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-none text-sm text-center">
           {error}
