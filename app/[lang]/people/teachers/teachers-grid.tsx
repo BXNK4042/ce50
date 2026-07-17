@@ -46,6 +46,13 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                   : "hover:shadow-blue-500/20"
               }`}
             >
+              {/* CE04 logo in the top-left corner */}
+              <img
+                src="/image/CE04.png?v=8"
+                alt="CE04 Logo"
+                className="absolute top-4 left-4 w-12 h-auto z-20 object-contain pointer-events-none opacity-85 group-hover:opacity-100 transition-opacity duration-300"
+              />
+
               {/* Full Background Portrait Image */}
               {teacher.photo ? (
                 <img
