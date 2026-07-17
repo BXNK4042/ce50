@@ -146,7 +146,7 @@ export default async function TeachersPage({
                 <img
                   src={`${teacher.photo}?v=8`}
                   alt={name}
-                  className="absolute right-0 bottom-0 h-full w-auto object-contain object-right z-0"
+                  className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-0"
                 />
               ) : (
                 <div className="absolute inset-0 w-full h-full bg-zinc-900 flex items-center justify-center text-white text-3xl font-bold z-0">
