@@ -197,7 +197,7 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
             >
               {/* Full Background Portrait Image */}
               <img
-                src={`${person.image}?v=7`}
+                src={`${person.image}?v=8`}
                 alt={lang === "th" ? person.nameTh : person.nameEn}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
               />

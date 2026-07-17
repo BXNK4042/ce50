@@ -137,14 +137,14 @@ export default async function TeachersPage({
               key={teacher.id}
               className={`w-full h-[300px] border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer select-none flex flex-col justify-end relative group ${
                 isAthasart
-                  ? "bg-[#f5945c] hover:shadow-orange-500/20"
+                  ? "bg-gradient-to-b from-[#fbc6a9] to-[#e06e30] hover:shadow-orange-500/20"
                   : "bg-black hover:shadow-black/20 dark:hover:shadow-black/40"
               }`}
             >
               {/* Full Background Portrait Image */}
               {teacher.photo ? (
                 <img
-                  src={`${teacher.photo}?v=7`}
+                  src={`${teacher.photo}?v=8`}
                   alt={name}
                   className="absolute right-0 bottom-0 h-full w-auto object-contain object-right transition-transform duration-500 group-hover:scale-105 translate-x-[15%] z-0"
                 />
