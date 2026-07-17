@@ -1,8 +1,16 @@
-export default function NewsPage() {
+import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
+
+export default async function NewsPage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const dict = await getDictionary(lang as Locale);
   return (
-    <section className="mx-auto max-w-5xl px-6 py-16">
-      <h1 className="text-3xl font-semibold">News — ข่าวสาร</h1>
-      <p className="mt-2 text-zinc-500">Competitions &amp; scholarships.</p>
+    <section className="mx-auto max-w-5xl px-12 md:px-16 py-12 md:py-16">
+      <h1 className="text-3xl font-semibold">{dict.news.title}</h1>
+      <p className="mt-2 text-zinc-500">{dict.news.subtitle}</p>
     </section>
   );
 }
