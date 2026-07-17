@@ -48,7 +48,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
 
       {/* Username / Email Field */}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-semibold text-white uppercase tracking-wider">
+        <label className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
           {isTh ? "ชื่อผู้ใช้ หรือ อีเมล" : "Username or Email"}
           <span className="text-red-500 ml-1 font-bold">*</span>
         </label>
@@ -64,7 +64,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
 
       {/* Password Field */}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-semibold text-white uppercase tracking-wider">
+        <label className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
           {isTh ? "รหัสผ่าน" : "Password"}
           <span className="text-red-500 ml-1 font-bold">*</span>
         </label>
@@ -98,7 +98,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
 
       {/* Remember Me Option */}
       <div className="flex items-center justify-between">
-        <label className="flex items-center gap-2 text-xs font-semibold text-white cursor-pointer select-none uppercase tracking-wider">
+        <label className="flex items-center gap-2 text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer select-none uppercase tracking-wider">
           <input
             type="checkbox"
             className="rounded-none border-zinc-300 dark:border-zinc-800 text-[#e55300] focus:ring-[#e55300] dark:bg-zinc-900"
