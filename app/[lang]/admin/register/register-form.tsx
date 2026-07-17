@@ -8,6 +8,7 @@ interface RegisterFormProps {
 
 export default function RegisterForm({ lang }: RegisterFormProps) {
   const isTh = lang === "th";
+  const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +35,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
       const res = await fetch(`/${lang}/api/admin/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ fullName, username, email, password }),
       });
 
       if (res.ok) {
@@ -66,6 +67,21 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
           {success}
         </div>
       )}
+
+      {/* Full Name Field */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
+          {isTh ? "ชื่อ-นามสกุล" : "Full Name"}
+        </label>
+        <input
+          type="text"
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+          placeholder={isTh ? "ระบุชื่อจริงและนามสกุลของคุณ" : "Enter your full name"}
+          required
+          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
+        />
+      </div>
 
       {/* Username Field */}
       <div className="flex flex-col gap-2">
