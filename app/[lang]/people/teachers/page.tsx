@@ -146,19 +146,12 @@ export default async function TeachersPage({
                 <img
                   src={`${teacher.photo}?v=8`}
                   alt={name}
-                  className="absolute right-0 bottom-0 h-full w-auto object-contain object-right transition-transform duration-500 group-hover:scale-105 translate-x-[15%] z-0"
+                  className="absolute right-0 bottom-0 h-full w-auto object-contain object-right z-0"
                 />
               ) : (
                 <div className="absolute inset-0 w-full h-full bg-zinc-900 flex items-center justify-center text-white text-3xl font-bold z-0">
                   {initials}
                 </div>
-              )}
-              {/* Vignette & Gradient Overlays (Skip for Athasart) */}
-              {!isAthasart && (
-                <>
-                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_20%,rgba(0,0,0,0.85)_100%)] z-10 pointer-events-none" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10" />
-                </>
               )}
 
               {/* Profile Info - Floated at the bottom-left */}
