@@ -137,7 +137,7 @@ export default async function TeachersPage({
               key={teacher.id}
               className={`w-full h-[300px] border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer select-none flex flex-col justify-end relative group ${
                 isAthasart
-                  ? "bg-gradient-to-b from-[#fbc6a9] to-[#e06e30] dark:bg-black dark:bg-none hover:shadow-orange-500/20 dark:hover:shadow-black/40"
+                  ? "bg-gradient-to-b from-[#fbc6a9] to-[#e06e30] dark:from-[#ff7b30] dark:to-[#9c3100] hover:shadow-orange-500/20"
                   : "bg-black hover:shadow-black/20 dark:hover:shadow-black/40"
               }`}
             >
@@ -153,14 +153,13 @@ export default async function TeachersPage({
                   {initials}
                 </div>
               )}
-              {/* Vignette Overlay (cinematic darkened edges) */}
-              <div className={`absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_20%,rgba(0,0,0,0.85)_100%)] z-10 pointer-events-none ${
-                isAthasart ? "hidden dark:block" : "block"
-              }`} />
-              {/* Premium Dark Gradient Overlay at the bottom for readability */}
-              <div className={`absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10 ${
-                isAthasart ? "hidden dark:block" : "block"
-              }`} />
+              {/* Vignette & Gradient Overlays (Skip for Athasart) */}
+              {!isAthasart && (
+                <>
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_20%,rgba(0,0,0,0.85)_100%)] z-10 pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10" />
+                </>
+              )}
 
               {/* Profile Info - Floated at the bottom-left */}
               <div className="p-6 flex flex-col gap-3 z-20 text-left w-full">
