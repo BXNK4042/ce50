@@ -134,6 +134,13 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                       className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
+                  {teacher.id === 4 && (
+                    <img
+                      src="/image/silar1.webp?v=8"
+                      alt={`${name} alternative`}
+                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
+                    />
+                  )}
                 </div>
               ) : (
                 <div className="absolute inset-0 w-full h-full bg-zinc-900 flex items-center justify-center text-white text-3xl font-bold z-10">
