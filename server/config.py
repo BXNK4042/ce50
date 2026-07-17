@@ -11,3 +11,8 @@ CORS_ORIGINS = [
 ]
 ADMIN_SECRET = os.getenv("ADMIN_SECRET", "change-me")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+
+# JWT Configurations for Authentication
+JWT_SECRET = os.getenv("JWT_SECRET", "super-secret-key-change-me")
+JWT_ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
