@@ -78,7 +78,7 @@ export default async function TeachersPage({
   });
 
   return (
-    <section className="w-full px-8 py-12">
+    <section className="w-full px-4 py-12">
       <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-zinc-900 dark:text-white">
         {isTh ? (
           <>
@@ -110,7 +110,7 @@ export default async function TeachersPage({
       </h1>
 
       {/* Teachers Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-5xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 w-full max-w-none">
         {teachers.map((teacher) => {
           const name = isTh ? teacher.name_th : (teacher.name_en || teacher.name_th);
           const initials = teacher.name_en
