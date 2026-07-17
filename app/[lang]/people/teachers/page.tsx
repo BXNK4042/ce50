@@ -164,37 +164,23 @@ export default async function TeachersPage({
               {/* Profile Info - Floated at the bottom-left */}
               <div className="p-6 flex flex-col gap-3 z-20 text-left w-full">
                 <div>
-                  <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold rounded-md uppercase tracking-wider select-none ${
-                    isAthasart
-                      ? "bg-black/10 text-zinc-950 border border-black/10 dark:bg-white/10 dark:backdrop-blur-md dark:text-white dark:border-white/20"
-                      : "bg-white/10 backdrop-blur-md text-white border border-white/20"
-                  }`}>
+                  <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-white rounded-md border border-white/20 uppercase tracking-wider select-none">
                     {isTh ? "อาจารย์ประจำสาขา" : "Faculty Member"}
                   </span>
-                  <h3 className={`text-lg font-bold mt-2 transition-colors line-clamp-1 ${
-                    isAthasart
-                      ? "text-zinc-950 dark:text-white dark:group-hover:text-sky-300"
-                      : "text-white group-hover:text-sky-300"
-                  }`}>
+                  <h3 className="text-lg font-bold text-white mt-2 group-hover:text-sky-300 transition-colors line-clamp-1">
                     {name}
                   </h3>
                   {teacher.advise_years && teacher.advise_years.length > 0 && (
-                    <p className={`text-xs mt-1 font-medium ${
-                      isAthasart ? "text-zinc-800 dark:text-white/60" : "text-white/60"
-                    }`}>
+                    <p className="text-xs text-white/60 mt-1 font-medium">
                       {isTh ? "ชั้นปีที่ดูแล: " : "Advise: "}
                       {teacher.advise_years.map((y: string) => `${isTh ? "ปี " : "Year "}${y}`).join(", ")}
                     </p>
                   )}
                 </div>
                 {teacher.contact && (
-                  <div className={`text-xs mt-1 border-t pt-3 flex items-center justify-between ${
-                    isAthasart 
-                      ? "border-black/10 text-zinc-800 dark:border-white/10 dark:text-white/70" 
-                      : "border-white/10 text-white/70"
-                  }`}>
+                  <div className="text-xs text-white/70 mt-1 border-t border-white/10 pt-3 flex items-center justify-between">
                     <span className="truncate">{teacher.contact}</span>
-                    <span className={`${isAthasart ? "text-zinc-950 dark:text-white" : "text-white"} group-hover:translate-x-1 transition-transform`}>→</span>
+                    <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
                   </div>
                 )}
               </div>
