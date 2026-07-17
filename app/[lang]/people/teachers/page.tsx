@@ -167,15 +167,11 @@ export default async function TeachersPage({
                   <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-white rounded-md border border-white/20 uppercase tracking-wider select-none">
                     {isTh ? "อาจารย์ประจำสาขา" : "Faculty Member"}
                   </span>
-                  <h3 className={`text-lg font-bold text-white mt-2 group-hover:text-sky-300 transition-colors line-clamp-1 ${
-                    isAthasart ? "drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.6)]" : ""
-                  }`}>
+                  <h3 className="text-lg font-bold text-white mt-2 group-hover:text-sky-300 transition-colors line-clamp-1">
                     {name}
                   </h3>
                   {teacher.advise_years && teacher.advise_years.length > 0 && (
-                    <p className={`text-xs text-white/60 mt-1 font-medium ${
-                      isAthasart ? "drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]" : ""
-                    }`}>
+                    <p className="text-xs text-white/60 mt-1 font-medium">
                       {isTh ? "ชั้นปีที่ดูแล: " : "Advise: "}
                       {teacher.advise_years.map((y: string) => `${isTh ? "ปี " : "Year "}${y}`).join(", ")}
                     </p>
@@ -183,12 +179,8 @@ export default async function TeachersPage({
                 </div>
                 {teacher.contact && (
                   <div className="text-xs text-white/70 mt-1 border-t border-white/10 pt-3 flex items-center justify-between">
-                    <span className={`truncate ${
-                      isAthasart ? "drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]" : ""
-                    }`}>{teacher.contact}</span>
-                    <span className={`text-white group-hover:translate-x-1 transition-transform ${
-                      isAthasart ? "drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]" : ""
-                    }`}>→</span>
+                    <span className="truncate">{teacher.contact}</span>
+                    <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
                   </div>
                 )}
               </div>
