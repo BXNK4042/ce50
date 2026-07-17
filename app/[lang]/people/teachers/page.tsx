@@ -130,7 +130,7 @@ export default async function TeachersPage({
               {/* Full Background Portrait Image */}
               {teacher.photo ? (
                 <img
-                  src={`${teacher.photo}?v=2`}
+                  src={`${teacher.photo}?v=3`}
                   alt={name}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
                 />
