@@ -24,7 +24,7 @@ def get_current_admin(token: str = Depends(oauth2_scheme)) -> dict:
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("SELECT id, username, role, year FROM admins WHERE username = ?", (username,))
+    cursor.execute("SELECT id, username, role, year FROM users WHERE username = ?", (username,))
     admin = cursor.fetchone()
     conn.close()
     

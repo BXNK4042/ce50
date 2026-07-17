@@ -1,0 +1,12 @@
+import { NextResponse } from "next/server";
+
+export async function POST() {
+  const res = NextResponse.json({ success: true });
+
+  // Clear cookies
+  res.cookies.delete("admin_token");
+  res.cookies.delete("admin_role");
+  res.cookies.delete("admin_year");
+
+  return res;
+}

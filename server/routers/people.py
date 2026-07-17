@@ -1,14 +1,12 @@
 from fastapi import APIRouter, Query
-import sqlite3
-from config import DB_PATH
+from db import get_db
 
 router = APIRouter(prefix="/people", tags=["people"])
 
 
 @router.get("/teachers")
 def list_teachers():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
+    conn = get_db()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM teachers ORDER BY id ASC")
     teachers = [dict(row) for row in cursor.fetchall()]
@@ -18,8 +16,7 @@ def list_teachers():
 
 @router.get("/students")
 def list_students(year: int = Query(None)):
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
+    conn = get_db()
     cursor = conn.cursor()
     if year is not None:
         cursor.execute("SELECT * FROM students WHERE year = ? ORDER BY student_id ASC", (year,))
