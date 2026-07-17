@@ -110,7 +110,7 @@ export default async function TeachersPage({
       </h1>
 
       {/* Teachers Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-[1032px] mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-[782px] mx-auto">
         {teachers.map((teacher) => {
           const name = isTh ? teacher.name_th : (teacher.name_en || teacher.name_th);
           const initials = teacher.name_en
@@ -125,7 +125,7 @@ export default async function TeachersPage({
           return (
             <div
               key={teacher.id}
-              className="w-full h-[400px] bg-black border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group"
+              className="w-full h-[300px] bg-black border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group"
             >
               {/* Full Background Portrait Image */}
               {teacher.photo ? (
