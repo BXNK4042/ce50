@@ -1,9 +1,13 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends, UploadFile, File
 import urllib.request
 import json
 from urllib.parse import quote
 from datetime import datetime, timezone
+import uuid
+import shutil
 from db import get_db
+from dependencies import get_current_admin, check_admin_auth
+from config import UPLOAD_DIR
 
 router = APIRouter(prefix="/news", tags=["news"])
 
@@ -144,3 +148,144 @@ def sync_gnews(apikey: str | None = None, query: str | None = None):
             status_code=500,
             detail=f"Sync failed: {str(e)}"
         )
+
+
+# --- CRUD APIs for Internal News Management ---
+from pydantic import BaseModel
+
+class NewsCreate(BaseModel):
+    title: str
+    category: str
+    body: str | None = None
+    link: str | None = None
+    image: str | None = None
+    published_at: str | None = None
+
+class NewsUpdate(BaseModel):
+    title: str | None = None
+    category: str | None = None
+    body: str | None = None
+    link: str | None = None
+    image: str | None = None
+    published_at: str | None = None
+
+
+@router.post("/")
+def create_news(payload: NewsCreate, admin: dict = Depends(get_current_admin)):
+    """
+    เพิ่มข่าวสารชิ้นใหม่เข้าระบบ (ต้องการสิทธิ์ แอดมิน)
+    """
+    check_admin_auth(admin, min_role="writer")
+
+    if payload.category not in ["competition", "scholarship", "other"]:
+        raise HTTPException(status_code=400, detail="Invalid category")
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    pub_at = payload.published_at or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    try:
+        cursor.execute(
+            "INSERT INTO news_items (title, category, body, link, image, published_at) VALUES (?, ?, ?, ?, ?, ?)",
+            (payload.title, payload.category, payload.body, payload.link, payload.image, pub_at)
+        )
+        conn.commit()
+        new_id = cursor.lastrowid
+        conn.close()
+        return {"status": "success", "id": new_id}
+    except Exception as e:
+        conn.close()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/{id}")
+def update_news(id: int, payload: NewsUpdate, admin: dict = Depends(get_current_admin)):
+    """
+    แก้ไขข่าวสารเดิมตาม ID (ต้องการสิทธิ์ แอดมิน)
+    """
+    check_admin_auth(admin, min_role="writer")
+
+    if payload.category is not None and payload.category not in ["competition", "scholarship", "other"]:
+        raise HTTPException(status_code=400, detail="Invalid category")
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM news_items WHERE id = ?", (id,))
+    if not cursor.fetchone():
+        conn.close()
+        raise HTTPException(status_code=404, detail="News article not found")
+
+    update_fields = []
+    params = []
+    # แปลงเฉพาะฟิลด์ที่มีการส่งค่าเข้ามาแก้ไข
+    for key, val in payload.dict(exclude_unset=True).items():
+        update_fields.append(f"{key} = ?")
+        params.append(val)
+
+    if not update_fields:
+        conn.close()
+        return {"status": "success", "message": "No changes made"}
+
+    params.append(id)
+    query_str = f"UPDATE news_items SET {', '.join(update_fields)} WHERE id = ?"
+
+    try:
+        cursor.execute(query_str, params)
+        conn.commit()
+        conn.close()
+        return {"status": "success", "message": "News article updated successfully"}
+    except Exception as e:
+        conn.close()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/{id}")
+def delete_news(id: int, admin: dict = Depends(get_current_admin)):
+    """
+    ลบข่าวสารออกจากระบบตาม ID (ต้องการสิทธิ์ แอดมิน)
+    """
+    check_admin_auth(admin, min_role="writer")
+
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT id FROM news_items WHERE id = ?", (id,))
+    if not cursor.fetchone():
+        conn.close()
+        raise HTTPException(status_code=404, detail="News article not found")
+
+    try:
+        cursor.execute("DELETE FROM news_items WHERE id = ?", (id,))
+        conn.commit()
+        conn.close()
+        return {"status": "success", "message": "News article deleted successfully"}
+    except Exception as e:
+        conn.close()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/upload-image")
+def upload_image(file: UploadFile = File(...), admin: dict = Depends(get_current_admin)):
+    """
+    อัปโหลดรูปภาพประกอบข่าวสารเก็บในระบบหลังบ้าน (ต้องการสิทธิ์ แอดมิน)
+    """
+    check_admin_auth(admin, min_role="writer")
+
+    ext = file.filename.split(".")[-1].lower()
+    if ext not in ["jpg", "jpeg", "png", "webp", "gif"]:
+        raise HTTPException(status_code=400, detail="Only image files are allowed")
+
+    # ตั้งชื่อไฟล์สุ่มด้วย UUID เพื่อป้องกันชื่อไฟล์ชนกัน
+    new_filename = f"{uuid.uuid4()}.{ext}"
+    dest_path = UPLOAD_DIR / new_filename
+
+    try:
+        with open(dest_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save image: {str(e)}")
+
+    # คืนค่า URL Path ที่หน้าบ้าน Next.js สามารถนำไปใช้เรียกดูได้โดยตรง
+    return {"url": f"/image/{new_filename}"}
