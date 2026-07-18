@@ -11,6 +11,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
   const [fullName, setFullName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState("writer");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +36,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
       const res = await fetch(`/${lang}/api/admin/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fullName, username, email, password }),
+        body: JSON.stringify({ fullName, username, email, password, role }),
       });
 
       if (res.ok) {
@@ -111,6 +112,22 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
           required
           className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
         />
+      </div>
+
+      {/* Role / Permission Field */}
+      <div className="flex flex-col gap-2">
+        <label className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
+          {isTh ? "สิทธิ์การเข้าถึง" : "Role / Permission"}
+        </label>
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all cursor-pointer text-sm font-medium"
+        >
+          <option value="superadmin">{isTh ? "Super Admin (ผู้ดูแลระบบสูงสุด)" : "Super Admin"}</option>
+          <option value="admin">{isTh ? "Admin (ผู้ดูแลระบบ)" : "Admin"}</option>
+          <option value="writer">{isTh ? "Writer (ผู้เขียน)" : "Writer"}</option>
+        </select>
       </div>
 
       {/* Passwords Row (Side-by-side) */}

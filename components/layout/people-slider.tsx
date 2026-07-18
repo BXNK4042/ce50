@@ -19,8 +19,8 @@ const people = [
   {
     nameTh: "ดร.รัตติกร สมบัติแก้ว",
     nameEn: "Rattikorn Sombutkaew",
-    roleTh: "รองหัวหน้าสาขาวิชา",
-    roleEn: "Deputy Head of Program",
+    roleTh: "อาจารย์ประจำสาขา",
+    roleEn: "Lecturer",
     email: "rattikorn.s@ce.ac.th",
     image: "/image/rattikorn.webp",
   },
@@ -35,16 +35,16 @@ const people = [
   {
     nameTh: "ว่าที่ร้อยตรี ศิลา ศิริมาสกุล",
     nameEn: "Silar Sirimasakul",
-    roleTh: "ผู้ช่วยศาสตราจารย์",
-    roleEn: "Assistant Professor",
+    roleTh: "อาจารย์ประจำสาขา",
+    roleEn: "Lecturer",
     email: "silar.s@ce.ac.th",
     image: "/image/silar.webp",
   },
   {
     nameTh: "อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช",
     nameEn: "Sakawkarn Piyawitwanich",
-    roleTh: "อาจารย์และนักวิจัย",
-    roleEn: "Lecturer & Researcher",
+    roleTh: "อาจารย์ประจำสาขา",
+    roleEn: "Lecturer",
     email: "sakawkarn.p@ce.ac.th",
     image: "/image/sakawkarn.webp",
   },
@@ -53,7 +53,7 @@ const people = [
     nameEn: "Jaturong Katenimit",
     roleTh: "นักวิชาการคอมพิวเตอร์",
     roleEn: "Computer Technical Officer",
-    email: "",
+    email: "jaturong.k@ce.ac.th",
     image: "/image/jaturong.webp",
   },
 ];
@@ -193,7 +193,7 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
           {duplicatedPeople.map((person, idx) => (
             <div
               key={idx}
-              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-black border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group"
+              className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-gradient-to-b from-[#a7c7f2] to-[#2b5c9e] dark:from-[#ff7b30] dark:to-[#9c3100] border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group"
             >
               {/* Full Background Portrait Image */}
               <img
@@ -201,8 +201,6 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
                 alt={lang === "th" ? person.nameTh : person.nameEn}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
               />
-              {/* Vignette Overlay (cinematic darkened edges) */}
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_20%,rgba(0,0,0,0.85)_100%)] z-10 pointer-events-none" />
               {/* Premium Dark Gradient Overlay at the bottom for readability */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10" />
 

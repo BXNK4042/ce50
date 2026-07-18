@@ -50,8 +50,8 @@ const fallbackTeachers = [
     name_th: "นายจตุรงค์ เกตุนิมิต",
     name_en: "Jaturong Katenimit",
     photo: "/image/jaturong.webp",
-    advise_years: [],
-    contact: "",
+    advise_years: ["4"],
+    contact: "jaturong.k@ce.ac.th",
   },
 ];
 

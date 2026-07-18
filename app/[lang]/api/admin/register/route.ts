@@ -7,7 +7,7 @@ export async function POST(
   try {
     const { lang } = await params;
     const body = await request.json();
-    const { username, password, email, fullName } = body;
+    const { username, password, email, fullName, role } = body;
 
     const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -21,7 +21,7 @@ export async function POST(
         password,
         email,
         fullName,
-        role: "writer", // Default role for self-registration
+        role: role || "writer",
         year: 1,        // Default year
       }),
     });

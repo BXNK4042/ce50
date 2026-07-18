@@ -18,9 +18,36 @@ export default function Navbar({
   const pathname = usePathname();
   const router = useRouter();
   const [activeLang, setActiveLang] = useState(lang);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    const checkLogin = () => {
+      const role = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("admin_role="))
+        ?.split("=")[1];
+      setIsLoggedIn(!!role);
+    };
+    checkLogin();
+  }, [pathname]);
+
+  const handleLogout = async () => {
+    try {
+      const res = await fetch(`/${lang}/api/admin/logout`, {
+        method: "POST",
+      });
+      if (res.ok) {
+        setIsLoggedIn(false);
+        router.push(`/${lang}/admin/login`);
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("Failed to logout:", err);
+    }
+  };
 
   const handleMouseEnter = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -210,7 +237,7 @@ export default function Navbar({
                       onMouseEnter={handleMouseEnter}
                       onMouseLeave={handleMouseLeave}
                     >
-                      <Link href={l.href} className="hover:underline flex items-center gap-1">
+                      <span className="flex items-center gap-1 cursor-default select-none">
                         {l.label}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +251,7 @@ export default function Navbar({
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                         </svg>
-                      </Link>
+                      </span>
                       
                       {/* Dropdown Menu with fade-in and smooth transition */}
                       <div
@@ -301,14 +328,23 @@ export default function Navbar({
           </div>
         </div>
 
-        {/* Right Section: Login Button */}
+        {/* Right Section: Login / Logout Button */}
         <div className="ml-auto flex items-center shrink-0 z-10 relative">
-          <Link
-            href={`/${lang}/admin/login`}
-            className="text-sm font-semibold hover:underline bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 w-[110px] h-9 flex items-center justify-center rounded-md transition-all duration-300 shrink-0"
-          >
-            {lang === "th" ? "เข้าสู่ระบบ" : "Login"}
-          </Link>
+          {isLoggedIn ? (
+            <button
+              onClick={handleLogout}
+              className="text-sm font-semibold hover:underline bg-red-100 hover:bg-red-200 text-red-600 dark:bg-red-950/40 dark:hover:bg-red-950/60 dark:text-red-400 w-[110px] h-9 flex items-center justify-center rounded-md transition-all duration-300 shrink-0 cursor-pointer"
+            >
+              {lang === "th" ? "ออกจากระบบ" : "Logout"}
+            </button>
+          ) : (
+            <Link
+              href={`/${lang}/admin/login`}
+              className="text-sm font-semibold hover:underline bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 w-[110px] h-9 flex items-center justify-center rounded-md transition-all duration-300 shrink-0"
+            >
+              {lang === "th" ? "เข้าสู่ระบบ" : "Login"}
+            </Link>
+          )}
         </div>
       </nav>
     </header>
