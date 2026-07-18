@@ -33,10 +33,56 @@ export default function WriterPage({ params }: WriterProps) {
   const [category, setCategory] = useState("other");
   const [body, setBody] = useState("");
   const [link, setLink] = useState("");
+  const [image, setImage] = useState("");
   
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [uploading, setUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setUploadSuccess(false);
+    setError("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+      
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("admin_token="))
+        ?.split("=")[1];
+
+      const res = await fetch(`${backendUrl}/news/upload-image`, {
+        method: "POST",
+        headers: {
+          "Authorization": token ? `Bearer ${token}` : "",
+        },
+        body: formData,
+      });
+
+      if (!res.ok) {
+        throw new Error(isTh ? "อัปโหลดไฟล์ล้มเหลว" : "Upload failed");
+      }
+
+      const data = await res.json();
+      const fullUrl = data.url.startsWith("http") ? data.url : `${backendUrl}${data.url}`;
+      setImage(fullUrl);
+      setUploadSuccess(true);
+    } catch (err: any) {
+      setError(err.message || (isTh ? "เกิดข้อผิดพลาดในการอัปโหลด" : "Upload error"));
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +90,7 @@ export default function WriterPage({ params }: WriterProps) {
     setLoading(true);
 
     try {
-      const payload = { title, category, body, link };
+      const payload = { title, category, body, link, image };
       const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
       
       // Get admin_token from document cookies
@@ -211,6 +257,81 @@ export default function WriterPage({ params }: WriterProps) {
                 placeholder="https://example.com/details"
                 className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
               />
+            </div>
+
+            {/* Image Upload & URL / Path (optional) */}
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
+                {isTh ? "รูปภาพข่าวสาร" : "News Image"}
+              </label>
+              <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center mb-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="image-file-input"
+                />
+                <label
+                  htmlFor="image-file-input"
+                  className="px-4 py-2.5 border border-dashed border-zinc-300 dark:border-zinc-700 hover:border-[#e55300] dark:hover:border-[#e55300] bg-zinc-50 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 hover:text-[#e55300] dark:hover:text-[#e55300] transition-colors text-sm font-semibold cursor-pointer text-center flex items-center justify-center gap-2"
+                >
+                  <svg
+                    className="w-5 h-5 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  </svg>
+                  {isTh ? "เลือกและอัปโหลดไฟล์..." : "Choose & Upload File..."}
+                </label>
+                
+                {uploading && (
+                  <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+                    <span className="w-4 h-4 border-2 border-[#e55300] border-t-transparent rounded-full animate-spin" />
+                    <span>{isTh ? "กำลังอัปโหลด..." : "Uploading..."}</span>
+                  </div>
+                )}
+                
+                {uploadSuccess && (
+                  <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                    ✓ {isTh ? "อัปโหลดสำเร็จ" : "Upload successful"}
+                  </span>
+                )}
+              </div>
+
+              {/* Paste URL field */}
+              <input
+                type="text"
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+                placeholder={isTh ? "หรือใส่ลิงก์รูปภาพ เช่น https://..." : "Or paste image link e.g. https://..."}
+                className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
+              />
+
+              {/* Preview image if available */}
+              {image && (
+                <div className="mt-2 relative w-40 aspect-[4/3] bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden group">
+                  <img
+                    src={image}
+                    alt="News Preview"
+                    className="w-full h-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setImage("");
+                      setUploadSuccess(false);
+                    }}
+                    className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-full bg-black/75 hover:bg-red-600 text-white transition-colors cursor-pointer text-xs"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* News Body / Content */}

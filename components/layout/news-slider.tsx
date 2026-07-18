@@ -8,6 +8,7 @@ interface NewsItem {
   category: "competition" | "scholarship" | "other" | string;
   body?: string;
   link?: string;
+  image?: string;
   published_at?: string;
 }
 
@@ -54,6 +55,40 @@ const mockNews: NewsItem[] = [
     published_at: "2026-07-12 14:00:00"
   }
 ];
+
+const getNewsImage = (item: NewsItem) => {
+  if (item.image) return item.image;
+  const title = item.title.toLowerCase();
+  
+  if (title.includes("anniversary") || title.includes("สถาปนา") || title.includes("30 ปี")) {
+    return "/image/news_anniversary.jpg";
+  }
+  if (title.includes("cyber") || title.includes("security") || title.includes("cybersecurity") || title.includes("blockchain") || title.includes("บล็อกเชน") || title.includes("ความปลอดภัยไซเบอร์")) {
+    return "/image/news_cybersecurity.jpg";
+  }
+  if (title.includes("hackathon") || title.includes("แข่ง") || title.includes("แข่งขัน") || title.includes("ประกวด")) {
+    if (title.includes("robot") || title.includes("หุ่นยนต์")) {
+      return "/image/news_robotics.jpg";
+    }
+    return "/image/news_hackathon.jpg";
+  }
+  if (title.includes("robot") || title.includes("หุ่นยนต์")) {
+    return "/image/news_robotics.jpg";
+  }
+  if (title.includes("scholarship") || title.includes("ทุน") || title.includes("ทุนการศึกษา")) {
+    return "/image/news_scholarship.jpg";
+  }
+  
+  // Category fallbacks
+  if (item.category === "competition") {
+    return "/image/news_hackathon.jpg";
+  }
+  if (item.category === "scholarship") {
+    return "/image/news_scholarship.jpg";
+  }
+  
+  return "/image/news_placeholder.jpg";
+};
 
 export default function NewsSlider({ lang, title }: NewsSliderProps) {
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -264,30 +299,37 @@ export default function NewsSlider({ lang, title }: NewsSliderProps) {
             return (
               <div
                 key={idx}
-                className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-zinc-950 dark:bg-black border border-zinc-800/80 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group"
+                className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-zinc-950 dark:bg-black border border-zinc-800/80 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/40 hover:border-zinc-700/80 cursor-pointer select-none relative group"
                 onClick={() => {
                   if (item.link) window.open(item.link, "_blank");
                 }}
               >
-                {/* Premium Dark Gradient Overlay at the bottom for readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent z-10" />
+                {/* Background image */}
+                <img
+                  src={getNewsImage(item)}
+                  alt={item.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-0"
+                />
 
-                {/* News Info - Floated at the bottom-left */}
-                <div className="p-6 flex flex-col gap-3 z-20 text-left w-full">
+                {/* Premium Dark Gradient Overlay at the bottom for readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 pointer-events-none" />
+
+                {/* News Info - Floating Card */}
+                <div className="absolute bottom-4 left-4 right-4 z-20 p-5 bg-zinc-950/85 dark:bg-black/90 backdrop-blur-md border border-zinc-800/80 rounded-xl flex flex-col gap-2.5 text-left transition-all duration-300 group-hover:-translate-y-1.5 group-hover:border-zinc-700/80 group-hover:shadow-xl group-hover:shadow-black/60">
                   <div>
-                    <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-white rounded-md border border-white/20 uppercase tracking-wider select-none">
+                    <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold rounded-md uppercase tracking-wider select-none ${catDetails.classes}`}>
                       {catDetails.label}
                     </span>
-                    <h3 className="text-lg font-bold text-white mt-3 group-hover:text-sky-300 transition-colors line-clamp-3 leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                    <h3 className="text-base font-bold text-white mt-2.5 group-hover:text-sky-300 transition-colors line-clamp-2 leading-snug drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
                       {item.title}
                     </h3>
                   </div>
                   {item.body && (
-                    <p className="text-white/70 text-xs line-clamp-4 leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                    <p className="text-white/70 text-xs line-clamp-3 leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
                       {item.body}
                     </p>
                   )}
-                  <div className="text-xs text-white/50 mt-1 border-t border-white/10 pt-3 flex items-center justify-between">
+                  <div className="text-[11px] text-white/50 mt-1 border-t border-white/10 pt-2.5 flex items-center justify-between">
                     <span>{formatDate(item.published_at)}</span>
                     <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
                   </div>

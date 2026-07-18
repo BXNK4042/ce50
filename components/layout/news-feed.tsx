@@ -8,6 +8,7 @@ interface NewsItem {
   category: "competition" | "scholarship" | "other" | string;
   body?: string;
   link?: string;
+  image?: string;
   published_at?: string;
 }
 
@@ -186,7 +187,7 @@ export default function NewsFeed({ lang, archiveTitle }: NewsFeedProps) {
           {/* Large Image */}
           <div className="w-full aspect-[16/9] overflow-hidden bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 relative group">
             <img
-              src="/image/news_placeholder.jpg?v=2"
+              src={featuredNews.image || "/image/news_placeholder.jpg?v=2"}
               alt={featuredNews.title}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
             />
@@ -231,7 +232,7 @@ export default function NewsFeed({ lang, archiveTitle }: NewsFeedProps) {
                 >
                   {/* Background image */}
                   <img
-                    src="/image/news_placeholder.jpg?v=2"
+                    src={item.image || "/image/news_placeholder.jpg?v=2"}
                     alt={item.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
                   />
@@ -291,7 +292,7 @@ export default function NewsFeed({ lang, archiveTitle }: NewsFeedProps) {
                 >
                   {/* Background image */}
                   <img
-                    src="/image/news_placeholder.jpg?v=2"
+                    src={item.image || "/image/news_placeholder.jpg?v=2"}
                     alt={item.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
                   />
