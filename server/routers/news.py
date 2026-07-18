@@ -38,14 +38,20 @@ def create_news(payload: NewsCreate):
         (payload.title, payload.category, payload.body, payload.link)
     )
     
-    # Prune oldest 'other' category items so it never exceeds 6 in the database
-    if payload.category == "other":
-        cursor.execute("SELECT COUNT(*) FROM news_items WHERE category = 'other'")
-        count = cursor.fetchone()[0]
-        if count > 6:
-            cursor.execute(
-                "DELETE FROM news_items WHERE category = 'other' AND id NOT IN (SELECT id FROM news_items WHERE category = 'other' ORDER BY id DESC LIMIT 6)"
-            )
+    # Prune oldest items per category group so each section count never exceeds 6
+    cursor.execute("SELECT COUNT(*) FROM news_items WHERE category = 'other'")
+    other_count = cursor.fetchone()[0]
+    if other_count > 6:
+        cursor.execute(
+            "DELETE FROM news_items WHERE category = 'other' AND id NOT IN (SELECT id FROM news_items WHERE category = 'other' ORDER BY id DESC LIMIT 6)"
+        )
+        
+    cursor.execute("SELECT COUNT(*) FROM news_items WHERE category IN ('competition', 'scholarship')")
+    internal_count = cursor.fetchone()[0]
+    if internal_count > 6:
+        cursor.execute(
+            "DELETE FROM news_items WHERE category IN ('competition', 'scholarship') AND id NOT IN (SELECT id FROM news_items WHERE category IN ('competition', 'scholarship') ORDER BY id DESC LIMIT 6)"
+        )
         
     conn.commit()
     conn.close()
