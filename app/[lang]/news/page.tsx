@@ -15,7 +15,7 @@ export default async function NewsPage({
   return (
     <section className="w-full px-12 md:px-16 py-12 md:py-16">
       <div className="flex flex-col gap-16">
-        {/* Section 1: Internal CE News (Vertical Feed) */}
+        {/* Section 1: Internal CE News (Vertical Feed without archive) */}
         <div className="flex flex-col gap-8">
           <div className="flex items-center justify-between select-none">
             <div className="flex items-center gap-3.5">
@@ -42,7 +42,7 @@ export default async function NewsPage({
               {isTh ? "เพิ่มข่าวสาร" : "Add News"}
             </Link>
           </div>
-          <NewsFeed lang={lang} archiveTitle={dict.news.archive} />
+          <NewsFeed lang={lang} archiveTitle={dict.news.archive} excludeArchive={true} />
         </div>
 
         {/* Section 2: Original News Section (External News) */}
@@ -50,6 +50,11 @@ export default async function NewsPage({
           <div>
             <NewsSlider lang={lang} title={dict.news.external} />
           </div>
+        </div>
+
+        {/* Section 3: Internal CE News Archive (at the very bottom) */}
+        <div className="flex flex-col gap-8">
+          <NewsFeed lang={lang} archiveTitle={dict.news.archive} onlyArchive={true} />
         </div>
       </div>
     </section>

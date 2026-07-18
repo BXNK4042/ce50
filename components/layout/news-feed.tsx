@@ -16,6 +16,8 @@ interface NewsItem {
 interface NewsFeedProps {
   lang: string;
   archiveTitle: string;
+  excludeArchive?: boolean;
+  onlyArchive?: boolean;
 }
 
 const mockNews: NewsItem[] = [
@@ -57,7 +59,7 @@ const mockNews: NewsItem[] = [
   }
 ];
 
-export default function NewsFeed({ lang, archiveTitle }: NewsFeedProps) {
+export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchive }: NewsFeedProps) {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [news, setNews] = useState<NewsItem[]>([]);
@@ -156,6 +158,96 @@ export default function NewsFeed({ lang, archiveTitle }: NewsFeedProps) {
   };
 
   if (news.length === 0) return null;
+
+  if (onlyArchive) {
+    const archiveItems = news.slice(5);
+    if (archiveItems.length === 0) return null;
+    return (
+      <div className="w-full flex flex-col gap-6">
+        <div className="flex items-center gap-3.5 select-none">
+          <span className="inline-block w-1.5 h-[0.9em] bg-blue-600 dark:bg-sky-500 rounded-full shrink-0" />
+          <h3 className="text-2xl font-bold text-blue-950 dark:text-white tracking-tight">
+            {archiveTitle}
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+          {archiveItems.map((item, idx) => {
+            const cat = getSmallCategoryDetails(item.category);
+            return (
+              <div
+                key={idx}
+                className="relative w-full h-[220px] overflow-hidden border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 hover:border-zinc-400 dark:hover:border-zinc-700 cursor-pointer select-none group flex flex-col justify-end"
+                onClick={(e) => {
+                  const isEditClick = (e.target as HTMLElement).closest(".edit-btn");
+                  if (isEditClick) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                  }
+                  if (item.link) window.open(item.link, "_blank");
+                }}
+              >
+                {/* Background image */}
+                <img
+                  src={item.image || "/image/news_placeholder.jpg?v=2"}
+                  alt={item.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                />
+
+                {/* Edit News button (Admins/Writers only) */}
+                {isLoggedIn && item.id && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(`/${lang}/news/edit/${item.id}`);
+                    }}
+                    className="edit-btn absolute top-3 right-3 z-30 p-2 bg-black/60 hover:bg-[#e55300] text-white rounded-full border border-white/20 transition-all duration-200 cursor-pointer shadow-md hover:scale-110"
+                    title={isTh ? "แก้ไขข่าวสาร" : "Edit News"}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="w-4 h-4"
+                    >
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </button>
+                )}
+
+                {/* Dark Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10" />
+
+                {/* News Info - Floated on top of the image */}
+                <div className="p-4 flex flex-col gap-2 z-20 text-left w-full">
+                  {/* Category & Date */}
+                  <div className="flex items-center justify-between text-[9px] text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                    <span className={`px-2 py-0.5 font-semibold rounded-full uppercase tracking-wider ${cat.classes}`}>
+                      {cat.label}
+                    </span>
+                    <span className="text-[10px]">{formatDate(item.published_at)}</span>
+                  </div>
+
+                  {/* Title */}
+                  <h4 className="text-xs font-bold text-white leading-snug group-hover:text-sky-300 transition-colors line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]">
+                    {item.title}
+                  </h4>
+
+                  {/* Body Snippet */}
+                  {item.body && (
+                    <p className="text-white/70 text-[10px] line-clamp-2 leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                      {item.body}
+                    </p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
 
   const featuredNews = news[0];
   const smallNewsItems = news.slice(1, 5); // next 4 items
@@ -330,7 +422,7 @@ export default function NewsFeed({ lang, archiveTitle }: NewsFeedProps) {
       </div>
 
       {/* 3. Bottom Row: Archive CE news (5 columns grid) */}
-      {news.slice(5).length > 0 && (
+      {!excludeArchive && news.slice(5).length > 0 && (
         <div className="w-full flex flex-col gap-6 mt-12 pt-12 border-t border-zinc-200 dark:border-zinc-800/80">
           <div className="flex items-center gap-3.5 select-none">
             <span className="inline-block w-1.5 h-[0.9em] bg-blue-600 dark:bg-sky-500 rounded-full shrink-0" />
