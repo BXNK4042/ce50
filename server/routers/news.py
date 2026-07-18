@@ -38,7 +38,7 @@ def sync_gnews_logic(conn, apikey: str, query: str, lang: str = "th", country: s
     ฟังก์ชันแกนหลักในการดึงข้อมูลจาก GNews และบันทึกลง SQLite พร้อมลบข้อมูลเก่า
     """
     safe_query = quote(query)
-    url = f"https://gnews.io/api/v4/search?q={safe_query}&lang={lang}&country={country}&max=25&apikey={apikey}"
+    url = f"https://gnews.io/api/v4/search?q={safe_query}&lang={lang}&country={country}&max=10&apikey={apikey}"
 
     import ssl
     context = ssl._create_unverified_context()
