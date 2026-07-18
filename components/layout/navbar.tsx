@@ -210,7 +210,7 @@ export default function Navbar({
                       onMouseEnter={handleMouseEnter}
                       onMouseLeave={handleMouseLeave}
                     >
-                      <Link href={l.href} className="hover:underline flex items-center gap-1">
+                      <span className="flex items-center gap-1 cursor-default select-none">
                         {l.label}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +224,7 @@ export default function Navbar({
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                         </svg>
-                      </Link>
+                      </span>
                       
                       {/* Dropdown Menu with fade-in and smooth transition */}
                       <div
