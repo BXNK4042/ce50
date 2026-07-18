@@ -13,6 +13,7 @@ interface NewsItem {
 
 interface NewsFeedProps {
   lang: string;
+  archiveTitle: string;
 }
 
 const mockNews: NewsItem[] = [
@@ -54,7 +55,7 @@ const mockNews: NewsItem[] = [
   }
 ];
 
-export default function NewsFeed({ lang }: NewsFeedProps) {
+export default function NewsFeed({ lang, archiveTitle }: NewsFeedProps) {
   const [news, setNews] = useState<NewsItem[]>([]);
   const isTh = lang === "th";
 
@@ -67,16 +68,16 @@ export default function NewsFeed({ lang }: NewsFeedProps) {
           const data: NewsItem[] = await res.json();
           if (data && data.length > 0) {
             const filtered = data.filter(item => item.category === "scholarship" || item.category === "competition");
-            setNews(filtered.slice(0, 6));
+            setNews(filtered); // Fetch all internal news (no slice limit)
             return;
           }
         }
       } catch (err) {
         console.error("Failed to fetch news:", err);
       }
-      // Fallback to mock data (filtered by scholarship/competition) if empty or failed
+      // Fallback to mock data
       const filteredMock = mockNews.filter(item => item.category === "scholarship" || item.category === "competition");
-      setNews(filteredMock.slice(0, 6));
+      setNews(filteredMock);
     };
 
     fetchNews();
@@ -149,120 +150,183 @@ export default function NewsFeed({ lang }: NewsFeedProps) {
   const featuredCat = getCategoryDetails(featuredNews.category);
 
   return (
-    <div className="w-full flex flex-col lg:flex-row gap-8 py-6">
-      {/* 1. Left Column: Featured News (Large) */}
-      <div className="w-full lg:w-7/12 flex flex-col gap-4">
-        {/* Title & Category & Date */}
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-3">
-            <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold rounded-full uppercase tracking-wider ${featuredCat.classes}`}>
-              {featuredCat.label}
-            </span>
-            <span className="text-xs text-zinc-400 dark:text-zinc-500">
-              {formatDate(featuredNews.published_at)}
-            </span>
-          </div>
-          {featuredNews.link ? (
-            <a
-              href={featuredNews.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-block"
-            >
-              <h3 className="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors">
+    <div className="w-full flex flex-col gap-6">
+      {/* 1 & 2: Featured Left + 2x2 Grid Right Section */}
+      <div className="w-full flex flex-col lg:flex-row gap-8 py-6">
+        {/* 1. Left Column: Featured News (Large) */}
+        <div className="w-full lg:w-7/12 flex flex-col gap-4">
+          {/* Title & Category & Date */}
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold rounded-full uppercase tracking-wider ${featuredCat.classes}`}>
+                {featuredCat.label}
+              </span>
+              <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                {formatDate(featuredNews.published_at)}
+              </span>
+            </div>
+            {featuredNews.link ? (
+              <a
+                href={featuredNews.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-block"
+              >
+                <h3 className="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors">
+                  {featuredNews.title}
+                </h3>
+              </a>
+            ) : (
+              <h3 className="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white leading-tight">
                 {featuredNews.title}
               </h3>
-            </a>
-          ) : (
-            <h3 className="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white leading-tight">
-              {featuredNews.title}
-            </h3>
+            )}
+          </div>
+
+          {/* Large Image */}
+          <div className="w-full aspect-[16/9] overflow-hidden bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 relative group">
+            <img
+              src="/image/news_placeholder.jpg?v=2"
+              alt={featuredNews.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
+            />
+            <div className="absolute inset-0 bg-black/10 dark:bg-black/20 group-hover:bg-transparent transition-all duration-300" />
+          </div>
+
+          {/* Details */}
+          {featuredNews.body && (
+            <div className="text-zinc-600 dark:text-zinc-300 text-sm md:text-base leading-relaxed whitespace-pre-line">
+              <p>{featuredNews.body}</p>
+            </div>
+          )}
+
+          {/* Read more */}
+          {featuredNews.link && (
+            <div className="mt-2">
+              <a
+                href={featuredNews.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 dark:text-sky-400 hover:text-blue-800 dark:hover:text-sky-300 transition-colors"
+              >
+                {isTh ? "อ่านเพิ่มเติม" : "Read More"}
+                <span className="text-base">→</span>
+              </a>
+            </div>
           )}
         </div>
 
-        {/* Large Image */}
-        <div className="w-full aspect-[16/9] overflow-hidden bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 relative group">
-          <img
-            src="/image/news_placeholder.jpg?v=2"
-            alt={featuredNews.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
-          />
-          <div className="absolute inset-0 bg-black/10 dark:bg-black/20 group-hover:bg-transparent transition-all duration-300" />
-        </div>
+        {/* 2. Right Column: 2x2 Grid of Small News Items */}
+        <div className="w-full lg:w-5/12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
+            {smallNewsItems.map((item, idx) => {
+              const cat = getSmallCategoryDetails(item.category);
+              return (
+                <div
+                  key={idx}
+                  className="relative w-full h-[320px] overflow-hidden border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 hover:border-zinc-400 dark:hover:border-zinc-700 cursor-pointer select-none group flex flex-col justify-end"
+                  onClick={() => {
+                    if (item.link) window.open(item.link, "_blank");
+                  }}
+                >
+                  {/* Background image */}
+                  <img
+                    src="/image/news_placeholder.jpg?v=2"
+                    alt={item.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                  />
 
-        {/* Details */}
-        {featuredNews.body && (
-          <div className="text-zinc-600 dark:text-zinc-300 text-sm md:text-base leading-relaxed whitespace-pre-line">
-            <p>{featuredNews.body}</p>
-          </div>
-        )}
+                  {/* Dark Gradient Overlay for readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10" />
 
-        {/* Read more */}
-        {featuredNews.link && (
-          <div className="mt-2">
-            <a
-              href={featuredNews.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 dark:text-sky-400 hover:text-blue-800 dark:hover:text-sky-300 transition-colors"
-            >
-              {isTh ? "อ่านเพิ่มเติม" : "Read More"}
-              <span className="text-base">→</span>
-            </a>
-          </div>
-        )}
-      </div>
+                  {/* News Info - Floated on top of the image */}
+                  <div className="p-4 flex flex-col gap-2 z-20 text-left w-full">
+                    {/* Category & Date */}
+                    <div className="flex items-center justify-between text-[9px] text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                      <span className={`px-2 py-0.5 font-semibold rounded-full uppercase tracking-wider ${cat.classes}`}>
+                        {cat.label}
+                      </span>
+                      <span className="text-[10px]">{formatDate(item.published_at)}</span>
+                    </div>
 
-      {/* 2. Right Column: 2x2 Grid of Small News Items */}
-      <div className="w-full lg:w-5/12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
-          {smallNewsItems.map((item, idx) => {
-            const cat = getSmallCategoryDetails(item.category);
-            return (
-              <div
-                key={idx}
-                className="relative w-full h-[320px] overflow-hidden border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 hover:border-zinc-400 dark:hover:border-zinc-700 cursor-pointer select-none group flex flex-col justify-end"
-                onClick={() => {
-                  if (item.link) window.open(item.link, "_blank");
-                }}
-              >
-                {/* Background image */}
-                <img
-                  src="/image/news_placeholder.jpg?v=2"
-                  alt={item.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-                />
+                    {/* Title */}
+                    <h4 className="text-sm font-bold text-white leading-snug group-hover:text-sky-300 transition-colors line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]">
+                      {item.title}
+                    </h4>
 
-                {/* Dark Gradient Overlay for readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10" />
-
-                {/* News Info - Floated on top of the image */}
-                <div className="p-4 flex flex-col gap-2 z-20 text-left w-full">
-                  {/* Category & Date */}
-                  <div className="flex items-center justify-between text-[9px] text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
-                    <span className={`px-2 py-0.5 font-semibold rounded-full uppercase tracking-wider ${cat.classes}`}>
-                      {cat.label}
-                    </span>
-                    <span className="text-[10px]">{formatDate(item.published_at)}</span>
+                    {/* Body Snippet */}
+                    {item.body && (
+                      <p className="text-white/70 text-[10px] line-clamp-2 leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                        {item.body}
+                      </p>
+                    )}
                   </div>
-
-                  {/* Title */}
-                  <h4 className="text-sm font-bold text-white leading-snug group-hover:text-sky-300 transition-colors line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]">
-                    {item.title}
-                  </h4>
-
-                  {/* Body Snippet */}
-                  {item.body && (
-                    <p className="text-white/70 text-[10px] line-clamp-2 leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
-                      {item.body}
-                    </p>
-                  )}
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
+
+      {/* 3. Bottom Row: Archive CE news (5 columns grid) */}
+      {news.slice(5).length > 0 && (
+        <div className="w-full flex flex-col gap-6 mt-12 pt-12 border-t border-zinc-200 dark:border-zinc-800/80">
+          <div className="flex items-center gap-3.5 select-none">
+            <span className="inline-block w-1.5 h-[0.9em] bg-blue-600 dark:bg-sky-500 rounded-full shrink-0" />
+            <h3 className="text-2xl font-bold text-blue-950 dark:text-white tracking-tight">
+              {archiveTitle}
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {news.slice(5).map((item, idx) => {
+              const cat = getSmallCategoryDetails(item.category);
+              return (
+                <div
+                  key={idx}
+                  className="relative w-full h-[220px] overflow-hidden border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 hover:border-zinc-400 dark:hover:border-zinc-700 cursor-pointer select-none group flex flex-col justify-end"
+                  onClick={() => {
+                    if (item.link) window.open(item.link, "_blank");
+                  }}
+                >
+                  {/* Background image */}
+                  <img
+                    src="/image/news_placeholder.jpg?v=2"
+                    alt={item.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                  />
+
+                  {/* Dark Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10" />
+
+                  {/* News Info - Floated on top of the image */}
+                  <div className="p-4 flex flex-col gap-2 z-20 text-left w-full">
+                    {/* Category & Date */}
+                    <div className="flex items-center justify-between text-[9px] text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                      <span className={`px-2 py-0.5 font-semibold rounded-full uppercase tracking-wider ${cat.classes}`}>
+                        {cat.label}
+                      </span>
+                      <span className="text-[10px]">{formatDate(item.published_at)}</span>
+                    </div>
+
+                    {/* Title */}
+                    <h4 className="text-xs font-bold text-white leading-snug group-hover:text-sky-300 transition-colors line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]">
+                      {item.title}
+                    </h4>
+
+                    {/* Body Snippet */}
+                    {item.body && (
+                      <p className="text-white/70 text-[10px] line-clamp-2 leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+                        {item.body}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

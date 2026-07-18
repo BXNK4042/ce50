@@ -46,13 +46,7 @@ def create_news(payload: NewsCreate):
             "DELETE FROM news_items WHERE category = 'other' AND id NOT IN (SELECT id FROM news_items WHERE category = 'other' ORDER BY id DESC LIMIT 6)"
         )
         
-    cursor.execute("SELECT COUNT(*) FROM news_items WHERE category IN ('competition', 'scholarship')")
-    internal_count = cursor.fetchone()[0]
-    if internal_count > 6:
-        cursor.execute(
-            "DELETE FROM news_items WHERE category IN ('competition', 'scholarship') AND id NOT IN (SELECT id FROM news_items WHERE category IN ('competition', 'scholarship') ORDER BY id DESC LIMIT 6)"
-        )
-        
+    # Prune only other category (External News) to limit it to 6 items
     conn.commit()
     conn.close()
     return {"detail": "News item created successfully"}

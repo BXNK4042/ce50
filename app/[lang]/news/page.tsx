@@ -50,7 +50,7 @@ export default async function NewsPage({
               {dict.news.internal}
             </h2>
           </div>
-          <NewsFeed lang={lang} />
+          <NewsFeed lang={lang} archiveTitle={dict.news.archive} />
         </div>
       </div>
     </section>
