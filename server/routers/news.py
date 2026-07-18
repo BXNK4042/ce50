@@ -55,6 +55,7 @@ def sync_gnews_logic(conn, apikey: str, query: str, lang: str = "th", country: s
         title = art.get("title")
         link = art.get("url")
         body = art.get("description") or art.get("content")
+        image = art.get("image")
         published_at = art.get("publishedAt")
 
         if not title or not link:
@@ -67,8 +68,8 @@ def sync_gnews_logic(conn, apikey: str, query: str, lang: str = "th", country: s
 
         # บันทึกข้อมูลข่าวสารลงฐานข้อมูล
         cursor.execute(
-            "INSERT INTO news_items (title, category, body, link, published_at) VALUES (?, 'other', ?, ?, ?)",
-            (title, body, link, published_at)
+            "INSERT INTO news_items (title, category, body, link, image, published_at) VALUES (?, 'other', ?, ?, ?, ?)",
+            (title, body, link, image, published_at)
         )
         inserted_count += 1
 

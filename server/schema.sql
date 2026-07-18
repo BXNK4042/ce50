@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS news_items (
   category TEXT NOT NULL CHECK (category IN ('competition','scholarship','other')),
   body TEXT,
   link TEXT,
+  image TEXT,
   published_at TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
