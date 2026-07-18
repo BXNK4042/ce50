@@ -218,7 +218,7 @@ export default function NewsFeed({ lang }: NewsFeedProps) {
             return (
               <div
                 key={idx}
-                className="relative w-full h-[220px] overflow-hidden border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 hover:border-zinc-400 dark:hover:border-zinc-700 cursor-pointer select-none group flex flex-col justify-end"
+                className="relative w-full h-[350px] overflow-hidden border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 hover:border-zinc-400 dark:hover:border-zinc-700 cursor-pointer select-none group flex flex-col justify-end"
                 onClick={() => {
                   if (item.link) window.open(item.link, "_blank");
                 }}
