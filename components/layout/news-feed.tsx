@@ -121,63 +121,64 @@ export default function NewsFeed({ lang }: NewsFeedProps) {
 
   if (news.length === 0) return null;
 
-  const latestItem = news[0];
-  const catDetails = getCategoryDetails(latestItem.category);
+  const featuredNews = news[0];
+  const smallNewsItems = news.slice(1, 5); // next 4 items
+  const featuredCat = getCategoryDetails(featuredNews.category);
 
   return (
-    <div className="w-full max-w-4xl mx-auto flex flex-col gap-12 py-6">
-      <article className="flex flex-col gap-4 pb-12 border-b border-zinc-200 dark:border-zinc-800 last:border-none last:pb-0">
-        {/* 1. หัวข้อข่าว (News Title) */}
+    <div className="w-full flex flex-col lg:flex-row gap-8 py-6">
+      {/* 1. Left Column: Featured News (Large) */}
+      <div className="w-full lg:w-7/12 flex flex-col gap-4">
+        {/* Title & Category & Date */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
-            <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold rounded-full uppercase tracking-wider ${catDetails.classes}`}>
-              {catDetails.label}
+            <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold rounded-full uppercase tracking-wider ${featuredCat.classes}`}>
+              {featuredCat.label}
             </span>
             <span className="text-xs text-zinc-400 dark:text-zinc-500">
-              {formatDate(latestItem.published_at)}
+              {formatDate(featuredNews.published_at)}
             </span>
           </div>
-          
-          {latestItem.link ? (
+          {featuredNews.link ? (
             <a
-              href={latestItem.link}
+              href={featuredNews.link}
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-block"
             >
               <h3 className="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors">
-                {latestItem.title}
+                {featuredNews.title}
               </h3>
             </a>
           ) : (
             <h3 className="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white leading-tight">
-              {latestItem.title}
+              {featuredNews.title}
             </h3>
           )}
         </div>
 
-        {/* 2. รูปข่าว (News Image) */}
-        <div className="w-full aspect-[21/9] md:aspect-[24/9] overflow-hidden bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 relative group">
+        {/* Large Image */}
+        <div className="w-full aspect-[16/9] overflow-hidden bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 relative group">
           <img
             src="/image/news_placeholder.jpg?v=2"
-            alt={latestItem.title}
+            alt={featuredNews.title}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
           />
           <div className="absolute inset-0 bg-black/10 dark:bg-black/20 group-hover:bg-transparent transition-all duration-300" />
         </div>
 
-        {/* 3. รายละเอียดข่าว (News Details) */}
-        {latestItem.body && (
+        {/* Details */}
+        {featuredNews.body && (
           <div className="text-zinc-600 dark:text-zinc-300 text-sm md:text-base leading-relaxed whitespace-pre-line">
-            <p>{latestItem.body}</p>
+            <p>{featuredNews.body}</p>
           </div>
         )}
 
-        {/* Read more link if applicable */}
-        {latestItem.link && (
+        {/* Read more */}
+        {featuredNews.link && (
           <div className="mt-2">
             <a
-              href={latestItem.link}
+              href={featuredNews.link}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 dark:text-sky-400 hover:text-blue-800 dark:hover:text-sky-300 transition-colors"
@@ -187,7 +188,51 @@ export default function NewsFeed({ lang }: NewsFeedProps) {
             </a>
           </div>
         )}
-      </article>
+      </div>
+
+      {/* 2. Right Column: 2x2 Grid of Small News Items */}
+      <div className="w-full lg:w-5/12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
+          {smallNewsItems.map((item, idx) => {
+            const cat = getCategoryDetails(item.category);
+            return (
+              <div
+                key={idx}
+                className="flex flex-col justify-between p-5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:border-zinc-400 dark:hover:border-zinc-700 hover:shadow-md cursor-pointer select-none group"
+                onClick={() => {
+                  if (item.link) window.open(item.link, "_blank");
+                }}
+              >
+                <div className="flex flex-col gap-3">
+                  {/* Category & Date */}
+                  <div className="flex items-center justify-between text-[9px] text-zinc-400 dark:text-zinc-500">
+                    <span className={`px-2 py-0.5 font-semibold rounded-full uppercase tracking-wider ${cat.classes}`}>
+                      {cat.label}
+                    </span>
+                    <span>{formatDate(item.published_at)}</span>
+                  </div>
+
+                  {/* Title (Small) */}
+                  <h4 className="text-sm font-bold text-zinc-900 dark:text-white leading-snug group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors line-clamp-2">
+                    {item.title}
+                  </h4>
+
+                  {/* Body Snippet */}
+                  {item.body && (
+                    <p className="text-zinc-500 dark:text-zinc-400 text-xs line-clamp-3 leading-relaxed">
+                      {item.body}
+                    </p>
+                  )}
+                </div>
+
+                <div className="mt-4 pt-2 border-t border-zinc-100 dark:border-zinc-800/40 flex items-center justify-end text-[10px] text-zinc-400 dark:text-zinc-500 font-semibold group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
