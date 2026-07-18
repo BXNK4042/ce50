@@ -80,3 +80,45 @@ def create_news(payload: NewsCreate):
     conn.commit()
     conn.close()
     return {"detail": "News item created successfully"}
+
+@router.get("/{news_id}")
+def get_news_item(news_id: int):
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM news_items WHERE id = ?", (news_id,))
+    row = cursor.fetchone()
+    conn.close()
+    if not row:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="News item not found"
+        )
+    return dict(row)
+
+@router.put("/{news_id}")
+def update_news(news_id: int, payload: NewsCreate):
+    if payload.category not in ['competition', 'scholarship', 'other']:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid category. Must be 'competition', 'scholarship', or 'other'"
+        )
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    # Check if news exists
+    cursor.execute("SELECT id FROM news_items WHERE id = ?", (news_id,))
+    if not cursor.fetchone():
+        conn.close()
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="News item not found"
+        )
+        
+    cursor.execute(
+        "UPDATE news_items SET title = ?, category = ?, body = ?, link = ?, image = ? WHERE id = ?",
+        (payload.title, payload.category, payload.body, payload.link, payload.image, news_id)
+    )
+    conn.commit()
+    conn.close()
+    return {"detail": "News item updated successfully"}

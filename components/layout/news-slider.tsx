@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface NewsItem {
   id?: number;
@@ -96,8 +97,19 @@ export default function NewsSlider({ lang, title }: NewsSliderProps) {
   const [visibleCount, setVisibleCount] = useState(3);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const isTh = lang === "th";
+
+  // Check login status on mount
+  useEffect(() => {
+    const role = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("admin_role="))
+      ?.split("=")[1];
+    setIsLoggedIn(!!role);
+  }, []);
 
   // Fetch news from DB
   useEffect(() => {
@@ -300,7 +312,13 @@ export default function NewsSlider({ lang, title }: NewsSliderProps) {
               <div
                 key={idx}
                 className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-zinc-950 dark:bg-black border border-zinc-800/80 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/40 hover:border-zinc-700/80 cursor-pointer select-none relative group"
-                onClick={() => {
+                onClick={(e) => {
+                  const isEditClick = (e.target as HTMLElement).closest(".edit-btn");
+                  if (isEditClick) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                  }
                   if (item.link) window.open(item.link, "_blank");
                 }}
               >
@@ -310,6 +328,27 @@ export default function NewsSlider({ lang, title }: NewsSliderProps) {
                   alt={item.title}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-0"
                 />
+
+                {/* Edit News button (Admins/Writers only) */}
+                {isLoggedIn && item.id && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(`/${lang}/news/edit/${item.id}`);
+                    }}
+                    className="edit-btn absolute top-3 right-3 z-30 p-2 bg-black/60 hover:bg-[#e55300] text-white rounded-full border border-white/20 transition-all duration-200 cursor-pointer shadow-md hover:scale-110"
+                    title={isTh ? "แก้ไขข่าวสาร" : "Edit News"}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="w-4 h-4"
+                    >
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </button>
+                )}
 
                 {/* Premium Dark Gradient Overlay at the bottom for readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10 pointer-events-none" />
