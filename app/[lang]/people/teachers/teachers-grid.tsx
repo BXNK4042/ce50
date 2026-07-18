@@ -116,7 +116,9 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
               <img
                 src="/CE.webp?v=8"
                 alt="CE Logo"
-                className="absolute top-4 left-4 w-48 h-auto z-20 object-contain pointer-events-none filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] contrast-[1.15] brightness-[1.05] opacity-25"
+                className={`absolute top-4 left-4 w-48 h-auto z-20 object-contain pointer-events-none filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] contrast-[1.15] brightness-[1.05] opacity-25 transition-opacity duration-500 ${
+                  teacher.id === 6 ? "group-hover:opacity-0" : ""
+                }`}
               />
 
               {/* Full Background Portrait Image */}
@@ -125,7 +127,9 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                   <img
                     src={`${teacher.photo}?v=8`}
                     alt={name}
-                    className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10"
+                    className={`absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 transition-opacity duration-500 ease-in-out ${
+                      [3, 4, 5].includes(teacher.id) ? "group-hover:opacity-0" : ""
+                    }`}
                   />
                   {teacher.id === 3 && (
                     <img
@@ -141,6 +145,20 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                       className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
+                  {teacher.id === 5 && (
+                    <img
+                      src="/image/sakawkarn1.webp?v=8"
+                      alt={`${name} alternative`}
+                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
+                    />
+                  )}
+                  {teacher.id === 6 && (
+                    <img
+                      src="/image/niyomcha.webp?v=8"
+                      alt="Niyomcha background"
+                      className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
+                    />
+                  )}
                 </div>
               ) : (
                 <div className="absolute inset-0 w-full h-full bg-zinc-900 flex items-center justify-center text-white text-3xl font-bold z-10">
@@ -149,25 +167,46 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
               )}
 
               {/* Profile Info - Floated at the bottom-left */}
-              <div className="p-6 flex flex-col gap-3 z-20 text-left w-full">
+              <div className={`p-6 flex flex-col gap-3 z-20 text-left w-full transition-transform duration-500 ease-in-out ${
+                teacher.id === 6 
+                  ? "group-hover:-translate-y-[124px]" 
+                  : ""
+              }`}>
                 <div>
-                  <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-white rounded-md border border-white/20 uppercase tracking-wider select-none">
-                    {teacher.id === 6
-                      ? (isTh ? "นักวิชาการคอมพิวเตอร์" : "Computer Technical Officer")
-                      : (isTh ? "อาจารย์ประจำสาขา" : "Faculty Member")}
+                  <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-white rounded-md border border-white/20 uppercase tracking-wider select-none transition-all duration-500 ${
+                    teacher.id === 6 ? "group-hover:text-black group-hover:bg-black/10 group-hover:border-black/20" : ""
+                  }`}>
+                    {teacher.id === 6 ? (
+                      <>
+                        <span className="group-hover:hidden">
+                          {isTh ? "นักวิชาการคอมพิวเตอร์" : "Computer Technical Officer"}
+                        </span>
+                        <span className="hidden group-hover:inline">
+                          {isTh ? 'ผู้บริหารร้าน "นิยมชา"' : 'Executive of "Niyomcha"'}
+                        </span>
+                      </>
+                    ) : (
+                      isTh ? "อาจารย์ประจำสาขา" : "Faculty Member"
+                    )}
                   </span>
-                  <h3 className="text-lg font-bold text-white mt-2 group-hover:text-sky-300 transition-colors line-clamp-1">
+                  <h3 className={`text-lg font-bold text-white mt-2 transition-colors line-clamp-1 ${
+                    teacher.id === 6 ? "group-hover:text-black" : "group-hover:text-sky-300"
+                  }`}>
                     {name}
                   </h3>
                   {teacher.advise_years && teacher.advise_years.length > 0 && (
-                    <p className="text-xs text-white/60 mt-1 font-medium">
+                    <p className={`text-xs text-white/60 mt-1 font-medium transition-all duration-500 ${
+                      teacher.id === 6 ? "group-hover:opacity-0 group-hover:pointer-events-none" : ""
+                    }`}>
                       {isTh ? "ชั้นปีที่ดูแล: " : "Advise: "}
                       {teacher.advise_years.map((y: string) => `${isTh ? "ปี " : "Year "}${y}`).join(", ")}
                     </p>
                   )}
                 </div>
                 {teacher.contact && (
-                  <div className="text-xs text-white/70 mt-1 border-t border-white/10 pt-3 flex items-center justify-between">
+                  <div className={`text-xs text-white/70 mt-1 border-t border-white/10 pt-3 flex items-center justify-between transition-all duration-500 ${
+                    teacher.id === 6 ? "group-hover:opacity-0 group-hover:pointer-events-none group-hover:border-transparent" : ""
+                  }`}>
                     <span className="truncate">{teacher.contact}</span>
                     <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
                   </div>

@@ -19,28 +19,28 @@ def main() -> None:
 
         # Seed teachers
         teachers_data = [
-            ("อาจารย์อรรถศาสตร์ นาคเทวัญ", "Athasart Narkthewan", "athasart.webp", '["1"]'),
-            ("ดร.รัตติกร สมบัติแก้ว", "Rattikorn Sombutkaew", "rattikorn.webp", '["2"]'),
-            ("อาจารย์นภัสรพี สิทธิวัจน์", "Pisakorn Sittiwatjana", "pisakorn.webp", '["3"]'),
-            ("ว่าที่ร้อยตรี ศิลา ศิริมาสกุล", "Silar Sirimasakul", "silar.webp", '["4"]'),
-            ("อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช", "Sakawkarn Piyawitwanich", "sakawkarn.webp", '["1", "2"]'),
-            ("นายจตุรงค์ เกตุนิมิต", "Jaturong Katenimit", "jaturong.webp", '[]')
+            ("อาจารย์อรรถศาสตร์ นาคเทวัญ", "Athasart Narkthewan", "athasart.webp", '["1"]', "athasart.n@ce.ac.th"),
+            ("ดร.รัตติกร สมบัติแก้ว", "Rattikorn Sombutkaew", "rattikorn.webp", '["2"]', "rattikorn.s@ce.ac.th"),
+            ("อาจารย์นภัสรพี สิทธิวัจน์", "Pisakorn Sittiwatjana", "pisakorn.webp", '["3"]', "pisakorn.s@ce.ac.th"),
+            ("ว่าที่ร้อยตรี ศิลา ศิริมาสกุล", "Silar Sirimasakul", "silar.webp", '["4"]', "silar.s@ce.ac.th"),
+            ("อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช", "Sakawkarn Piyawitwanich", "sakawkarn.webp", '["1", "2"]', "sakawkarn.p@ce.ac.th"),
+            ("นายจตุรงค์ เกตุนิมิต", "Jaturong Katenimit", "jaturong.webp", '["4"]', "jaturong.k@ce.ac.th")
         ]
 
-        for name_th, name_en, photo_filename, advise_years in teachers_data:
+        for name_th, name_en, photo_filename, advise_years, contact in teachers_data:
             photo_path = f"/image/{photo_filename}"
             cursor = conn.cursor()
             cursor.execute("SELECT id FROM teachers WHERE name_th = ?", (name_th,))
             row = cursor.fetchone()
             if row:
                 cursor.execute(
-                    "UPDATE teachers SET name_en = ?, photo = ?, advise_years = ? WHERE id = ?",
-                    (name_en, photo_path, advise_years, row[0])
+                    "UPDATE teachers SET name_en = ?, photo = ?, advise_years = ?, contact = ? WHERE id = ?",
+                    (name_en, photo_path, advise_years, contact, row[0])
                 )
             else:
                 cursor.execute(
-                    "INSERT INTO teachers (name_th, name_en, photo, advise_years) VALUES (?, ?, ?, ?)",
-                    (name_th, name_en, photo_path, advise_years)
+                    "INSERT INTO teachers (name_th, name_en, photo, advise_years, contact) VALUES (?, ?, ?, ?, ?)",
+                    (name_th, name_en, photo_path, advise_years, contact)
                 )
 
         # Seed students
