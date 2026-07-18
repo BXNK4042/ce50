@@ -17,13 +17,16 @@ if (!(Test-Path "$ProjectRoot\node_modules")) {
     Write-Host "[WARNING] node_modules folder is missing. You might need to run: npm install" -ForegroundColor Yellow
 }
 
-# Locate Python Virtual Environment and Uvicorn
-$VenvUvicorn = "$ProjectRoot\.venv\Scripts\uvicorn.exe"
+# Locate Python Virtual Environment
+$VenvPython = "$ProjectRoot\.venv\Scripts\python.exe"
+if (!(Test-Path $VenvPython)) {
+    $VenvPython = "$ProjectRoot\.venv\bin\python.exe"
+}
 $BackendCmd = ""
 
-if (Test-Path $VenvUvicorn) {
+if (Test-Path $VenvPython) {
     Write-Host "[2/3] Found Python virtual environment at .venv." -ForegroundColor Cyan
-    $BackendCmd = ".venv\Scripts\uvicorn main:app --reload --app-dir server"
+    $BackendCmd = "`"$VenvPython`" -m uvicorn main:app --reload --app-dir server"
 } else {
     Write-Host "[2/3] Virtual environment not found at .venv. Will fall back to global uvicorn." -ForegroundColor Yellow
     $BackendCmd = "uvicorn main:app --reload --app-dir server"

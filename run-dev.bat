@@ -23,13 +23,15 @@ if not exist "%PROJECT_ROOT%\node_modules" (
     echo [WARNING] node_modules folder is missing. You might need to run: npm install
 )
 
-:: Locate Python Virtual Environment and Uvicorn
-set "VENV_UVICORN=%PROJECT_ROOT%\.venv\Scripts\uvicorn.exe"
-set "BACKEND_CMD="
+:: Locate Python Virtual Environment
+set "VENV_PYTHON=.venv\Scripts\python.exe"
+if not exist "%PROJECT_ROOT%\.venv\Scripts\python.exe" (
+    set "VENV_PYTHON=.venv\bin\python.exe"
+)
 
-if exist "%VENV_UVICORN%" (
+if exist "%PROJECT_ROOT%\!VENV_PYTHON!" (
     echo [2/3] Found Python virtual environment at .venv.
-    set "BACKEND_CMD=.venv\Scripts\uvicorn main:app --reload --app-dir server"
+    set "BACKEND_CMD=!VENV_PYTHON! -m uvicorn main:app --reload --app-dir server"
 ) else (
     echo [2/3] Virtual environment not found at .venv. Will fall back to global uvicorn.
     set "BACKEND_CMD=uvicorn main:app --reload --app-dir server"

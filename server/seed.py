@@ -1,10 +1,32 @@
 # Dev sample data. Run: python seed.py  (after `python db.py`)
 from pathlib import Path
 from db import db_cursor
+from auth_utils import hash_password
 
 
 def main() -> None:
     with db_cursor() as conn:
+        # Seed users
+        users_data = [
+            ("superadmin", hash_password("super1234"), "superadmin@ce.ac.th", "Super Admin", "superadmin", 0),
+            ("admin_y1", hash_password("admin1234"), "admin_y1@ce.ac.th", "Admin Year 1", "admin", 1),
+            ("writer_y1", hash_password("writer1234"), "writer_y1@ce.ac.th", "Writer Year 1", "writer", 1),
+        ]
+        for username, password_hash, email, full_name, role, year in users_data:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
+            row = cursor.fetchone()
+            if row:
+                cursor.execute(
+                    "UPDATE users SET password_hash = ?, email = ?, full_name = ?, role = ?, year = ? WHERE id = ?",
+                    (password_hash, email, full_name, role, year, row[0])
+                )
+            else:
+                cursor.execute(
+                    "INSERT INTO users (username, password_hash, email, full_name, role, year) VALUES (?, ?, ?, ?, ?, ?)",
+                    (username, password_hash, email, full_name, role, year)
+                )
+
         # Seed rooms
         conn.executemany(
             "INSERT OR IGNORE INTO rooms(name, description) VALUES (?,?)",
