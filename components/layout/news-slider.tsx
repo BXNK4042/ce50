@@ -71,17 +71,19 @@ export default function NewsSlider({ lang, title }: NewsSliderProps) {
         const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
         const res = await fetch(`${backendUrl}/news`);
         if (res.ok) {
-          const data = await res.json();
+          const data: NewsItem[] = await res.json();
           if (data && data.length > 0) {
-            setNews(data.slice(0, 6));
+            const filtered = data.filter(item => item.category === "other");
+            setNews(filtered.slice(0, 6));
             return;
           }
         }
       } catch (err) {
         console.error("Failed to fetch news:", err);
       }
-      // Fallback to mock data if empty or failed
-      setNews(mockNews);
+      // Fallback to mock data (filtered by 'other') if empty or failed
+      const filteredMock = mockNews.filter(item => item.category === "other");
+      setNews(filteredMock.slice(0, 6));
     };
 
     fetchNews();
