@@ -119,78 +119,75 @@ export default function NewsFeed({ lang }: NewsFeedProps) {
     }
   };
 
+  if (news.length === 0) return null;
+
+  const latestItem = news[0];
+  const catDetails = getCategoryDetails(latestItem.category);
+
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-12 py-6">
-      {news.map((item, idx) => {
-        const catDetails = getCategoryDetails(item.category);
-        return (
-          <article
-            key={idx}
-            className="flex flex-col gap-4 pb-12 border-b border-zinc-200 dark:border-zinc-800 last:border-none last:pb-0"
-          >
-            {/* 1. หัวข้อข่าว (News Title) */}
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-3">
-                <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold rounded-full uppercase tracking-wider ${catDetails.classes}`}>
-                  {catDetails.label}
-                </span>
-                <span className="text-xs text-zinc-400 dark:text-zinc-500">
-                  {formatDate(item.published_at)}
-                </span>
-              </div>
-              
-              {item.link ? (
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-block"
-                >
-                  <h3 className="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors">
-                    {item.title}
-                  </h3>
-                </a>
-              ) : (
-                <h3 className="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white leading-tight">
-                  {item.title}
-                </h3>
-              )}
-            </div>
+      <article className="flex flex-col gap-4 pb-12 border-b border-zinc-200 dark:border-zinc-800 last:border-none last:pb-0">
+        {/* 1. หัวข้อข่าว (News Title) */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-3">
+            <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold rounded-full uppercase tracking-wider ${catDetails.classes}`}>
+              {catDetails.label}
+            </span>
+            <span className="text-xs text-zinc-400 dark:text-zinc-500">
+              {formatDate(latestItem.published_at)}
+            </span>
+          </div>
+          
+          {latestItem.link ? (
+            <a
+              href={latestItem.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-block"
+            >
+              <h3 className="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors">
+                {latestItem.title}
+              </h3>
+            </a>
+          ) : (
+            <h3 className="text-xl md:text-2xl font-extrabold text-zinc-900 dark:text-white leading-tight">
+              {latestItem.title}
+            </h3>
+          )}
+        </div>
 
-            {/* 2. รูปข่าว (News Image) */}
-            <div className="w-full aspect-[21/9] md:aspect-[24/9] overflow-hidden bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 relative group">
-              <img
-                src="/image/news_placeholder.jpg?v=2"
-                alt={item.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
-              />
-              <div className="absolute inset-0 bg-black/10 dark:bg-black/20 group-hover:bg-transparent transition-all duration-300" />
-            </div>
+        {/* 2. รูปข่าว (News Image) */}
+        <div className="w-full aspect-[21/9] md:aspect-[24/9] overflow-hidden bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 relative group">
+          <img
+            src="/image/news_placeholder.jpg?v=2"
+            alt={latestItem.title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
+          />
+          <div className="absolute inset-0 bg-black/10 dark:bg-black/20 group-hover:bg-transparent transition-all duration-300" />
+        </div>
 
-            {/* 3. รายละเอียดข่าว (News Details) */}
-            {item.body && (
-              <div className="text-zinc-600 dark:text-zinc-300 text-sm md:text-base leading-relaxed whitespace-pre-line">
-                <p>{item.body}</p>
-              </div>
-            )}
+        {/* 3. รายละเอียดข่าว (News Details) */}
+        {latestItem.body && (
+          <div className="text-zinc-600 dark:text-zinc-300 text-sm md:text-base leading-relaxed whitespace-pre-line">
+            <p>{latestItem.body}</p>
+          </div>
+        )}
 
-            {/* Read more link if applicable */}
-            {item.link && (
-              <div className="mt-2">
-                <a
-                  href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 dark:text-sky-400 hover:text-blue-800 dark:hover:text-sky-300 transition-colors"
-                >
-                  {isTh ? "อ่านเพิ่มเติม" : "Read More"}
-                  <span className="text-base">→</span>
-                </a>
-              </div>
-            )}
-          </article>
-        );
-      })}
+        {/* Read more link if applicable */}
+        {latestItem.link && (
+          <div className="mt-2">
+            <a
+              href={latestItem.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 dark:text-sky-400 hover:text-blue-800 dark:hover:text-sky-300 transition-colors"
+            >
+              {isTh ? "อ่านเพิ่มเติม" : "Read More"}
+              <span className="text-base">→</span>
+            </a>
+          </div>
+        )}
+      </article>
     </div>
   );
 }
