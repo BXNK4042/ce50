@@ -66,7 +66,7 @@ export default function NewsFeed({ lang }: NewsFeedProps) {
         if (res.ok) {
           const data = await res.json();
           if (data && data.length > 0) {
-            setNews(data);
+            setNews(data.slice(0, 6));
             return;
           }
         }

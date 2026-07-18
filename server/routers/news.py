@@ -37,6 +37,15 @@ def create_news(payload: NewsCreate):
         "INSERT INTO news_items (title, category, body, link, published_at) VALUES (?, ?, ?, ?, datetime('now', 'localtime'))",
         (payload.title, payload.category, payload.body, payload.link)
     )
+    
+    # Prune oldest items so database count never exceeds 6
+    cursor.execute("SELECT COUNT(*) FROM news_items")
+    count = cursor.fetchone()[0]
+    if count > 6:
+        cursor.execute(
+            "DELETE FROM news_items WHERE id NOT IN (SELECT id FROM news_items ORDER BY id DESC LIMIT 6)"
+        )
+        
     conn.commit()
     conn.close()
     return {"detail": "News item created successfully"}
