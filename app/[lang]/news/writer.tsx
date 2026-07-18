@@ -47,20 +47,40 @@ export default function WriterPage({ params }: WriterProps) {
       const payload = { title, category, body, link };
       const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
       
+      // Get admin_token from document cookies
+      const token = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("admin_token="))
+        ?.split("=")[1];
+
       const res = await fetch(`${backendUrl}/news/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": token ? `Bearer ${token}` : "",
         },
         body: JSON.stringify(payload),
       }).catch(() => null);
+
+      if (!res) {
+        throw new Error("connection_failed");
+      }
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.detail || "failed_to_save");
+      }
 
       setSuccess(true);
       setTimeout(() => {
         router.push(`/${lang}/news`);
       }, 3000);
-    } catch (err) {
-      setError(isTh ? "เกิดข้อผิดพลาดในการเชื่อมต่อ" : "Connection error");
+    } catch (err: any) {
+      if (err.message === "connection_failed") {
+        setError(isTh ? "เกิดข้อผิดพลาดในการเชื่อมต่อ" : "Connection error");
+      } else {
+        setError(isTh ? `ไม่สามารถบันทึกข้อมูลได้: ${err.message}` : `Failed to save: ${err.message}`);
+      }
     } finally {
       setLoading(false);
     }
