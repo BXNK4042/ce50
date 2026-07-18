@@ -40,8 +40,11 @@ def sync_gnews_logic(conn, apikey: str, query: str, lang: str = "th", country: s
     safe_query = quote(query)
     url = f"https://gnews.io/api/v4/search?q={safe_query}&lang={lang}&country={country}&max=10&apikey={apikey}"
 
+    import ssl
+    context = ssl._create_unverified_context()
+
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req, timeout=10) as response:
+    with urllib.request.urlopen(req, timeout=10, context=context) as response:
         res_data = json.loads(response.read().decode("utf-8"))
 
     articles = res_data.get("articles", [])
