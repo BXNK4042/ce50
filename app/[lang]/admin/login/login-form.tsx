@@ -13,6 +13,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +28,10 @@ export default function LoginForm({ lang }: LoginFormProps) {
       });
 
       if (res.ok) {
-        window.location.href = `/${lang}/admin/news`;
+        setShowSuccess(true);
+        setTimeout(() => {
+          window.location.href = `/${lang}`;
+        }, 3000);
       } else {
         setError(isTh ? "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" : "Invalid username or password");
       }
@@ -40,6 +44,28 @@ export default function LoginForm({ lang }: LoginFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      {showSuccess && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center">
+          <div className="bg-emerald-100 dark:bg-emerald-950/90 border border-emerald-500 text-emerald-700 dark:text-emerald-300 font-semibold px-6 py-3 rounded-none shadow-2xl flex items-center gap-3 backdrop-blur-md">
+            <svg
+              className="w-5 h-5 text-emerald-600 dark:text-emerald-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2.5"
+                d="M5 13l4 4L19 7"
+              ></path>
+            </svg>
+            <span>{isTh ? "ล็อกอินสำเร็จ" : "Login successful"}</span>
+          </div>
+        </div>
+      )}
+
       {error && (
         <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-none text-sm text-center">
           {error}
