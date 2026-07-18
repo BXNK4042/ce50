@@ -119,6 +119,26 @@ export default function NewsFeed({ lang }: NewsFeedProps) {
     }
   };
 
+  const getSmallCategoryDetails = (cat: string) => {
+    switch (cat.toLowerCase()) {
+      case "competition":
+        return {
+          label: isTh ? "การแข่งขัน" : "Competition",
+          classes: "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 backdrop-blur-md"
+        };
+      case "scholarship":
+        return {
+          label: isTh ? "ทุนการศึกษา" : "Scholarship",
+          classes: "bg-purple-500/20 text-purple-300 border border-purple-500/30 backdrop-blur-md"
+        };
+      default:
+        return {
+          label: isTh ? "ข่าวประชาสัมพันธ์" : "Announcement",
+          classes: "bg-sky-500/20 text-sky-300 border border-sky-500/30 backdrop-blur-md"
+        };
+    }
+  };
+
   if (news.length === 0) return null;
 
   const featuredNews = news[0];
@@ -194,39 +214,46 @@ export default function NewsFeed({ lang }: NewsFeedProps) {
       <div className="w-full lg:w-5/12">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
           {smallNewsItems.map((item, idx) => {
-            const cat = getCategoryDetails(item.category);
+            const cat = getSmallCategoryDetails(item.category);
             return (
               <div
                 key={idx}
-                className="flex flex-col justify-between p-5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:border-zinc-400 dark:hover:border-zinc-700 hover:shadow-md cursor-pointer select-none group"
+                className="relative w-full h-[200px] overflow-hidden border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 hover:border-zinc-400 dark:hover:border-zinc-700 cursor-pointer select-none group flex flex-col justify-end"
                 onClick={() => {
                   if (item.link) window.open(item.link, "_blank");
                 }}
               >
-                <div className="flex flex-col gap-3">
+                {/* Background image */}
+                <img
+                  src="/image/news_placeholder.jpg?v=2"
+                  alt={item.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                />
+
+                {/* Dark Gradient Overlay for readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10" />
+
+                {/* News Info - Floated on top of the image */}
+                <div className="p-4 flex flex-col gap-2 z-20 text-left w-full">
                   {/* Category & Date */}
-                  <div className="flex items-center justify-between text-[9px] text-zinc-400 dark:text-zinc-500">
+                  <div className="flex items-center justify-between text-[9px] text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
                     <span className={`px-2 py-0.5 font-semibold rounded-full uppercase tracking-wider ${cat.classes}`}>
                       {cat.label}
                     </span>
-                    <span>{formatDate(item.published_at)}</span>
+                    <span className="text-[10px]">{formatDate(item.published_at)}</span>
                   </div>
 
-                  {/* Title (Small) */}
-                  <h4 className="text-sm font-bold text-zinc-900 dark:text-white leading-snug group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors line-clamp-2">
+                  {/* Title */}
+                  <h4 className="text-sm font-bold text-white leading-snug group-hover:text-sky-300 transition-colors line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]">
                     {item.title}
                   </h4>
 
                   {/* Body Snippet */}
                   {item.body && (
-                    <p className="text-zinc-500 dark:text-zinc-400 text-xs line-clamp-3 leading-relaxed">
+                    <p className="text-white/70 text-[10px] line-clamp-2 leading-relaxed drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
                       {item.body}
                     </p>
                   )}
-                </div>
-
-                <div className="mt-4 pt-2 border-t border-zinc-100 dark:border-zinc-800/40 flex items-center justify-end text-[10px] text-zinc-400 dark:text-zinc-500 font-semibold group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">
-                  <span className="group-hover:translate-x-1 transition-transform">→</span>
                 </div>
               </div>
             );
