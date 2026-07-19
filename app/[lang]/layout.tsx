@@ -38,6 +38,9 @@ export default async function LangLayout({
   const cookieStore = await cookies();
   const theme = cookieStore.get("theme")?.value || "dark";
 
+  const videoFileName = lang === "th" ? "Footage_CE04_remake.mp4" : "Footage_CE04.mp4";
+  const videoSrc = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/Video/${videoFileName}`;
+
   return (
     <html
       lang={lang}
@@ -48,7 +51,7 @@ export default async function LangLayout({
         <ThemeScript />
       </head>
       <body className="min-h-full flex flex-col transition-colors duration-300">
-        <HomeBackgroundVideo src={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/Video/Footage_CE04.mp4`} />
+        <HomeBackgroundVideo src={videoSrc} />
         <Navbar lang={lang} dict={dict} initialTheme={theme as "light" | "dark"} />
         <main className="flex-1 relative z-10">{children}</main>
         <Footer lang={lang} />

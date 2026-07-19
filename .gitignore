@@ -57,3 +57,6 @@ next-env.d.ts
 *.db-shm
 *.db-wal
 *.db-journal
+
+# video backups
+server/Video/*_original.mp4

@@ -15,7 +15,6 @@ export default function HomeBackgroundVideo({ src }: { src: string }) {
     if (!video) {
       video = document.createElement("video");
       video.id = "global-hero-video";
-      video.src = src;
       video.autoplay = true;
       video.loop = true;
       video.muted = true;
@@ -27,11 +26,18 @@ export default function HomeBackgroundVideo({ src }: { src: string }) {
       video.style.opacity = "0";
       
       document.body.appendChild(video);
+    }
 
-      // Attempt to play the video immediately
-      video.play().catch((err) => {
-        console.warn("Autoplay was prevented by browser:", err);
-      });
+    // Update src if it has changed
+    const absoluteSrc = new URL(src, window.location.href).href;
+    if (video.src !== absoluteSrc) {
+      video.src = src;
+      video.load();
+      if (isHome) {
+        video.play().catch((err) => {
+          console.warn("Video play was prevented:", err);
+        });
+      }
     }
 
     if (isHome) {
