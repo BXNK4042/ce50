@@ -98,6 +98,318 @@ const DEFAULT_EXAMS: ExamItem[] = [
   },
 ];
 
+interface ClassItem {
+  code: string;
+  nameEn: string;
+  nameTh: string;
+  room?: string;
+  instructorEn?: string;
+  instructorTh?: string;
+  descriptionEn?: string;
+  descriptionTh?: string;
+}
+
+interface WeeklyClassRow {
+  time: string;
+  monday: ClassItem | null;
+  tuesday: ClassItem | null;
+  wednesday: ClassItem | null;
+  thursday: ClassItem | null;
+  friday: ClassItem | null;
+  saturday: ClassItem | null;
+}
+
+const DEFAULT_CLASSES: WeeklyClassRow[] = [
+  {
+    time: "09:00 - 10:00",
+    monday: {
+      code: "CPE 321",
+      nameEn: "Database Systems",
+      nameTh: "ระบบฐานข้อมูล",
+      room: "CPE-401",
+      instructorEn: "Dr. Sarah Johnson",
+      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
+      descriptionEn: "Introduction to database management systems. Topics include relational database design, query languages (SQL), database storage and indexing, transaction management, concurrency control, and database administration.",
+      descriptionTh: "สถาปัตยกรรมระบบจัดการฐานข้อมูล แบบจำลองข้อมูลความสัมพันธ์ ภาษาคิวรีมาตรฐาน (SQL) การออกแบบฐานข้อมูลเชิงสัมพันธ์ด้วยขั้นตอนวิธีนอร์มัลไลเซชัน การควบคุมภาวะพร้อมกัน การกู้คืนระบบ และการจัดการความปลอดภัย"
+    },
+    tuesday: {
+      code: "CPE 322",
+      nameEn: "Software Engineering",
+      nameTh: "วิศวกรรมซอฟต์แวร์",
+      room: "CPE-402",
+      instructorEn: "Dr. Michael Chen",
+      instructorTh: "ดร. ไมเคิล เฉิน",
+      descriptionEn: "Principles of software engineering. Topics include software development lifecycles, requirement analysis, software design patterns, architectural styles, software testing, agile methodologies, and project management.",
+      descriptionTh: "หลักการวิศวกรรมซอฟต์แวร์ วงจรการพัฒนาซอฟต์แวร์ การวิเคราะห์ความต้องการ การออกแบบระบบสถาปัตยกรรมซอฟต์แวร์ รูปแบบการทดสอบซอฟต์แวร์ กระบวนการพัฒนาแบบเอจายล์ และการจัดการโครงการซอฟต์แวร์"
+    },
+    wednesday: {
+      code: "CPE 323",
+      nameEn: "Computer Networks",
+      nameTh: "เครือข่ายคอมพิวเตอร์",
+      room: "CPE-501",
+      instructorEn: "Dr. Alan Turing",
+      instructorTh: "ดร. อลัน ทัวริง",
+      descriptionEn: "Fundamentals of computer networks and communications. Topics include OSI model, TCP/IP protocol suite, network routing algorithms, transport layer congestion control, DNS, HTTP, and network security concepts.",
+      descriptionTh: "สถาปัตยกรรมโครงข่ายเครือข่ายคอมพิวเตอร์ตามแบบจำลอง OSI และ TCP/IP อัลกอริทึมการกำหนดเส้นทาง การควบคุมความคับคั่งในระดับชั้นขนส่ง โปรโตคอลแอปพลิเคชัน และความปลอดภัยบนระบบเครือข่าย"
+    },
+    thursday: {
+      code: "CPE 324",
+      nameEn: "Embedded Systems",
+      nameTh: "ระบบฝังตัว",
+      room: "CPE-502",
+      instructorEn: "Dr. Grace Hopper",
+      instructorTh: "ดร. เกรซ ฮอปเปอร์",
+      descriptionEn: "Introduction to embedded systems design. Topics include microcontroller architecture, hardware-software co-design, real-time operating systems (RTOS), serial communication interfaces (I2C, SPI, UART), and sensor interfacing.",
+      descriptionTh: "การออกแบบระบบคอมพิวเตอร์ฝังตัว สถาปัตยกรรมไมโครคอนโทรลเลอร์ การควบคุมอุปกรณ์รับเข้าและส่งออก อินเทอร์เฟสระบบสื่อสารอนุกรม ระบบปฏิบัติการเวลาจริง (RTOS) และการเชื่อมต่อเซนเซอร์"
+    },
+    friday: {
+      code: "CPE 325",
+      nameEn: "Artificial Intelligence",
+      nameTh: "ปัญญาประดิษฐ์",
+      room: "CPE-601",
+      instructorEn: "Dr. John McCarthy",
+      instructorTh: "ดร. จอห์น แมคคาร์ธี",
+      descriptionEn: "Principles of artificial intelligence. Topics include heuristic search techniques, knowledge representation, logic programming, machine learning algorithms, artificial neural networks, and decision theory.",
+      descriptionTh: "แนวคิดพื้นฐานเกี่ยวกับปัญญาประดิษฐ์ เทคนิคการค้นหาเชิงศึกษาพยากรณ์ การแสดงความรู้ การให้เหตุผลเชิงตรรกะ ตัวแทนที่ชาญฉลาด และการประยุกต์ใช้งานขั้นตอนวิธีเรียนรู้ของเครื่อง"
+    },
+    saturday: null,
+  },
+  {
+    time: "10:00 - 11:00",
+    monday: {
+      code: "CPE 321",
+      nameEn: "Database Systems",
+      nameTh: "ระบบฐานข้อมูล",
+      room: "CPE-401",
+      instructorEn: "Dr. Sarah Johnson",
+      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
+      descriptionEn: "Introduction to database management systems. Topics include relational database design, query languages (SQL), database storage and indexing, transaction management, concurrency control, and database administration.",
+      descriptionTh: "สถาปัตยกรรมระบบจัดการฐานข้อมูล แบบจำลองข้อมูลความสัมพันธ์ ภาษาคิวรีมาตรฐาน (SQL) การออกแบบฐานข้อมูลเชิงสัมพันธ์ด้วยขั้นตอนวิธีนอร์มัลไลเซชัน การควบคุมภาวะพร้อมกัน การกู้คืนระบบ และการจัดการความปลอดภัย"
+    },
+    tuesday: {
+      code: "CPE 322",
+      nameEn: "Software Engineering",
+      nameTh: "วิศวกรรมซอฟต์แวร์",
+      room: "CPE-402",
+      instructorEn: "Dr. Michael Chen",
+      instructorTh: "ดร. ไมเคิล เฉิน",
+      descriptionEn: "Principles of software engineering. Topics include software development lifecycles, requirement analysis, software design patterns, architectural styles, software testing, agile methodologies, and project management.",
+      descriptionTh: "หลักการวิศวกรรมซอฟต์แวร์ วงจรการพัฒนาซอฟต์แวร์ การวิเคราะห์ความต้องการ การออกแบบระบบสถาปัตยกรรมซอฟต์แวร์ รูปแบบการทดสอบซอฟต์แวร์ กระบวนการพัฒนาแบบเอจายล์ และการจัดการโครงการซอฟต์แวร์"
+    },
+    wednesday: {
+      code: "CPE 323",
+      nameEn: "Computer Networks",
+      nameTh: "เครือข่ายคอมพิวเตอร์",
+      room: "CPE-501",
+      instructorEn: "Dr. Alan Turing",
+      instructorTh: "ดร. อลัน ทัวริง",
+      descriptionEn: "Fundamentals of computer networks and communications. Topics include OSI model, TCP/IP protocol suite, network routing algorithms, transport layer congestion control, DNS, HTTP, and network security concepts.",
+      descriptionTh: "สถาปัตยกรรมโครงข่ายเครือข่ายคอมพิวเตอร์ตามแบบจำลอง OSI และ TCP/IP อัลกอริทึมการกำหนดเส้นทาง การควบคุมความคับคั่งในระดับชั้นขนส่ง โปรโตคอลแอปพลิเคชัน และความปลอดภัยบนระบบเครือข่าย"
+    },
+    thursday: {
+      code: "CPE 324",
+      nameEn: "Embedded Systems",
+      nameTh: "ระบบฝังตัว",
+      room: "CPE-502",
+      instructorEn: "Dr. Grace Hopper",
+      instructorTh: "ดร. เกรซ ฮอปเปอร์",
+      descriptionEn: "Introduction to embedded systems design. Topics include microcontroller architecture, hardware-software co-design, real-time operating systems (RTOS), serial communication interfaces (I2C, SPI, UART), and sensor interfacing.",
+      descriptionTh: "การออกแบบระบบคอมพิวเตอร์ฝังตัว สถาปัตยกรรมไมโครคอนโทรลเลอร์ การควบคุมอุปกรณ์รับเข้าและส่งออก อินเทอร์เฟสระบบสื่อสารอนุกรม ระบบปฏิบัติการเวลาจริง (RTOS) และการเชื่อมต่อเซนเซอร์"
+    },
+    friday: {
+      code: "CPE 325",
+      nameEn: "Artificial Intelligence",
+      nameTh: "ปัญญาประดิษฐ์",
+      room: "CPE-601",
+      instructorEn: "Dr. John McCarthy",
+      instructorTh: "ดร. จอห์น แมคคาร์ธี",
+      descriptionEn: "Principles of artificial intelligence. Topics include heuristic search techniques, knowledge representation, logic programming, machine learning algorithms, artificial neural networks, and decision theory.",
+      descriptionTh: "แนวคิดพื้นฐานเกี่ยวกับปัญญาประดิษฐ์ เทคนิคการค้นหาเชิงศึกษาพยากรณ์ การแสดงความรู้ การให้เหตุผลเชิงตรรกะ ตัวแทนที่ชาญฉลาด และการประยุกต์ใช้งานขั้นตอนวิธีเรียนรู้ของเครื่อง"
+    },
+    saturday: null,
+  },
+  {
+    time: "11:00 - 12:00",
+    monday: {
+      code: "CPE 321",
+      nameEn: "Database Systems",
+      nameTh: "ระบบฐานข้อมูล",
+      room: "CPE-401",
+      instructorEn: "Dr. Sarah Johnson",
+      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
+      descriptionEn: "Introduction to database management systems. Topics include relational database design, query languages (SQL), database storage and indexing, transaction management, concurrency control, and database administration.",
+      descriptionTh: "สถาปัตยกรรมระบบจัดการฐานข้อมูล แบบจำลองข้อมูลความสัมพันธ์ ภาษาคิวรีมาตรฐาน (SQL) การออกแบบฐานข้อมูลเชิงสัมพันธ์ด้วยขั้นตอนวิธีนอร์มัลไลเซชัน การควบคุมภาวะพร้อมกัน การกู้คืนระบบ และการจัดการความปลอดภัย"
+    },
+    tuesday: {
+      code: "CPE 322",
+      nameEn: "Software Engineering",
+      nameTh: "วิศวกรรมซอฟต์แวร์",
+      room: "CPE-402",
+      instructorEn: "Dr. Michael Chen",
+      instructorTh: "ดร. ไมเคิล เฉิน",
+      descriptionEn: "Principles of software engineering. Topics include software development lifecycles, requirement analysis, software design patterns, architectural styles, software testing, agile methodologies, and project management.",
+      descriptionTh: "หลักการวิศวกรรมซอฟต์แวร์ วงจรการพัฒนาซอฟต์แวร์ การวิเคราะห์ความต้องการ การออกแบบระบบสถาปัตยกรรมซอฟต์แวร์ รูปแบบการทดสอบซอฟต์แวร์ กระบวนการพัฒนาแบบเอจายล์ และการจัดการโครงการซอฟต์แวร์"
+    },
+    wednesday: {
+      code: "CPE 323",
+      nameEn: "Computer Networks",
+      nameTh: "เครือข่ายคอมพิวเตอร์",
+      room: "CPE-501",
+      instructorEn: "Dr. Alan Turing",
+      instructorTh: "ดร. อลัน ทัวริง",
+      descriptionEn: "Fundamentals of computer networks and communications. Topics include OSI model, TCP/IP protocol suite, network routing algorithms, transport layer congestion control, DNS, HTTP, and network security concepts.",
+      descriptionTh: "สถาปัตยกรรมโครงข่ายเครือข่ายคอมพิวเตอร์ตามแบบจำลอง OSI และ TCP/IP อัลกอริทึมการกำหนดเส้นทาง การควบคุมความคับคั่งในระดับชั้นขนส่ง โปรโตคอลแอปพลิเคชัน และความปลอดภัยบนระบบเครือข่าย"
+    },
+    thursday: {
+      code: "CPE 324",
+      nameEn: "Embedded Systems",
+      nameTh: "ระบบฝังตัว",
+      room: "CPE-502",
+      instructorEn: "Dr. Grace Hopper",
+      instructorTh: "ดร. เกรซ ฮอปเปอร์",
+      descriptionEn: "Introduction to embedded systems design. Topics include microcontroller architecture, hardware-software co-design, real-time operating systems (RTOS), serial communication interfaces (I2C, SPI, UART), and sensor interfacing.",
+      descriptionTh: "การออกแบบระบบคอมพิวเตอร์ฝังตัว สถาปัตยกรรมไมโครคอนโทรลเลอร์ การควบคุมอุปกรณ์รับเข้าและส่งออก อินเทอร์เฟสระบบสื่อสารอนุกรม ระบบปฏิบัติการเวลาจริง (RTOS) และการเชื่อมต่อเซนเซอร์"
+    },
+    friday: {
+      code: "CPE 325",
+      nameEn: "Artificial Intelligence",
+      nameTh: "ปัญญาประดิษฐ์",
+      room: "CPE-601",
+      instructorEn: "Dr. John McCarthy",
+      instructorTh: "ดร. จอห์น แมคคาร์ธี",
+      descriptionEn: "Principles of artificial intelligence. Topics include heuristic search techniques, knowledge representation, logic programming, machine learning algorithms, artificial neural networks, and decision theory.",
+      descriptionTh: "แนวคิดพื้นฐานเกี่ยวกับปัญญาประดิษฐ์ เทคนิคการค้นหาเชิงศึกษาพยากรณ์ การแสดงความรู้ การให้เหตุผลเชิงตรรกะ ตัวแทนที่ชาญฉลาด และการประยุกต์ใช้งานขั้นตอนวิธีเรียนรู้ของเครื่อง"
+    },
+    saturday: null,
+  },
+  {
+    time: "12:00 - 13:00",
+    monday: null,
+    tuesday: null,
+    wednesday: null,
+    thursday: null,
+    friday: null,
+    saturday: null,
+  },
+  {
+    time: "13:00 - 14:00",
+    monday: {
+      code: "CPE 326",
+      nameEn: "Operating Systems",
+      nameTh: "ระบบปฏิบัติการ",
+      room: "CPE-401",
+      instructorEn: "Dr. Sarah Johnson",
+      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
+      descriptionEn: "Principles of operating systems architecture. Topics include process synchronization, CPU scheduling, thread management, memory management, virtual memory techniques, file systems, disk scheduling, and deadlocks.",
+      descriptionTh: "โครงสร้างและหน้าที่ของระบบปฏิบัติการ การจัดการกระบวนการ การจัดตารางเวลาของซีพียู การจัดการหน่วยความจำหลัก หน่วยความจำเสมือน ระบบแฟ้มข้อมูล และการจัดการทรัพยากรเมื่อเกิดการติดตาย"
+    },
+    tuesday: null,
+    wednesday: {
+      code: "CPE 381",
+      nameEn: "Comp Eng Lab III",
+      nameTh: "ปฏิบัติการวิศวกรรมคอมพิวเตอร์ 3",
+      room: "CPE-Lab 3",
+      instructorEn: "Dr. Linus Torvalds",
+      instructorTh: "ดร. ไลนัส ทอร์วัลด์ส",
+      descriptionEn: "Practical experiments in computer engineering. Focuses on advanced web services development, network socket programming, API integration, and hands-on system administration in Linux servers.",
+      descriptionTh: "การทดลองเชิงปฏิบัติการวิศวกรรมคอมพิวเตอร์ มุ่งเน้นการสร้างเว็บเซอร์วิสขั้นสูง โปรแกรมมิ่งซ็อกเก็ตเครือข่าย การผสานอินเทอร์เฟส API และทักษะการดูแลระบบเซิร์ฟเวอร์ด้วย Linux"
+    },
+    thursday: null,
+    friday: null,
+    saturday: null,
+  },
+  {
+    time: "14:00 - 15:00",
+    monday: {
+      code: "CPE 326",
+      nameEn: "Operating Systems",
+      nameTh: "ระบบปฏิบัติการ",
+      room: "CPE-401",
+      instructorEn: "Dr. Sarah Johnson",
+      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
+      descriptionEn: "Principles of operating systems architecture. Topics include process synchronization, CPU scheduling, thread management, memory management, virtual memory techniques, file systems, disk scheduling, and deadlocks.",
+      descriptionTh: "โครงสร้างและหน้าที่ของระบบปฏิบัติการ การจัดการกระบวนการ การจัดตารางเวลาของซีพียู การจัดการหน่วยความจำหลัก หน่วยความจำเสมือน ระบบแฟ้มข้อมูล และการจัดการทรัพยากรเมื่อเกิดการติดตาย"
+    },
+    tuesday: null,
+    wednesday: {
+      code: "CPE 381",
+      nameEn: "Comp Eng Lab III",
+      nameTh: "ปฏิบัติการวิศวกรรมคอมพิวเตอร์ 3",
+      room: "CPE-Lab 3",
+      instructorEn: "Dr. Linus Torvalds",
+      instructorTh: "ดร. ไลนัส ทอร์วัลด์ส",
+      descriptionEn: "Practical experiments in computer engineering. Focuses on advanced web services development, network socket programming, API integration, and hands-on system administration in Linux servers.",
+      descriptionTh: "การทดลองเชิงปฏิบัติการวิศวกรรมคอมพิวเตอร์ มุ่งเน้นการสร้างเว็บเซอร์วิสขั้นสูง โปรแกรมมิ่งซ็อกเก็ตเครือข่าย การผสานอินเทอร์เฟส API และทักษะการดูแลระบบเซิร์ฟเวอร์ด้วย Linux"
+    },
+    thursday: null,
+    friday: null,
+    saturday: null,
+  },
+  {
+    time: "15:00 - 16:00",
+    monday: {
+      code: "CPE 326",
+      nameEn: "Operating Systems",
+      nameTh: "ระบบปฏิบัติการ",
+      room: "CPE-401",
+      instructorEn: "Dr. Sarah Johnson",
+      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
+      descriptionEn: "Principles of operating systems architecture. Topics include process synchronization, CPU scheduling, thread management, memory management, virtual memory techniques, file systems, disk scheduling, and deadlocks.",
+      descriptionTh: "โครงสร้างและหน้าที่ of ระบบปฏิบัติการ การจัดการกระบวนการ การจัดตารางเวลาของซีพียู การจัดการหน่วยความจำหลัก หน่วยความจำเสมือน ระบบแฟ้มข้อมูล และการจัดการทรัพยากรเมื่อเกิดการติดตาย"
+    },
+    tuesday: null,
+    wednesday: {
+      code: "CPE 381",
+      nameEn: "Comp Eng Lab III",
+      nameTh: "ปฏิบัติการวิศวกรรมคอมพิวเตอร์ 3",
+      room: "CPE-Lab 3",
+      instructorEn: "Dr. Linus Torvalds",
+      instructorTh: "ดร. ไลนัส ทอร์วัลด์ส",
+      descriptionEn: "Practical experiments in computer engineering. Focuses on advanced web services development, network socket programming, API integration, and hands-on system administration in Linux servers.",
+      descriptionTh: "การทดลองเชิงปฏิบัติการวิศวกรรมคอมพิวเตอร์ มุ่งเน้นการสร้างเว็บเซอร์วิสขั้นสูง โปรแกรมมิ่งซ็อกเก็ตเครือข่าย การผสานอินเทอร์เฟส API และทักษะการดูแลระบบเซิร์ฟเวอร์ด้วย Linux"
+    },
+    thursday: null,
+    friday: null,
+    saturday: null,
+  },
+  {
+    time: "16:00 - 17:00",
+    monday: null,
+    tuesday: null,
+    wednesday: null,
+    thursday: null,
+    friday: null,
+    saturday: null,
+  },
+  {
+    time: "17:00 - 18:00",
+    monday: null,
+    tuesday: null,
+    wednesday: null,
+    thursday: null,
+    friday: null,
+    saturday: null,
+  },
+  {
+    time: "18:00 - 19:00",
+    monday: null,
+    tuesday: null,
+    wednesday: null,
+    thursday: null,
+    friday: null,
+    saturday: null,
+  },
+  {
+    time: "19:00 - 20:00",
+    monday: null,
+    tuesday: null,
+    wednesday: null,
+    thursday: null,
+    friday: null,
+    saturday: null,
+  },
+];
+
 export default function ScheduleClient({
   lang,
   dict,
@@ -110,6 +422,8 @@ export default function ScheduleClient({
   term?: string;
 }) {
   const [exams, setExams] = useState<ExamItem[]>([]);
+  const [weeklyClasses, setWeeklyClasses] = useState<WeeklyClassRow[]>([]);
+  const [selectedClass, setSelectedClass] = useState<ClassItem | null>(null);
 
   useEffect(() => {
     const saved = localStorage.getItem("exam_schedules");
@@ -118,6 +432,14 @@ export default function ScheduleClient({
     } else {
       localStorage.setItem("exam_schedules", JSON.stringify(DEFAULT_EXAMS));
       setExams(DEFAULT_EXAMS);
+    }
+
+    const savedClasses = localStorage.getItem("weekly_class_schedules");
+    if (savedClasses) {
+      setWeeklyClasses(JSON.parse(savedClasses));
+    } else {
+      localStorage.setItem("weekly_class_schedules", JSON.stringify(DEFAULT_CLASSES));
+      setWeeklyClasses(DEFAULT_CLASSES);
     }
   }, []);
 
@@ -379,52 +701,286 @@ export default function ScheduleClient({
             </div>
           </>
         ) : (
-          <div className="flex items-center justify-between w-full">
-            <h2 className="text-3xl md:text-4xl font-bold flex items-center gap-3 text-zinc-900 dark:text-zinc-100 leading-none">
-              <svg
-                className="w-8 h-8 text-blue-600 dark:text-sky-500 shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>{lang === "th" ? "ตารางเรียน" : "Class Schedule"}</span>
-            </h2>
+          <>
+            <div className="flex items-center justify-between w-full">
+              <h2 className="text-3xl md:text-4xl font-bold flex items-center gap-3 text-zinc-900 dark:text-zinc-100 leading-none">
+                <svg
+                  className="w-8 h-8 text-blue-600 dark:text-sky-500 shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span>{lang === "th" ? "ตารางเรียน" : "Weekly Timetable"}</span>
+              </h2>
 
-            <Link
-              href={`/${lang}/admin/schedule`}
-              className="p-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-all duration-300"
-              title={lang === "th" ? "ตั้งค่าตารางเรียน" : "Class Schedule Settings"}
-            >
-              <svg
-                className="w-6 h-6 transform hover:rotate-45 transition-transform duration-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+              <Link
+                href={`/${lang}/admin/class-schedule`}
+                className="p-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-all duration-300"
+                title={lang === "th" ? "ตั้งค่าตารางเรียน" : "Weekly Timetable Settings"}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-            </Link>
-          </div>
+                <svg
+                  className="w-6 h-6 transform hover:rotate-45 transition-transform duration-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </Link>
+            </div>
+
+            {/* Weekly Timetable Table */}
+            <div className="mt-8 overflow-x-auto">
+              <table className="w-full text-left border-collapse min-w-[800px]">
+                <thead>
+                  <tr className="bg-blue-50/70 dark:bg-sky-950/20 border-b border-blue-100 dark:border-sky-900/30">
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">TIME</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">MONDAY</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">TUESDAY</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">WEDNESDAY</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">THURSDAY</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">FRIDAY</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">SATURDAY</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {weeklyClasses.map((row, index) => (
+                    <tr
+                      key={index}
+                      className="border-b border-zinc-100 dark:border-zinc-900 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-colors"
+                    >
+                      <td className="py-4 px-4 text-sm font-bold text-zinc-900 dark:text-zinc-100 whitespace-nowrap">
+                        {row.time}
+                      </td>
+                      {row.time === "12:00 - 13:00" ? (
+                        <td
+                          colSpan={6}
+                          className="py-4 px-4 text-center text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest bg-zinc-50/40 dark:bg-zinc-900/20"
+                        >
+                          {lang === "th" ? "พักกลางวัน (LUNCH BREAK)" : "LUNCH BREAK"}
+                        </td>
+                      ) : (
+                        <>
+                          {/* Monday */}
+                          <td
+                            onClick={() => row.monday && setSelectedClass(row.monday)}
+                            className={row.monday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                          >
+                            {row.monday ? (
+                              <>
+                                <div className="font-bold text-blue-900 dark:text-sky-200">{row.monday.code}</div>
+                                <div className="text-xs text-blue-700/80 dark:text-sky-300/80 mt-0.5 font-medium">{lang === "th" ? row.monday.nameTh : row.monday.nameEn}</div>
+                                <div className="flex flex-col gap-0.5 mt-1.5 pt-1.5 border-t border-blue-100/30 dark:border-sky-900/10 text-[10px] text-blue-600/70 dark:text-sky-400/70 text-left">
+                                  {row.monday.room && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                      </svg>
+                                      <span>{lang === "th" ? `ห้อง: ${row.monday.room}` : `Room: ${row.monday.room}`}</span>
+                                    </div>
+                                  )}
+                                  {(row.monday.instructorEn || row.monday.instructorTh) && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                      </svg>
+                                      <span className="truncate">{lang === "th" ? row.monday.instructorTh : row.monday.instructorEn}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                          {/* Tuesday */}
+                          <td
+                            onClick={() => row.tuesday && setSelectedClass(row.tuesday)}
+                            className={row.tuesday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                          >
+                            {row.tuesday ? (
+                              <>
+                                <div className="font-bold text-blue-900 dark:text-sky-200">{row.tuesday.code}</div>
+                                <div className="text-xs text-blue-700/80 dark:text-sky-300/80 mt-0.5 font-medium">{lang === "th" ? row.tuesday.nameTh : row.tuesday.nameEn}</div>
+                                <div className="flex flex-col gap-0.5 mt-1.5 pt-1.5 border-t border-blue-100/30 dark:border-sky-900/10 text-[10px] text-blue-600/70 dark:text-sky-400/70 text-left">
+                                  {row.tuesday.room && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                      </svg>
+                                      <span>{lang === "th" ? `ห้อง: ${row.tuesday.room}` : `Room: ${row.tuesday.room}`}</span>
+                                    </div>
+                                  )}
+                                  {(row.tuesday.instructorEn || row.tuesday.instructorTh) && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                      </svg>
+                                      <span className="truncate">{lang === "th" ? row.tuesday.instructorTh : row.tuesday.instructorEn}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                          {/* Wednesday */}
+                          <td
+                            onClick={() => row.wednesday && setSelectedClass(row.wednesday)}
+                            className={row.wednesday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                          >
+                            {row.wednesday ? (
+                              <>
+                                <div className="font-bold text-blue-900 dark:text-sky-200">{row.wednesday.code}</div>
+                                <div className="text-xs text-blue-700/80 dark:text-sky-300/80 mt-0.5 font-medium">{lang === "th" ? row.wednesday.nameTh : row.wednesday.nameEn}</div>
+                                <div className="flex flex-col gap-0.5 mt-1.5 pt-1.5 border-t border-blue-100/30 dark:border-sky-900/10 text-[10px] text-blue-600/70 dark:text-sky-400/70 text-left">
+                                  {row.wednesday.room && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                      </svg>
+                                      <span>{lang === "th" ? `ห้อง: ${row.wednesday.room}` : `Room: ${row.wednesday.room}`}</span>
+                                    </div>
+                                  )}
+                                  {(row.wednesday.instructorEn || row.wednesday.instructorTh) && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                      </svg>
+                                      <span className="truncate">{lang === "th" ? row.wednesday.instructorTh : row.wednesday.instructorEn}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                          {/* Thursday */}
+                          <td
+                            onClick={() => row.thursday && setSelectedClass(row.thursday)}
+                            className={row.thursday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                          >
+                            {row.thursday ? (
+                              <>
+                                <div className="font-bold text-blue-900 dark:text-sky-200">{row.thursday.code}</div>
+                                <div className="text-xs text-blue-700/80 dark:text-sky-300/80 mt-0.5 font-medium">{lang === "th" ? row.thursday.nameTh : row.thursday.nameEn}</div>
+                                <div className="flex flex-col gap-0.5 mt-1.5 pt-1.5 border-t border-blue-100/30 dark:border-sky-900/10 text-[10px] text-blue-600/70 dark:text-sky-400/70 text-left">
+                                  {row.thursday.room && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                      </svg>
+                                      <span>{lang === "th" ? `ห้อง: ${row.thursday.room}` : `Room: ${row.thursday.room}`}</span>
+                                    </div>
+                                  )}
+                                  {(row.thursday.instructorEn || row.thursday.instructorTh) && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                      </svg>
+                                      <span className="truncate">{lang === "th" ? row.thursday.instructorTh : row.thursday.instructorEn}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                          {/* Friday */}
+                          <td
+                            onClick={() => row.friday && setSelectedClass(row.friday)}
+                            className={row.friday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                          >
+                            {row.friday ? (
+                              <>
+                                <div className="font-bold text-blue-900 dark:text-sky-200">{row.friday.code}</div>
+                                <div className="text-xs text-blue-700/80 dark:text-sky-300/80 mt-0.5 font-medium">{lang === "th" ? row.friday.nameTh : row.friday.nameEn}</div>
+                                <div className="flex flex-col gap-0.5 mt-1.5 pt-1.5 border-t border-blue-100/30 dark:border-sky-900/10 text-[10px] text-blue-600/70 dark:text-sky-400/70 text-left">
+                                  {row.friday.room && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                      </svg>
+                                      <span>{lang === "th" ? `ห้อง: ${row.friday.room}` : `Room: ${row.friday.room}`}</span>
+                                    </div>
+                                  )}
+                                  {(row.friday.instructorEn || row.friday.instructorTh) && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                      </svg>
+                                      <span className="truncate">{lang === "th" ? row.friday.instructorTh : row.friday.instructorEn}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                          {/* Saturday */}
+                          <td
+                            onClick={() => row.saturday && setSelectedClass(row.saturday)}
+                            className={row.saturday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                          >
+                            {row.saturday ? (
+                              <>
+                                <div className="font-bold text-blue-900 dark:text-sky-200">{row.saturday.code}</div>
+                                <div className="text-xs text-blue-700/80 dark:text-sky-300/80 mt-0.5 font-medium">{lang === "th" ? row.saturday.nameTh : row.saturday.nameEn}</div>
+                                <div className="flex flex-col gap-0.5 mt-1.5 pt-1.5 border-t border-blue-100/30 dark:border-sky-900/10 text-[10px] text-blue-600/70 dark:text-sky-400/70 text-left">
+                                  {row.saturday.room && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                      </svg>
+                                      <span>{lang === "th" ? `ห้อง: ${row.saturday.room}` : `Room: ${row.saturday.room}`}</span>
+                                    </div>
+                                  )}
+                                  {(row.saturday.instructorEn || row.saturday.instructorTh) && (
+                                    <div className="flex items-center gap-1">
+                                      <svg className="w-3 h-3 text-blue-500/60 dark:text-sky-500/60 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                      </svg>
+                                      <span className="truncate">{lang === "th" ? row.saturday.instructorTh : row.saturday.instructorEn}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </>
+                            ) : (
+                              "-"
+                            )}
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
     </section>
