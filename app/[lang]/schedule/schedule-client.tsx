@@ -794,31 +794,31 @@ export default function ScheduleClient({
 
             {/* Weekly Timetable Table */}
             <div className="mt-8 overflow-x-auto">
-              <table className="w-full text-left border-collapse min-w-[800px]">
+              <table className="w-full text-left border-collapse min-w-[800px] border border-zinc-300 dark:border-zinc-700">
                 <thead>
-                  <tr className="bg-blue-50/70 dark:bg-sky-950/20 border-b border-blue-100 dark:border-sky-900/30">
-                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">TIME</th>
-                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">MONDAY</th>
-                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">TUESDAY</th>
-                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">WEDNESDAY</th>
-                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">THURSDAY</th>
-                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">FRIDAY</th>
-                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300">SATURDAY</th>
+                  <tr className="bg-blue-50/70 dark:bg-sky-950/20 border-b-2 border-zinc-300 dark:border-zinc-700">
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300 border border-zinc-300 dark:border-zinc-700">TIME</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300 border border-zinc-300 dark:border-zinc-700">MONDAY</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300 border border-zinc-300 dark:border-zinc-700">TUESDAY</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300 border border-zinc-300 dark:border-zinc-700">WEDNESDAY</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300 border border-zinc-300 dark:border-zinc-700">THURSDAY</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300 border border-zinc-300 dark:border-zinc-700">FRIDAY</th>
+                    <th className="py-3 px-4 text-xs font-bold uppercase tracking-wider text-blue-800 dark:text-sky-300 border border-zinc-300 dark:border-zinc-700">SATURDAY</th>
                   </tr>
                 </thead>
                 <tbody>
                   {weeklyClasses.map((row, index) => (
                     <tr
                       key={index}
-                      className="border-b border-zinc-100 dark:border-zinc-900 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-colors"
+                      className="border-b border-zinc-300 dark:border-zinc-700 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-colors"
                     >
-                      <td className="py-4 px-4 text-sm font-bold text-zinc-900 dark:text-zinc-100 whitespace-nowrap">
+                      <td className="py-4 px-4 text-sm font-bold text-zinc-900 dark:text-zinc-100 whitespace-nowrap border border-zinc-300 dark:border-zinc-700">
                         {row.time}
                       </td>
                       {row.time === "12:00 - 13:00" ? (
                         <td
                           colSpan={6}
-                          className="py-4 px-4 text-center text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest bg-zinc-50/40 dark:bg-zinc-900/20"
+                          className="py-4 px-4 text-center text-xs font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest bg-zinc-50/40 dark:bg-zinc-900/20 border border-zinc-300 dark:border-zinc-700"
                         >
                           {lang === "th" ? "พักกลางวัน (LUNCH BREAK)" : "LUNCH BREAK"}
                         </td>
@@ -829,7 +829,7 @@ export default function ScheduleClient({
                             <td
                               rowSpan={spans[index].monday.rowSpan}
                               onClick={() => row.monday && setSelectedClass(row.monday)}
-                              className={row.monday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                              className={row.monday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-zinc-300 dark:border-zinc-700 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600 border border-zinc-300 dark:border-zinc-700"}
                             >
                               {row.monday ? (
                                 <>
@@ -864,7 +864,7 @@ export default function ScheduleClient({
                             <td
                               rowSpan={spans[index].tuesday.rowSpan}
                               onClick={() => row.tuesday && setSelectedClass(row.tuesday)}
-                              className={row.tuesday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                              className={row.tuesday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-zinc-300 dark:border-zinc-700 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600 border border-zinc-300 dark:border-zinc-700"}
                             >
                               {row.tuesday ? (
                                 <>
@@ -899,7 +899,7 @@ export default function ScheduleClient({
                             <td
                               rowSpan={spans[index].wednesday.rowSpan}
                               onClick={() => row.wednesday && setSelectedClass(row.wednesday)}
-                              className={row.wednesday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                              className={row.wednesday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-zinc-300 dark:border-zinc-700 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600 border border-zinc-300 dark:border-zinc-700"}
                             >
                               {row.wednesday ? (
                                 <>
@@ -934,7 +934,7 @@ export default function ScheduleClient({
                             <td
                               rowSpan={spans[index].thursday.rowSpan}
                               onClick={() => row.thursday && setSelectedClass(row.thursday)}
-                              className={row.thursday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                              className={row.thursday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-zinc-300 dark:border-zinc-700 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600 border border-zinc-300 dark:border-zinc-700"}
                             >
                               {row.thursday ? (
                                 <>
@@ -969,7 +969,7 @@ export default function ScheduleClient({
                             <td
                               rowSpan={spans[index].friday.rowSpan}
                               onClick={() => row.friday && setSelectedClass(row.friday)}
-                              className={row.friday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                              className={row.friday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-zinc-300 dark:border-zinc-700 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600 border border-zinc-300 dark:border-zinc-700"}
                             >
                               {row.friday ? (
                                 <>
@@ -1004,7 +1004,7 @@ export default function ScheduleClient({
                             <td
                               rowSpan={spans[index].saturday.rowSpan}
                               onClick={() => row.saturday && setSelectedClass(row.saturday)}
-                              className={row.saturday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-blue-100/50 dark:border-sky-900/10 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600"}
+                              className={row.saturday ? "py-4 px-4 text-sm bg-blue-50/70 dark:bg-sky-950/30 border border-zinc-300 dark:border-zinc-700 cursor-pointer hover:scale-[1.01] hover:shadow-sm transform transition-all duration-200" : "py-4 px-4 text-sm text-center text-zinc-400 dark:text-zinc-600 border border-zinc-300 dark:border-zinc-700"}
                             >
                               {row.saturday ? (
                                 <>
