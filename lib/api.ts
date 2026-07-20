@@ -19,6 +19,19 @@ async function get<T>(path: string, params?: Record<string, string>): Promise<T>
   return res.json() as Promise<T>;
 }
 
+async function post<T>(path: string, body: any): Promise<T> {
+  const url = new URL(path, BASE);
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`${res.status} ${url.toString()}`);
+  return res.json() as Promise<T>;
+}
+
 export const api = {
   teachers: () => get<Teacher[]>("/people/teachers"),
   students: (year?: number) =>
@@ -31,6 +44,13 @@ export const api = {
     get<Schedule[]>("/schedule", {
       ...(kind ? { kind } : {}),
       ...(year ? { year: String(year) } : {}),
+    }),
+  saveSchedule: (kind: "class" | "exam", year: number, payload: any, term: number = 1) =>
+    post<{ status: string }>("/schedule", {
+      kind,
+      year,
+      term,
+      payload: JSON.stringify(payload),
     }),
   rooms: () => get<Room[]>("/rooms"),
   internship: (host_branch?: string) =>

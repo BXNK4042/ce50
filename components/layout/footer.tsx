@@ -45,7 +45,7 @@ export default function Footer({ lang }: { lang: string }) {
             </li>
             <li>
               <Link href={`/${lang}/schedule`} className="hover:text-black dark:hover:text-white hover:underline transition-colors">
-                {isTh ? "ตารางสอน/สอบ" : "Schedule"}
+                {isTh ? "ตารางสอน/สอบ" : "Class/Exam Schedule"}
               </Link>
             </li>
             <li>

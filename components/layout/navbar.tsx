@@ -21,7 +21,9 @@ export default function Navbar({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isScheduleDropdownOpen, setIsScheduleDropdownOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scheduleTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const checkLogin = () => {
@@ -60,6 +62,17 @@ export default function Navbar({
     }, 300);
   };
 
+  const handleScheduleMouseEnter = () => {
+    if (scheduleTimeoutRef.current) clearTimeout(scheduleTimeoutRef.current);
+    setIsScheduleDropdownOpen(true);
+  };
+
+  const handleScheduleMouseLeave = () => {
+    scheduleTimeoutRef.current = setTimeout(() => {
+      setIsScheduleDropdownOpen(false);
+    }, 300);
+  };
+
   useEffect(() => {
     setActiveLang(lang);
   }, [lang]);
@@ -67,6 +80,7 @@ export default function Navbar({
   useEffect(() => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (scheduleTimeoutRef.current) clearTimeout(scheduleTimeoutRef.current);
     };
   }, []);
 
@@ -317,13 +331,67 @@ export default function Navbar({
           {/* Right Links Column (aligned left to maintain dynamic gap to logo) */}
           <div className="flex-1 flex justify-start pl-8 xl:pl-[60px] pointer-events-auto">
             <ul className="flex items-center gap-4 xl:gap-8 text-sm">
-              {links.slice(3).map((l) => (
-                <li key={l.href}>
-                  <Link href={l.href} className="hover:underline">
-                    {l.label}
-                  </Link>
-                </li>
-              ))}
+              {links.slice(3).map((l) => {
+                const isSchedule = l.href === `/${lang}/schedule`;
+                if (isSchedule) {
+                  return (
+                    <li
+                      key={l.href}
+                      className="relative py-2"
+                      onMouseEnter={handleScheduleMouseEnter}
+                      onMouseLeave={handleScheduleMouseLeave}
+                    >
+                      <span className="flex items-center gap-1 cursor-default select-none">
+                        {l.label}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={2.5}
+                          stroke="currentColor"
+                          className={`w-3 h-3 transition-transform duration-200 ${
+                            isScheduleDropdownOpen ? "rotate-180" : ""
+                          }`}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                      </span>
+
+                      {/* Dropdown Menu with fade-in and smooth transition */}
+                      <div
+                        className={`absolute left-1/2 -translate-x-1/2 top-full pt-1.5 z-50 w-36 transition-all duration-200 ${
+                          isScheduleDropdownOpen 
+                            ? "opacity-100 translate-y-0 visible pointer-events-auto" 
+                            : "opacity-0 -translate-y-1 invisible pointer-events-none"
+                        }`}
+                      >
+                        <div className="bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-md shadow-xl py-1">
+                          <Link
+                            href={`/${lang}/schedule?type=class`}
+                            className="block px-4 py-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+                          >
+                            {lang === "th" ? "ตารางเรียน" : "Class"}
+                          </Link>
+                          <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-1" />
+                          <Link
+                            href={`/${lang}/schedule?type=exam`}
+                            className="block px-4 py-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+                          >
+                            {lang === "th" ? "ตารางสอบ" : "Exam"}
+                          </Link>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                }
+                return (
+                  <li key={l.href}>
+                    <Link href={l.href} className="hover:underline">
+                      {l.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>

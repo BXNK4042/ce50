@@ -33,8 +33,13 @@
     "subtitle": "News, competitions, and scholarships"
   },
   "schedule": {
-    "title": "Class/Exam Schedule",
-    "subtitle": "Timetables for classes and examinations"
+    "title": "Year 3 Student",
+    "subtitle": "Junior",
+    "upcomingExams": "Upcoming Exams",
+    "weeklyOverview": "Weekly Overview",
+    "allTerms": "All terms",
+    "midterm": "Midterm",
+    "finals": "Finals"
   },
   "rooms": {
     "title": "CE Rooms",
