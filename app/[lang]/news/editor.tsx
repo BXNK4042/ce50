@@ -4,27 +4,23 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-interface WriterProps {
-  params: Promise<{ lang: string }>;
+interface EditorProps {
+  lang: string;
+  newsId: string;
 }
 
-export default function WriterPage({ params }: WriterProps) {
-  const [lang, setLang] = useState("th");
+interface NewsItem {
+  id?: number;
+  title: string;
+  category: "competition" | "scholarship" | "other" | string;
+  body?: string;
+  link?: string;
+  image?: string;
+}
+
+export default function EditorPage({ lang, newsId }: EditorProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
-
-  useEffect(() => {
-    params.then((p) => {
-      setLang(p.lang);
-    });
-
-    // Check if user is logged in
-    const role = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("admin_role="))
-      ?.split("=")[1];
-    setIsLoggedIn(!!role);
-  }, [params]);
 
   const isTh = lang === "th";
 
@@ -38,9 +34,46 @@ export default function WriterPage({ params }: WriterProps) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
 
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+
+  useEffect(() => {
+    // Check if user is logged in
+    const role = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("admin_role="))
+      ?.split("=")[1];
+    setIsLoggedIn(!!role);
+
+    // Fetch existing news item
+    const fetchNewsItem = async () => {
+      try {
+        const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+        const res = await fetch(`${backendUrl}/news/${newsId}`);
+        if (!res.ok) {
+          throw new Error(isTh ? "ไม่พบข่าวสารที่ต้องการแก้ไข" : "News item not found");
+        }
+        const data: NewsItem = await res.json();
+        setTitle(data.title);
+        setCategory(data.category);
+        setBody(data.body ?? "");
+        setLink(data.link ?? "");
+        setImage(data.image ?? "");
+      } catch (err: any) {
+        setError(err.message || (isTh ? "เกิดข้อผิดพลาดในการดึงข้อมูล" : "Error fetching news item"));
+      } finally {
+        setFetching(false);
+      }
+    };
+
+    if (role) {
+      fetchNewsItem();
+    } else {
+      setFetching(false);
+    }
+  }, [newsId, isTh]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -99,8 +132,8 @@ export default function WriterPage({ params }: WriterProps) {
         .find((row) => row.startsWith("admin_token="))
         ?.split("=")[1];
 
-      const res = await fetch(`${backendUrl}/news/`, {
-        method: "POST",
+      const res = await fetch(`${backendUrl}/news/${newsId}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           "Authorization": token ? `Bearer ${token}` : "",
@@ -120,17 +153,25 @@ export default function WriterPage({ params }: WriterProps) {
       setSuccess(true);
       setTimeout(() => {
         router.push(`/${lang}/news`);
-      }, 3000);
+      }, 2000);
     } catch (err: any) {
       if (err.message === "connection_failed") {
         setError(isTh ? "เกิดข้อผิดพลาดในการเชื่อมต่อ" : "Connection error");
       } else {
-        setError(isTh ? `ไม่สามารถบันทึกข้อมูลได้: ${err.message}` : `Failed to save: ${err.message}`);
+        setError(isTh ? `ไม่สามารถบันทึกการแก้ไขได้: ${err.message}` : `Failed to update: ${err.message}`);
       }
     } finally {
       setLoading(false);
     }
   };
+
+  if (fetching) {
+    return (
+      <main className="w-full min-h-[80vh] flex flex-col items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-900 transition-colors duration-300">
+        <span className="w-8 h-8 border-4 border-[#e55300] border-t-transparent rounded-full animate-spin" />
+      </main>
+    );
+  }
 
   if (!isLoggedIn) {
     return (
@@ -188,7 +229,7 @@ export default function WriterPage({ params }: WriterProps) {
                 d="M5 13l4 4L19 7"
               />
             </svg>
-            <span>{isTh ? "สร้างข่าวสารสำเร็จ" : "News published successfully"}</span>
+            <span>{isTh ? "บันทึกการแก้ไขสำเร็จ" : "News updated successfully"}</span>
           </div>
         </div>
       )}
@@ -196,7 +237,7 @@ export default function WriterPage({ params }: WriterProps) {
       <div className="max-w-2xl w-full flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-extrabold tracking-wider text-zinc-900 dark:text-white uppercase">
-            {isTh ? "เขียนข่าวสารใหม่" : "Write New News"}
+            {isTh ? "แก้ไขข่าวสาร" : "Edit News"}
           </h1>
           <Link
             href={`/${lang}/news`}
@@ -365,7 +406,7 @@ export default function WriterPage({ params }: WriterProps) {
                 {loading ? (
                   <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 ) : (
-                  isTh ? "เผยแพร่ข่าวสาร" : "Publish News"
+                  isTh ? "บันทึกการแก้ไข" : "Save Changes"
                 )}
               </button>
             </div>
