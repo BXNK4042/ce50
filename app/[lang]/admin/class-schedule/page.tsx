@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -316,6 +316,35 @@ const DEFAULT_CLASSES: WeeklyClassRow[] = [
   },
 ];
 
+// --- TIME OPTIONS ---
+const START_TIMES = [
+  "09:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
+  "17:00",
+  "18:00",
+  "19:00",
+];
+
+const END_TIMES = [
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
+  "17:00",
+  "18:00",
+  "19:00",
+  "20:00",
+];
+
 export default function AdminClassSchedulePage({
   params,
 }: {
@@ -354,7 +383,8 @@ export default function AdminClassSchedulePage({
 
   // --- CLASS FORM STATES ---
   const [classDay, setClassDay] = useState("monday");
-  const [classTimeSlot, setClassTimeSlot] = useState("09:00 - 10:00");
+  const [classStartTime, setClassStartTime] = useState("09:00");
+  const [classEndTime, setClassEndTime] = useState("10:00");
   const [classCode, setClassCode] = useState("");
   const [classNameEn, setClassNameEn] = useState("");
   const [classNameTh, setClassNameTh] = useState("");
@@ -363,17 +393,147 @@ export default function AdminClassSchedulePage({
   const [classInstructorTh, setClassInstructorTh] = useState("");
   const [classDescriptionEn, setClassDescriptionEn] = useState("");
   const [classDescriptionTh, setClassDescriptionTh] = useState("");
-  const [editingClassSlot, setEditingClassSlot] = useState<{ day: string; time: string } | null>(null);
+  const [editingClassSlot, setEditingClassSlot] = useState<{ day: string; startTime: string; endTime: string; code: string } | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
   // --- CLASS HANDLERS ---
+  const isRowInTimeRange = (rowTime: string, startSelected: string, endSelected: string) => {
+    const [rowStart, rowEnd] = rowTime.split(" - ");
+    return rowStart >= startSelected && rowEnd <= endSelected;
+  };
+
+  const handleStartChange = (value: string) => {
+    setClassStartTime(value);
+    const startIdx = START_TIMES.indexOf(value);
+    const endIdx = END_TIMES.indexOf(classEndTime);
+    if (endIdx <= startIdx) {
+      setClassEndTime(END_TIMES[Math.min(startIdx, END_TIMES.length - 1)]);
+    }
+  };
+
+  const handleEndChange = (value: string) => {
+    setClassEndTime(value);
+    const startIdx = START_TIMES.indexOf(classStartTime);
+    const endIdx = END_TIMES.indexOf(value);
+    if (startIdx >= endIdx) {
+      setClassStartTime(START_TIMES[Math.max(endIdx, 0)]);
+    }
+  };
+
+  // --- OCCUPIED TIME FILTERS ---
+  const occupiedRows = weeklyClasses.filter((row) => {
+    const classItem = row[classDay as keyof Omit<WeeklyClassRow, "time">];
+    if (!classItem) return false;
+    if (editingClassSlot && classItem.code === editingClassSlot.code) {
+      return false;
+    }
+    return true;
+  });
+
+  const isStartTimeValid = (start: string) => {
+    return !occupiedRows.some((row) => row.time.startsWith(start));
+  };
+
+  const isEndTimeValid = (end: string) => {
+    const startIdx = START_TIMES.indexOf(classStartTime);
+    const endIdx = END_TIMES.indexOf(end);
+    if (endIdx <= startIdx) return false;
+    
+    for (let i = startIdx; i < endIdx; i++) {
+      const slotTime = `${START_TIMES[i]} - ${END_TIMES[i]}`;
+      if (occupiedRows.some((row) => row.time === slotTime)) return false;
+    }
+    return true;
+  };
+
+  // Adjust start time if current becomes invalid
+  useEffect(() => {
+    const isCurrentValid = isStartTimeValid(classStartTime);
+    if (!isCurrentValid) {
+      const firstValid = START_TIMES.find((time) => isStartTimeValid(time));
+      if (firstValid) {
+        setClassStartTime(firstValid);
+        const startIdx = START_TIMES.indexOf(firstValid);
+        const endIdx = END_TIMES.indexOf(classEndTime);
+        if (endIdx <= startIdx) {
+          setClassEndTime(END_TIMES[startIdx]);
+        }
+      }
+    }
+  }, [classDay, weeklyClasses, editingClassSlot]);
+
+  // Adjust end time if current becomes invalid
+  useEffect(() => {
+    const isEndValid = isEndTimeValid(classEndTime);
+    if (!isEndValid) {
+      const startIdx = START_TIMES.indexOf(classStartTime);
+      let firstValidEnd = "";
+      for (let idx = startIdx; idx < END_TIMES.length; idx++) {
+        const tempEnd = END_TIMES[idx];
+        let ok = true;
+        for (let i = startIdx; i <= idx; i++) {
+          const slotTime = `${START_TIMES[i]} - ${END_TIMES[i]}`;
+          if (occupiedRows.some((row) => row.time === slotTime)) {
+            ok = false;
+            break;
+          }
+        }
+        if (ok) {
+          firstValidEnd = tempEnd;
+        } else {
+          break;
+        }
+      }
+      if (firstValidEnd) {
+        setClassEndTime(firstValidEnd);
+      }
+    }
+  }, [classStartTime, classDay, weeklyClasses, editingClassSlot]);
+
   const handleStartClassEdit = (dayKey: string, timeSlot: string, classItem: ClassItem) => {
-    setEditingClassSlot({ day: dayKey, time: timeSlot });
+    const saved = localStorage.getItem("weekly_class_schedules");
+    const list = saved ? JSON.parse(saved) : [...DEFAULT_CLASSES];
+
+    let start = timeSlot.split(" - ")[0];
+    let end = timeSlot.split(" - ")[1];
+
+    const currentIndex = list.findIndex((row: WeeklyClassRow) => row.time === timeSlot);
+    if (currentIndex > -1 && classItem.code) {
+      const code = classItem.code;
+      // Look back to find contiguous start
+      let firstIndex = currentIndex;
+      while (firstIndex > 0) {
+        const prevRow = list[firstIndex - 1];
+        const prevItem = prevRow[dayKey as keyof Omit<WeeklyClassRow, "time">];
+        if (prevItem && prevItem.code === code) {
+          firstIndex--;
+        } else {
+          break;
+        }
+      }
+      // Look forward to find contiguous end
+      let lastIndex = currentIndex;
+      while (lastIndex < list.length - 1) {
+        const nextRow = list[lastIndex + 1];
+        const nextItem = nextRow[dayKey as keyof Omit<WeeklyClassRow, "time">];
+        if (nextItem && nextItem.code === code) {
+          lastIndex++;
+        } else {
+          break;
+        }
+      }
+
+      start = list[firstIndex].time.split(" - ")[0];
+      end = list[lastIndex].time.split(" - ")[1];
+    }
+
+    setEditingClassSlot({ day: dayKey, startTime: start, endTime: end, code: classItem.code });
     setClassDay(dayKey);
-    setClassTimeSlot(timeSlot);
+    setClassStartTime(start);
+    setClassEndTime(end);
     setClassCode(classItem.code);
     setClassNameEn(classItem.nameEn);
     setClassNameTh(classItem.nameTh);
@@ -391,7 +551,8 @@ export default function AdminClassSchedulePage({
   const handleCancelClassEdit = () => {
     setEditingClassSlot(null);
     setClassDay("monday");
-    setClassTimeSlot("09:00 - 10:00");
+    setClassStartTime("09:00");
+    setClassEndTime("10:00");
     setClassCode("");
     setClassNameEn("");
     setClassNameTh("");
@@ -416,23 +577,34 @@ export default function AdminClassSchedulePage({
       const saved = localStorage.getItem("weekly_class_schedules");
       const list = saved ? JSON.parse(saved) : [...DEFAULT_CLASSES];
 
-      const rowIndex = list.findIndex((row: WeeklyClassRow) => row.time === classTimeSlot);
-      if (rowIndex > -1) {
-        if (classCode.trim() === "") {
-          list[rowIndex][classDay as keyof Omit<WeeklyClassRow, "time">] = null;
-        } else {
-          list[rowIndex][classDay as keyof Omit<WeeklyClassRow, "time">] = {
-            code: classCode.trim().toUpperCase(),
-            nameEn: classNameEn.trim(),
-            nameTh: classNameTh.trim(),
-            room: classRoom.trim(),
-            instructorEn: classInstructorEn.trim(),
-            instructorTh: classInstructorTh.trim(),
-            descriptionEn: classDescriptionEn.trim(),
-            descriptionTh: classDescriptionTh.trim(),
-          };
-        }
+      // 1. If we were editing, clear the old range first
+      if (editingClassSlot) {
+        list.forEach((row: WeeklyClassRow) => {
+          if (isRowInTimeRange(row.time, editingClassSlot.startTime, editingClassSlot.endTime)) {
+            row[editingClassSlot.day as keyof Omit<WeeklyClassRow, "time">] = null;
+          }
+        });
       }
+
+      // 2. Set the details for all rows in the new range
+      list.forEach((row: WeeklyClassRow) => {
+        if (isRowInTimeRange(row.time, classStartTime, classEndTime)) {
+          if (classCode.trim() === "") {
+            row[classDay as keyof Omit<WeeklyClassRow, "time">] = null;
+          } else {
+            row[classDay as keyof Omit<WeeklyClassRow, "time">] = {
+              code: classCode.trim().toUpperCase(),
+              nameEn: classNameEn.trim(),
+              nameTh: classNameTh.trim(),
+              room: classRoom.trim(),
+              instructorEn: classInstructorEn.trim(),
+              instructorTh: classInstructorTh.trim(),
+              descriptionEn: classDescriptionEn.trim(),
+              descriptionTh: classDescriptionTh.trim(),
+            };
+          }
+        }
+      });
 
       localStorage.setItem("weekly_class_schedules", JSON.stringify(list));
       setWeeklyClasses(list);
@@ -457,14 +629,51 @@ export default function AdminClassSchedulePage({
       
       const rowIndex = list.findIndex((row: WeeklyClassRow) => row.time === timeSlot);
       if (rowIndex > -1) {
-        list[rowIndex][dayKey as keyof Omit<WeeklyClassRow, "time">] = null;
+        const classItem = list[rowIndex][dayKey as keyof Omit<WeeklyClassRow, "time">];
+        if (classItem) {
+          const code = classItem.code;
+          
+          // Find contiguous range for the same class code on the same day
+          let firstIndex = rowIndex;
+          while (firstIndex > 0) {
+            const prevItem = list[firstIndex - 1][dayKey as keyof Omit<WeeklyClassRow, "time">];
+            if (prevItem && prevItem.code === code) {
+              firstIndex--;
+            } else {
+              break;
+            }
+          }
+          let lastIndex = rowIndex;
+          while (lastIndex < list.length - 1) {
+            const nextItem = list[lastIndex + 1][dayKey as keyof Omit<WeeklyClassRow, "time">];
+            if (nextItem && nextItem.code === code) {
+              lastIndex++;
+            } else {
+              break;
+            }
+          }
+
+          // Clear all rows in this range
+          for (let i = firstIndex; i <= lastIndex; i++) {
+            list[i][dayKey as keyof Omit<WeeklyClassRow, "time">] = null;
+          }
+        } else {
+          list[rowIndex][dayKey as keyof Omit<WeeklyClassRow, "time">] = null;
+        }
       }
 
       localStorage.setItem("weekly_class_schedules", JSON.stringify(list));
       setWeeklyClasses(list);
 
-      if (editingClassSlot && editingClassSlot.day === dayKey && editingClassSlot.time === timeSlot) {
-        handleCancelClassEdit();
+      // Cancel edit mode if we deleted the slot we were editing
+      if (editingClassSlot && editingClassSlot.day === dayKey) {
+        const [slotStart, slotEnd] = timeSlot.split(" - ");
+        if (
+          (slotStart >= editingClassSlot.startTime && slotStart < editingClassSlot.endTime) ||
+          (slotEnd > editingClassSlot.startTime && slotEnd <= editingClassSlot.endTime)
+        ) {
+          handleCancelClassEdit();
+        }
       }
     }
   };
@@ -484,7 +693,7 @@ export default function AdminClassSchedulePage({
         <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 p-8 shadow-xl rounded-lg">
           <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-6">
             {editingClassSlot 
-              ? (isTh ? `แก้ไขวิชาเรียน คาบ ${editingClassSlot.time} วัน${editingClassSlot.day.toUpperCase()}` : `Edit Class Slot: ${editingClassSlot.time} (${editingClassSlot.day.toUpperCase()})`) 
+              ? (isTh ? `แก้ไขวิชาเรียน คาบ ${editingClassSlot.startTime} - ${editingClassSlot.endTime} วัน${editingClassSlot.day.toUpperCase()}` : `Edit Class Slot: ${editingClassSlot.startTime} - ${editingClassSlot.endTime} (${editingClassSlot.day.toUpperCase()})`) 
               : (isTh ? "ตั้งค่าตารางเรียนรายสัปดาห์" : "Weekly Timetable Settings")}
           </h1>
 
@@ -533,17 +742,47 @@ export default function AdminClassSchedulePage({
               <label className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 uppercase tracking-wider">
                 {isTh ? "เลือกคาบเวลา" : "Select Time Slot"}
               </label>
-              <select
-                required
-                value={classTimeSlot}
-                onChange={(e) => setClassTimeSlot(e.target.value)}
-                disabled={!!editingClassSlot}
-                className="px-4 py-2.5 border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 rounded-md focus:outline-none focus:border-blue-500 dark:focus:border-sky-500 text-zinc-900 dark:text-zinc-100 transition-colors cursor-pointer"
-              >
-                {DEFAULT_CLASSES.map((row) => (
-                  <option key={row.time} value={row.time}>{row.time}</option>
-                ))}
-              </select>
+              <div className="flex gap-4 items-center">
+                {/* Start Time Select */}
+                <div className="flex-1 flex flex-col gap-1.5">
+                  <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                    {isTh ? "เวลาเริ่มต้น" : "Start Time"}
+                  </span>
+                  <select
+                    value={classStartTime}
+                    onChange={(e) => handleStartChange(e.target.value)}
+                    disabled={!!editingClassSlot}
+                    className="px-4 py-2.5 border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 rounded-md focus:outline-none focus:border-blue-500 dark:focus:border-sky-500 text-zinc-900 dark:text-zinc-100 transition-colors cursor-pointer w-full"
+                  >
+                    {START_TIMES.map((time) => (
+                      <option key={time} value={time} disabled={!isStartTimeValid(time)}>
+                        {time} {!isStartTimeValid(time) ? (isTh ? " (ไม่ว่าง)" : " (Occupied)") : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <span className="text-xl font-bold text-zinc-400 self-end mb-2.5">:</span>
+
+                {/* End Time Select */}
+                <div className="flex-1 flex flex-col gap-1.5">
+                  <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                    {isTh ? "เวลาสิ้นสุด" : "End Time"}
+                  </span>
+                  <select
+                    value={classEndTime}
+                    onChange={(e) => handleEndChange(e.target.value)}
+                    disabled={!!editingClassSlot}
+                    className="px-4 py-2.5 border border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 rounded-md focus:outline-none focus:border-blue-500 dark:focus:border-sky-500 text-zinc-900 dark:text-zinc-100 transition-colors cursor-pointer w-full"
+                  >
+                    {END_TIMES.map((time) => (
+                      <option key={time} value={time} disabled={!isEndTimeValid(time)}>
+                        {time} {!isEndTimeValid(time) ? (isTh ? " (ไม่ว่าง/ไม่ต่อเนื่อง)" : " (Occupied/Invalid)") : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
 
             {/* Subject Code */}
