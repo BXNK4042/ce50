@@ -118,6 +118,23 @@ def list_news(category: str | None = Query(None)):
     return news
 
 
+@router.get("/{id}")
+def get_news_item(id: int):
+    """
+    ดึงข้อมูลข่าวสารชิ้นเดียวตาม ID
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM news_items WHERE id = ?", (id,))
+    row = cursor.fetchone()
+    conn.close()
+
+    if not row:
+        raise HTTPException(status_code=404, detail="News article not found")
+
+    return dict(row)
+
+
 @router.post("/sync-gnews")
 def sync_gnews(apikey: str | None = None, query: str | None = None):
     """
