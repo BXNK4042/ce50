@@ -48,14 +48,41 @@ CREATE TABLE IF NOT EXISTS news_items (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
--- 4. ตารางสอน/สอบ — Schedule
-CREATE TABLE IF NOT EXISTS schedules (
+-- 4. ตารางสอน/สอบ — Schedule (split: class grid + exam list)
+CREATE TABLE IF NOT EXISTS class_schedules (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  kind TEXT NOT NULL CHECK (kind IN ('class','exam')),
   year INTEGER NOT NULL,
-  term INTEGER,
-  payload TEXT NOT NULL,         -- JSON table data
-  updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+  term INTEGER NOT NULL DEFAULT 1,
+  day TEXT NOT NULL CHECK (day IN ('monday','tuesday','wednesday','thursday','friday','saturday')),
+  time_slot TEXT NOT NULL,            -- e.g. "09:00 - 10:00"
+  code TEXT NOT NULL,
+  name_en TEXT,
+  name_th TEXT,
+  room TEXT,
+  instructor_en TEXT,
+  instructor_th TEXT,
+  description_en TEXT,
+  description_th TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(year, term, day, time_slot)
+);
+
+CREATE TABLE IF NOT EXISTS exam_schedules (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  year INTEGER NOT NULL,
+  term INTEGER NOT NULL DEFAULT 1,
+  code TEXT NOT NULL,
+  name_en TEXT,
+  name_th TEXT,
+  date_raw TEXT,                      -- ISO yyyy-mm-dd or 9999-12-31 = outside schedule
+  start_time TEXT,
+  end_time TEXT,
+  midterm_en TEXT,
+  midterm_th TEXT,
+  finals_en TEXT,
+  finals_th TEXT,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(year, term, code)
 );
 
 -- 5. ผู้ใช้งานระบบ — Users (including Admins & Writers)

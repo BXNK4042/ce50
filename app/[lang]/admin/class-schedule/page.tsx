@@ -3,318 +3,18 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  api,
+  cellsToGrid,
+  gridToCells,
+  type WeeklyClassRow,
+  type ClassItem,
+} from "@/lib/api";
 
-interface ClassItem {
-  code: string;
-  nameEn: string;
-  nameTh: string;
-  room?: string;
-  instructorEn?: string;
-  instructorTh?: string;
-  descriptionEn?: string;
-  descriptionTh?: string;
-}
+// ponytail: year/term hardcoded — add cohort selector when multiple years exist
+const SCHEDULE_YEAR = 3;
+const SCHEDULE_TERM = 1;
 
-interface WeeklyClassRow {
-  time: string;
-  monday: ClassItem | null;
-  tuesday: ClassItem | null;
-  wednesday: ClassItem | null;
-  thursday: ClassItem | null;
-  friday: ClassItem | null;
-  saturday: ClassItem | null;
-}
-
-const DEFAULT_CLASSES: WeeklyClassRow[] = [
-  {
-    time: "09:00 - 10:00",
-    monday: {
-      code: "CPE 321",
-      nameEn: "Database Systems",
-      nameTh: "ระบบฐานข้อมูล",
-      room: "CPE-401",
-      instructorEn: "Dr. Sarah Johnson",
-      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
-      descriptionEn: "Introduction to database management systems. Topics include relational database design, query languages (SQL), database storage and indexing, transaction management, concurrency control, and database administration.",
-      descriptionTh: "สถาปัตยกรรมระบบจัดการฐานข้อมูล แบบจำลองข้อมูลความสัมพันธ์ ภาษาคิวรีมาตรฐาน (SQL) การออกแบบฐานข้อมูลเชิงสัมพันธ์ด้วยขั้นตอนวิธีนอร์มัลไลเซชัน การควบคุมภาวะพร้อมกัน การกู้คืนระบบ และการจัดการความปลอดภัย"
-    },
-    tuesday: {
-      code: "CPE 322",
-      nameEn: "Software Engineering",
-      nameTh: "วิศวกรรมซอฟต์แวร์",
-      room: "CPE-402",
-      instructorEn: "Dr. Michael Chen",
-      instructorTh: "ดร. ไมเคิล เฉิน",
-      descriptionEn: "Principles of software engineering. Topics include software development lifecycles, requirement analysis, software design patterns, architectural styles, software testing, agile methodologies, and project management.",
-      descriptionTh: "หลักการวิศวกรรมซอฟต์แวร์ วงจรการพัฒนาซอฟต์แวร์ การวิเคราะห์ความต้องการ การออกแบบระบบสถาปัตยกรรมซอฟต์แวร์ รูปแบบการทดสอบซอฟต์แวร์ กระบวนการพัฒนาแบบเอจายล์ และการจัดการโครงการซอฟต์แวร์"
-    },
-    wednesday: {
-      code: "CPE 323",
-      nameEn: "Computer Networks",
-      nameTh: "เครือข่ายคอมพิวเตอร์",
-      room: "CPE-501",
-      instructorEn: "Dr. Alan Turing",
-      instructorTh: "ดร. อลัน ทัวริง",
-      descriptionEn: "Fundamentals of computer networks and communications. Topics include OSI model, TCP/IP protocol suite, network routing algorithms, transport layer congestion control, DNS, HTTP, and network security concepts.",
-      descriptionTh: "สถาปัตยกรรมโครงข่ายเครือข่ายคอมพิวเตอร์ตามแบบจำลอง OSI และ TCP/IP อัลกอริทึมการกำหนดเส้นทาง การควบคุมความคับคั่งในระดับชั้นขนส่ง โปรโตคอลแอปพลิเคชัน และความปลอดภัยบนระบบเครือข่าย"
-    },
-    thursday: {
-      code: "CPE 324",
-      nameEn: "Embedded Systems",
-      nameTh: "ระบบฝังตัว",
-      room: "CPE-502",
-      instructorEn: "Dr. Grace Hopper",
-      instructorTh: "ดร. เกรซ ฮอปเปอร์",
-      descriptionEn: "Introduction to embedded systems design. Topics include microcontroller architecture, hardware-software co-design, real-time operating systems (RTOS), serial communication interfaces (I2C, SPI, UART), and sensor interfacing.",
-      descriptionTh: "การออกแบบระบบคอมพิวเตอร์ฝังตัว สถาปัตยกรรมไมโครคอนโทรลเลอร์ การควบคุมอุปกรณ์รับเข้าและส่งออก อินเทอร์เฟสระบบสื่อสารอนุกรม ระบบปฏิบัติการเวลาจริง (RTOS) และการเชื่อมต่อเซนเซอร์"
-    },
-    friday: {
-      code: "CPE 325",
-      nameEn: "Artificial Intelligence",
-      nameTh: "ปัญญาประดิษฐ์",
-      room: "CPE-601",
-      instructorEn: "Dr. John McCarthy",
-      instructorTh: "ดร. จอห์น แมคคาร์ธี",
-      descriptionEn: "Principles of artificial intelligence. Topics include heuristic search techniques, knowledge representation, logic programming, machine learning algorithms, artificial neural networks, and decision theory.",
-      descriptionTh: "แนวคิดพื้นฐานเกี่ยวกับปัญญาประดิษฐ์ เทคนิคการค้นหาเชิงศึกษาพยากรณ์ การแสดงความรู้ การให้เหตุผลเชิงตรรกะ ตัวแทนที่ชาญฉลาด และการประยุกต์ใช้งานขั้นตอนวิธีเรียนรู้ของเครื่อง"
-    },
-    saturday: null,
-  },
-  {
-    time: "10:00 - 11:00",
-    monday: {
-      code: "CPE 321",
-      nameEn: "Database Systems",
-      nameTh: "ระบบฐานข้อมูล",
-      room: "CPE-401",
-      instructorEn: "Dr. Sarah Johnson",
-      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
-      descriptionEn: "Introduction to database management systems. Topics include relational database design, query languages (SQL), database storage and indexing, transaction management, concurrency control, and database administration.",
-      descriptionTh: "สถาปัตยกรรมระบบจัดการฐานข้อมูล แบบจำลองข้อมูลความสัมพันธ์ ภาษาคิวรีมาตรฐาน (SQL) การออกแบบฐานข้อมูลเชิงสัมพันธ์ด้วยขั้นตอนวิธีนอร์มัลไลเซชัน การควบคุมภาวะพร้อมกัน การกู้คืนระบบ และการจัดการความปลอดภัย"
-    },
-    tuesday: {
-      code: "CPE 322",
-      nameEn: "Software Engineering",
-      nameTh: "วิศวกรรมซอฟต์แวร์",
-      room: "CPE-402",
-      instructorEn: "Dr. Michael Chen",
-      instructorTh: "ดร. ไมเคิล เฉิน",
-      descriptionEn: "Principles of software engineering. Topics include software development lifecycles, requirement analysis, software design patterns, architectural styles, software testing, agile methodologies, and project management.",
-      descriptionTh: "หลักการวิศวกรรมซอฟต์แวร์ วงจรการพัฒนาซอฟต์แวร์ การวิเคราะห์ความต้องการ การออกแบบระบบสถาปัตยกรรมซอฟต์แวร์ รูปแบบการทดสอบซอฟต์แวร์ กระบวนการพัฒนาแบบเอจายล์ และการจัดการโครงการซอฟต์แวร์"
-    },
-    wednesday: {
-      code: "CPE 323",
-      nameEn: "Computer Networks",
-      nameTh: "เครือข่ายคอมพิวเตอร์",
-      room: "CPE-501",
-      instructorEn: "Dr. Alan Turing",
-      instructorTh: "ดร. อลัน ทัวริง",
-      descriptionEn: "Fundamentals of computer networks and communications. Topics include OSI model, TCP/IP protocol suite, network routing algorithms, transport layer congestion control, DNS, HTTP, and network security concepts.",
-      descriptionTh: "สถาปัตยกรรมโครงข่ายเครือข่ายคอมพิวเตอร์ตามแบบจำลอง OSI และ TCP/IP อัลกอริทึมการกำหนดเส้นทาง การควบคุมความคับคั่งในระดับชั้นขนส่ง โปรโตคอลแอปพลิเคชัน และความปลอดภัยบนระบบเครือข่าย"
-    },
-    thursday: {
-      code: "CPE 324",
-      nameEn: "Embedded Systems",
-      nameTh: "ระบบฝังตัว",
-      room: "CPE-502",
-      instructorEn: "Dr. Grace Hopper",
-      instructorTh: "ดร. เกรซ ฮอปเปอร์",
-      descriptionEn: "Introduction to embedded systems design. Topics include microcontroller architecture, hardware-software co-design, real-time operating systems (RTOS), serial communication interfaces (I2C, SPI, UART), and sensor interfacing.",
-      descriptionTh: "การออกแบบระบบคอมพิวเตอร์ฝังตัว สถาปัตยกรรมไมโครคอนโทรลเลอร์ การควบคุมอุปกรณ์รับเข้าและส่งออก อินเทอร์เฟสระบบสื่อสารอนุกรม ระบบปฏิบัติการเวลาจริง (RTOS) และการเชื่อมต่อเซนเซอร์"
-    },
-    friday: {
-      code: "CPE 325",
-      nameEn: "Artificial Intelligence",
-      nameTh: "ปัญญาประดิษฐ์",
-      room: "CPE-601",
-      instructorEn: "Dr. John McCarthy",
-      instructorTh: "ดร. จอห์น แมคคาร์ธี",
-      descriptionEn: "Principles of artificial intelligence. Topics include heuristic search techniques, knowledge representation, logic programming, machine learning algorithms, artificial neural networks, and decision theory.",
-      descriptionTh: "แนวคิดพื้นฐานเกี่ยวกับปัญญาประดิษฐ์ เทคนิคการค้นหาเชิงศึกษาพยากรณ์ การแสดงความรู้ การให้เหตุผลเชิงตรรกะ ตัวแทนที่ชาญฉลาด และการประยุกต์ใช้งานขั้นตอนวิธีเรียนรู้ของเครื่อง"
-    },
-    saturday: null,
-  },
-  {
-    time: "11:00 - 12:00",
-    monday: {
-      code: "CPE 321",
-      nameEn: "Database Systems",
-      nameTh: "ระบบฐานข้อมูล",
-      room: "CPE-401",
-      instructorEn: "Dr. Sarah Johnson",
-      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
-      descriptionEn: "Introduction to database management systems. Topics include relational database design, query languages (SQL), database storage and indexing, transaction management, concurrency control, and database administration.",
-      descriptionTh: "สถาปัตยกรรมระบบจัดการฐานข้อมูล แบบจำลองข้อมูลความสัมพันธ์ ภาษาคิวรีมาตรฐาน (SQL) การออกแบบฐานข้อมูลเชิงสัมพันธ์ด้วยขั้นตอนวิธีนอร์มัลไลเซชัน การควบคุมภาวะพร้อมกัน การกู้คืนระบบ และการจัดการความปลอดภัย"
-    },
-    tuesday: {
-      code: "CPE 322",
-      nameEn: "Software Engineering",
-      nameTh: "วิศวกรรมซอฟต์แวร์",
-      room: "CPE-402",
-      instructorEn: "Dr. Michael Chen",
-      instructorTh: "ดร. ไมเคิล เฉิน",
-      descriptionEn: "Principles of software engineering. Topics include software development lifecycles, requirement analysis, software design patterns, architectural styles, software testing, agile methodologies, and project management.",
-      descriptionTh: "หลักการวิศวกรรมซอฟต์แวร์ วงจรการพัฒนาซอฟต์แวร์ การวิเคราะห์ความต้องการ การออกแบบระบบสถาปัตยกรรมซอฟต์แวร์ รูปแบบการทดสอบซอฟต์แวร์ กระบวนการพัฒนาแบบเอจายล์ และการจัดการโครงการซอฟต์แวร์"
-    },
-    wednesday: {
-      code: "CPE 323",
-      nameEn: "Computer Networks",
-      nameTh: "เครือข่ายคอมพิวเตอร์",
-      room: "CPE-501",
-      instructorEn: "Dr. Alan Turing",
-      instructorTh: "ดร. อลัน ทัวริง",
-      descriptionEn: "Fundamentals of computer networks and communications. Topics include OSI model, TCP/IP protocol suite, network routing algorithms, transport layer congestion control, DNS, HTTP, and network security concepts.",
-      descriptionTh: "สถาปัตยกรรมโครงข่ายเครือข่ายคอมพิวเตอร์ตามแบบจำลอง OSI และ TCP/IP อัลกอริทึมการกำหนดเส้นทาง การควบคุมความคับคั่งในระดับชั้นขนส่ง โปรโตคอลแอปพลิเคชัน และความปลอดภัยบนระบบเครือข่าย"
-    },
-    thursday: {
-      code: "CPE 324",
-      nameEn: "Embedded Systems",
-      nameTh: "ระบบฝังตัว",
-      room: "CPE-502",
-      instructorEn: "Dr. Grace Hopper",
-      instructorTh: "ดร. เกรซ ฮอปเปอร์",
-      descriptionEn: "Introduction to embedded systems design. Topics include microcontroller architecture, hardware-software co-design, real-time operating systems (RTOS), serial communication interfaces (I2C, SPI, UART), and sensor interfacing.",
-      descriptionTh: "การออกแบบระบบคอมพิวเตอร์ฝังตัว สถาปัตยกรรมไมโครคอนโทรลเลอร์ การควบคุมอุปกรณ์รับเข้าและส่งออก อินเทอร์เฟสระบบสื่อสารอนุกรม ระบบปฏิบัติการเวลาจริง (RTOS) และการเชื่อมต่อเซนเซอร์"
-    },
-    friday: {
-      code: "CPE 325",
-      nameEn: "Artificial Intelligence",
-      nameTh: "ปัญญาประดิษฐ์",
-      room: "CPE-601",
-      instructorEn: "Dr. John McCarthy",
-      instructorTh: "ดร. จอห์น แมคคาร์ธี",
-      descriptionEn: "Principles of artificial intelligence. Topics include heuristic search techniques, knowledge representation, logic programming, machine learning algorithms, artificial neural networks, and decision theory.",
-      descriptionTh: "แนวคิดพื้นฐานเกี่ยวกับปัญญาประดิษฐ์ เทคนิคการค้นหาเชิงศึกษาพยากรณ์ การแสดงความรู้ การให้เหตุผลเชิงตรรกะ ตัวแทนที่ชาญฉลาด และการประยุกต์ใช้งานขั้นตอนวิธีเรียนรู้ของเครื่อง"
-    },
-    saturday: null,
-  },
-  {
-    time: "12:00 - 13:00",
-    monday: null,
-    tuesday: null,
-    wednesday: null,
-    thursday: null,
-    friday: null,
-    saturday: null,
-  },
-  {
-    time: "13:00 - 14:00",
-    monday: {
-      code: "CPE 326",
-      nameEn: "Operating Systems",
-      nameTh: "ระบบปฏิบัติการ",
-      room: "CPE-401",
-      instructorEn: "Dr. Sarah Johnson",
-      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
-      descriptionEn: "Principles of operating systems architecture. Topics include process synchronization, CPU scheduling, thread management, memory management, virtual memory techniques, file systems, disk scheduling, and deadlocks.",
-      descriptionTh: "โครงสร้างและหน้าที่ของระบบปฏิบัติการ การจัดการกระบวนการ การจัดตารางเวลาของซีพียู การจัดการหน่วยความจำหลัก หน่วยความจำเสมือน ระบบแฟ้มข้อมูล และการจัดการทรัพยากรเมื่อเกิดการติดตาย"
-    },
-    tuesday: null,
-    wednesday: {
-      code: "CPE 381",
-      nameEn: "Comp Eng Lab III",
-      nameTh: "ปฏิบัติการวิศวกรรมคอมพิวเตอร์ 3",
-      room: "CPE-Lab 3",
-      instructorEn: "Dr. Linus Torvalds",
-      instructorTh: "ดร. ไลนัส ทอร์วัลด์ส",
-      descriptionEn: "Practical experiments in computer engineering. Focuses on advanced web services development, network socket programming, API integration, and hands-on system administration in Linux servers.",
-      descriptionTh: "การทดลองเชิงปฏิบัติการวิศวกรรมคอมพิวเตอร์ มุ่งเน้นการสร้างเว็บเซอร์วิสขั้นสูง โปรแกรมมิ่งซ็อกเก็ตเครือข่าย การผสานอินเทอร์เฟส API และทักษะการดูแลระบบเซิร์ฟเวอร์ด้วย Linux"
-    },
-    thursday: null,
-    friday: null,
-    saturday: null,
-  },
-  {
-    time: "14:00 - 15:00",
-    monday: {
-      code: "CPE 326",
-      nameEn: "Operating Systems",
-      nameTh: "ระบบปฏิบัติการ",
-      room: "CPE-401",
-      instructorEn: "Dr. Sarah Johnson",
-      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
-      descriptionEn: "Principles of operating systems architecture. Topics include process synchronization, CPU scheduling, thread management, memory management, virtual memory techniques, file systems, disk scheduling, and deadlocks.",
-      descriptionTh: "โครงสร้างและหน้าที่ของระบบปฏิบัติการ การจัดการกระบวนการ การจัดตารางเวลาของซีพียู การจัดการหน่วยความจำหลัก หน่วยความจำเสมือน ระบบแฟ้มข้อมูล และการจัดการทรัพยากรเมื่อเกิดการติดตาย"
-    },
-    tuesday: null,
-    wednesday: {
-      code: "CPE 381",
-      nameEn: "Comp Eng Lab III",
-      nameTh: "ปฏิบัติการวิศวกรรมคอมพิวเตอร์ 3",
-      room: "CPE-Lab 3",
-      instructorEn: "Dr. Linus Torvalds",
-      instructorTh: "ดร. ไลนัส ทอร์วัลด์ส",
-      descriptionEn: "Practical experiments in computer engineering. Focuses on advanced web services development, network socket programming, API integration, and hands-on system administration in Linux servers.",
-      descriptionTh: "การทดลองเชิงปฏิบัติการวิศวกรรมคอมพิวเตอร์ มุ่งเน้นการสร้างเว็บเซอร์วิสขั้นสูง โปรแกรมมิ่งซ็อกเก็ตเครือข่าย การผสานอินเทอร์เฟส API และทักษะการดูแลระบบเซิร์ฟเวอร์ด้วย Linux"
-    },
-    thursday: null,
-    friday: null,
-    saturday: null,
-  },
-  {
-    time: "15:00 - 16:00",
-    monday: {
-      code: "CPE 326",
-      nameEn: "Operating Systems",
-      nameTh: "ระบบปฏิบัติการ",
-      room: "CPE-401",
-      instructorEn: "Dr. Sarah Johnson",
-      instructorTh: "ดร. ซาร่าห์ จอห์นสัน",
-      descriptionEn: "Principles of operating systems architecture. Topics include process synchronization, CPU scheduling, thread management, memory management, virtual memory techniques, file systems, disk scheduling, and deadlocks.",
-      descriptionTh: "โครงสร้างและหน้าที่ของระบบปฏิบัติการ การจัดการกระบวนการ การจัดตารางเวลาของซีพียู การจัดการหน่วยความจำหลัก หน่วยความจำเสมือน ระบบแฟ้มข้อมูล และการจัดการทรัพยากรเมื่อเกิดการติดตาย"
-    },
-    tuesday: null,
-    wednesday: {
-      code: "CPE 381",
-      nameEn: "Comp Eng Lab III",
-      nameTh: "ปฏิบัติการวิศวกรรมคอมพิวเตอร์ 3",
-      room: "CPE-Lab 3",
-      instructorEn: "Dr. Linus Torvalds",
-      instructorTh: "ดร. ไลนัส ทอร์วัลด์ส",
-      descriptionEn: "Practical experiments in computer engineering. Focuses on advanced web services development, network socket programming, API integration, and hands-on system administration in Linux servers.",
-      descriptionTh: "การทดลองเชิงปฏิบัติการวิศวกรรมคอมพิวเตอร์ มุ่งเน้นการสร้างเว็บเซอร์วิสขั้นสูง โปรแกรมมิ่งซ็อกเก็ตเครือข่าย การผสานอินเทอร์เฟส API และทักษะการดูแลระบบเซิร์ฟเวอร์ด้วย Linux"
-    },
-    thursday: null,
-    friday: null,
-    saturday: null,
-  },
-  {
-    time: "16:00 - 17:00",
-    monday: null,
-    tuesday: null,
-    wednesday: null,
-    thursday: null,
-    friday: null,
-    saturday: null,
-  },
-  {
-    time: "17:00 - 18:00",
-    monday: null,
-    tuesday: null,
-    wednesday: null,
-    thursday: null,
-    friday: null,
-    saturday: null,
-  },
-  {
-    time: "18:00 - 19:00",
-    monday: null,
-    tuesday: null,
-    wednesday: null,
-    thursday: null,
-    friday: null,
-    saturday: null,
-  },
-  {
-    time: "19:00 - 20:00",
-    monday: null,
-    tuesday: null,
-    wednesday: null,
-    thursday: null,
-    friday: null,
-    saturday: null,
-  },
-];
 
 // --- TIME OPTIONS ---
 const START_TIMES = [
@@ -370,13 +70,10 @@ export default function AdminClassSchedulePage({
     setIsLoggedIn(!!role);
 
     // Load class items
-    const savedClasses = localStorage.getItem("weekly_class_schedules");
-    if (savedClasses) {
-      setWeeklyClasses(JSON.parse(savedClasses));
-    } else {
-      localStorage.setItem("weekly_class_schedules", JSON.stringify(DEFAULT_CLASSES));
-      setWeeklyClasses(DEFAULT_CLASSES);
-    }
+    api
+      .classSchedule(SCHEDULE_YEAR, SCHEDULE_TERM)
+      .then((cells) => setWeeklyClasses(cellsToGrid(cells)))
+      .catch((e) => console.error("Failed to load class schedule:", e));
   }, [params]);
 
   const isTh = lang === "th";
@@ -494,8 +191,7 @@ export default function AdminClassSchedulePage({
   }, [classStartTime, classDay, weeklyClasses, editingClassSlot]);
 
   const handleStartClassEdit = (dayKey: string, timeSlot: string, classItem: ClassItem) => {
-    const saved = localStorage.getItem("weekly_class_schedules");
-    const list = saved ? JSON.parse(saved) : [...DEFAULT_CLASSES];
+    const list = weeklyClasses;
 
     let start = timeSlot.split(" - ")[0];
     let end = timeSlot.split(" - ")[1];
@@ -572,10 +268,18 @@ export default function AdminClassSchedulePage({
     setLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
-      const saved = localStorage.getItem("weekly_class_schedules");
-      const list = saved ? JSON.parse(saved) : [...DEFAULT_CLASSES];
+      // deep clone current grid so we don't mutate React state directly
+      const list: WeeklyClassRow[] = weeklyClasses.map((row) => ({
+        ...row,
+        monday: row.monday ? { ...row.monday } : null,
+        tuesday: row.tuesday ? { ...row.tuesday } : null,
+        wednesday: row.wednesday ? { ...row.wednesday } : null,
+        thursday: row.thursday ? { ...row.thursday } : null,
+        friday: row.friday ? { ...row.friday } : null,
+        saturday: row.saturday ? { ...row.saturday } : null,
+      }));
 
       // 1. If we were editing, clear the old range first
       if (editingClassSlot) {
@@ -606,7 +310,7 @@ export default function AdminClassSchedulePage({
         }
       });
 
-      localStorage.setItem("weekly_class_schedules", JSON.stringify(list));
+      await api.saveClassSchedule(SCHEDULE_YEAR, gridToCells(list));
       setWeeklyClasses(list);
 
       setSuccess(true);
@@ -624,15 +328,23 @@ export default function AdminClassSchedulePage({
 
   const handleClassDelete = (dayKey: string, timeSlot: string) => {
     if (confirm(isTh ? "คุณต้องการลบวิชาในคาบเวลานี้ใช่หรือไม่?" : "Are you sure you want to clear this class slot?")) {
-      const saved = localStorage.getItem("weekly_class_schedules");
-      const list = saved ? JSON.parse(saved) : [...DEFAULT_CLASSES];
-      
+      // deep clone so we don't mutate React state directly
+      const list: WeeklyClassRow[] = weeklyClasses.map((row) => ({
+        ...row,
+        monday: row.monday ? { ...row.monday } : null,
+        tuesday: row.tuesday ? { ...row.tuesday } : null,
+        wednesday: row.wednesday ? { ...row.wednesday } : null,
+        thursday: row.thursday ? { ...row.thursday } : null,
+        friday: row.friday ? { ...row.friday } : null,
+        saturday: row.saturday ? { ...row.saturday } : null,
+      }));
+
       const rowIndex = list.findIndex((row: WeeklyClassRow) => row.time === timeSlot);
       if (rowIndex > -1) {
         const classItem = list[rowIndex][dayKey as keyof Omit<WeeklyClassRow, "time">];
         if (classItem) {
           const code = classItem.code;
-          
+
           // Find contiguous range for the same class code on the same day
           let firstIndex = rowIndex;
           while (firstIndex > 0) {
@@ -662,8 +374,10 @@ export default function AdminClassSchedulePage({
         }
       }
 
-      localStorage.setItem("weekly_class_schedules", JSON.stringify(list));
       setWeeklyClasses(list);
+      api
+        .saveClassSchedule(SCHEDULE_YEAR, gridToCells(list))
+        .catch((e: any) => setError(e?.message ?? "Save failed"));
 
       // Cancel edit mode if we deleted the slot we were editing
       if (editingClassSlot && editingClassSlot.day === dayKey) {

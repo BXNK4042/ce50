@@ -43,13 +43,57 @@ export interface NewsItem {
   published_at?: string | null;
 }
 
-export interface Schedule {
-  id: number;
-  kind: "class" | "exam";
-  year: number;
-  term?: number | null;
-  payload: unknown;
+// Flat class cell stored in DB; frontend converts to/from WeeklyClassRow grid.
+export interface ClassCell {
+  day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday";
+  time_slot: string;
+  code: string;
+  name_en?: string | null;
+  name_th?: string | null;
+  room?: string | null;
+  instructor_en?: string | null;
+  instructor_th?: string | null;
+  description_en?: string | null;
+  description_th?: string | null;
 }
+
+// Flat exam row stored in DB.
+export interface ExamSlot {
+  code: string;
+  name_en?: string | null;
+  name_th?: string | null;
+  date_raw?: string | null;
+  start_time?: string | null;
+  end_time?: string | null;
+  midterm_en?: string | null;
+  midterm_th?: string | null;
+  finals_en?: string | null;
+  finals_th?: string | null;
+}
+
+// Fixed weekly time slots used to rebuild the class grid from flat cells.
+export const CLASS_TIME_SLOTS = [
+  "09:00 - 10:00",
+  "10:00 - 11:00",
+  "11:00 - 12:00",
+  "12:00 - 13:00",
+  "13:00 - 14:00",
+  "14:00 - 15:00",
+  "15:00 - 16:00",
+  "16:00 - 17:00",
+  "17:00 - 18:00",
+  "18:00 - 19:00",
+  "19:00 - 20:00",
+];
+
+export const CLASS_DAYS = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+] as const;
 
 export interface Room {
   id: number;
