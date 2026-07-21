@@ -114,7 +114,7 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
 
               {/* CE04 logo in the top-left corner */}
               <img
-                src="/CE.webp?v=8"
+                src="/ce_logo.webp?v=8"
                 alt="CE Logo"
                 className={`absolute top-4 left-4 w-48 h-auto z-20 object-contain pointer-events-none filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] contrast-[1.15] brightness-[1.05] opacity-25 transition-opacity duration-500 ${
                   teacher.id === 6 ? "group-hover:opacity-0" : ""
@@ -133,28 +133,28 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                   />
                   {teacher.id === 3 && (
                     <img
-                      src="/image/pisakorn2.webp?v=8"
+                      src="/professors/pisakorn-alt.webp?v=8"
                       alt={`${name} alternative`}
                       className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
                   {teacher.id === 4 && (
                     <img
-                      src="/image/silar1.webp?v=8"
+                      src="/professors/silar-alt.webp?v=8"
                       alt={`${name} alternative`}
                       className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
                   {teacher.id === 5 && (
                     <img
-                      src="/image/sakawkarn1.webp?v=8"
+                      src="/professors/sakawkarn-alt.webp?v=8"
                       alt={`${name} alternative`}
                       className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
                   {teacher.id === 6 && (
                     <img
-                      src="/image/niyomcha.webp?v=8"
+                      src="/backgrounds/niyomcha.webp?v=8"
                       alt="Niyomcha background"
                       className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
                     />
@@ -358,7 +358,7 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                         {/* Portrait */}
                         <div className="relative flex-1 my-2 bg-slate-950/70 rounded-lg overflow-hidden border border-purple-500/30 flex items-center justify-center z-10">
                           <img
-                            src="/image/rattikorn1.webp?v=8"
+                            src="/professors/rattikorn-alt.webp?v=8"
                             alt="ป้าจุ๋ม"
                             className="absolute bottom-0 w-[95%] h-auto object-contain object-bottom pointer-events-none"
                           />

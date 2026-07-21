@@ -323,7 +323,7 @@ export default function Navbar({
           {/* Center Logo Column (always perfectly centered) */}
           <div className="flex-initial pointer-events-auto">
             <Link href={`/${lang}`} className="flex items-center gap-1.5 font-bold text-lg shrink-0">
-              <img src="/CE.webp" alt="CE Logo" className="h-11 w-11 object-contain" />
+              <img src="/ce_logo.webp" alt="CE Logo" className="h-11 w-11 object-contain" />
               <span>COM EN</span>
             </Link>
           </div>

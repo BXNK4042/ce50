@@ -4,57 +4,6 @@ import TeachersGrid from "./teachers-grid";
 
 export const dynamic = "force-dynamic";
 
-const fallbackTeachers = [
-  {
-    id: 1,
-    name_th: "อาจารย์อรรถศาสตร์ นาคเทวัญ",
-    name_en: "Athasart Narkthewan",
-    photo: "/image/athasart.webp",
-    advise_years: ["1"],
-    contact: "athasart.n@ce.ac.th",
-  },
-  {
-    id: 2,
-    name_th: "ดร.รัตติกร สมบัติแก้ว",
-    name_en: "Rattikorn Sombutkaew",
-    photo: "/image/rattikorn.webp",
-    advise_years: ["2"],
-    contact: "rattikorn.s@ce.ac.th",
-  },
-  {
-    id: 3,
-    name_th: "อาจารย์นภัสรพี สิทธิวัจน์",
-    name_en: "Pisakorn Sittiwatjana",
-    photo: "/image/pisakorn.webp",
-    advise_years: ["3"],
-    contact: "pisakorn.s@ce.ac.th",
-  },
-  {
-    id: 4,
-    name_th: "ว่าที่ร้อยตรี ศิลา ศิริมาสกุล",
-    name_en: "Silar Sirimasakul",
-    photo: "/image/silar.webp",
-    advise_years: ["4"],
-    contact: "silar.s@ce.ac.th",
-  },
-  {
-    id: 5,
-    name_th: "อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช",
-    name_en: "Sakawkarn Piyawitwanich",
-    photo: "/image/sakawkarn.webp",
-    advise_years: ["1", "2"],
-    contact: "sakawkarn.p@ce.ac.th",
-  },
-  {
-    id: 6,
-    name_th: "นายจตุรงค์ เกตุนิมิต",
-    name_en: "Jaturong Katenimit",
-    photo: "/image/jaturong.webp",
-    advise_years: ["4"],
-    contact: "jaturong.k@ce.ac.th",
-  },
-];
-
 export default async function TeachersPage({
   params,
 }: {
@@ -70,7 +19,7 @@ export default async function TeachersPage({
     console.error("Failed to fetch teachers:", error);
   }
 
-  const teachers = (dbTeachers.length > 0 ? dbTeachers : fallbackTeachers).map((t) => {
+  const teachers = dbTeachers.map((t) => {
     let adviseYears: string[] = [];
     if (t.advise_years) {
       if (typeof t.advise_years === "string") {
@@ -119,7 +68,15 @@ export default async function TeachersPage({
       </h1>
 
       {/* Teachers Grid */}
-      <TeachersGrid teachers={teachers} lang={lang} />
+      {teachers.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-black/50 border border-blue-100 dark:border-zinc-800 rounded-xl p-8 text-center mt-12">
+          <p className="text-zinc-500 dark:text-zinc-400 font-medium">
+            {isTh ? "ไม่พบข้อมูลคณาจารย์" : "No faculty records found."}
+          </p>
+        </div>
+      ) : (
+        <TeachersGrid teachers={teachers} lang={lang} />
+      )}
     </section>
   );
 }

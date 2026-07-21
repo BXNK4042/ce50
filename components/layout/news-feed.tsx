@@ -20,45 +20,6 @@ interface NewsFeedProps {
   onlyArchive?: boolean;
 }
 
-const mockNews: NewsItem[] = [
-  {
-    title: "ทีมนักศึกษา CE คว้ารางวัลชนะเลิศระดับประเทศการแข่ง Hackathon 2026",
-    category: "competition",
-    body: "ทีมนักศึกษาชั้นปีที่ 3 และ 4 สาขาวิชาวิศวกรรมคอมพิวเตอร์ คว้ารางวัลชนะเลิศอันดับหนึ่งจากการแข่งขันพัฒนาซอฟต์แวร์นวัตกรรมและเทคโนโลยีระดับประเทศ Hackathon 2026 ณ ศูนย์การประชุมแห่งชาติสิริกิติ์",
-    published_at: "2026-07-18 10:00:00"
-  },
-  {
-    title: "เปิดรับสมัครทุนการศึกษาเรียนดีแต่ขาดแคลนทุนทรัพย์ ประจำภาคเรียนที่ 1/2569",
-    category: "scholarship",
-    body: "สาขาวิชาวิศวกรรมคอมพิวเตอร์เปิดรับสมัครขอรับทุนสนับสนุนการศึกษาสำหรับนักศึกษาที่มีผลการเรียนดีแต่ขาดแคลนทุนทรัพย์ ประจำปีการศึกษา 2569 โดยสามารถยื่นเอกสารได้ที่สำนักงานสาขาจนถึงสิ้นเดือนนี้",
-    published_at: "2026-07-17 09:00:00"
-  },
-  {
-    title: "ขอเชิญชวนศิษย์เก่าและนักศึกษาปัจจุบันร่วมงานสถาปนาครบรอบ 30 ปี วิศวกรรมคอมพิวเตอร์",
-    category: "other",
-    body: "ร่วมเฉลิมฉลองและสานสัมพันธ์เครือข่ายพี่น้องคอมพิวเตอร์ในงานครบรอบ 30 ปีการก่อตั้งสาขาวิชา พบกับกิจกรรมเสวนาวิชาการโดยศิษย์เก่าผู้ทรงคุณวุฒิ และงานเลี้ยงสังสรรค์ในภาคค่ำ",
-    published_at: "2026-07-16 13:30:00"
-  },
-  {
-    title: "CE04 เป็นตัวแทนประเทศไทยเข้าร่วมแข่งขันโอลิมปิกหุ่นยนต์ระดับนานาชาติ ณ ประเทศญี่ปุ่น",
-    category: "competition",
-    body: "ทีมนักศึกษา CE04 คว้ารางวัลเหรียญทองจากการคัดเลือกตัวแทนระดับประเทศ และได้รับสิทธิ์เดินทางไปเข้าร่วมประกวดนวัตกรรมหุ่นยนต์อัตโนมัติรอบชิงแชมป์โลก ณ เมืองโตเกียว ประเทศญี่ปุ่น",
-    published_at: "2026-07-15 11:15:00"
-  },
-  {
-    title: "ทุนสนับสนุนการวิจัยและฝึกงานต่างประเทศสำหรับนักศึกษาชั้นปีที่ 4 สนับสนุนโดยสมาคมศิษย์เก่า",
-    category: "scholarship",
-    body: "สมาคมศิษย์เก่าวิศวกรรมคอมพิวเตอร์ มอบทุนการศึกษาและตั๋วเครื่องบินสำหรับศึกษาดูงานและฝึกงานระยะสั้น ณ มหาวิทยาลัยคู่ความร่วมมือในต่างประเทศ สำหรับนักศึกษาที่มีผลการเรียนและทักษะภาษาอังกฤษดีเด่น",
-    published_at: "2026-07-14 15:45:00"
-  },
-  {
-    title: "การบรรยายพิเศษเรื่องความปลอดภัยไซเบอร์ (Cybersecurity) และบล็อกเชนในโลกยุคใหม่",
-    category: "other",
-    body: "ขอเชิญผู้สนใจเข้าร่วมฟังการสัมมนาจากกูรูผู้เชี่ยวชาญด้านความปลอดภัยทางไซเบอร์และบล็อกเชนระดับแนวหน้าของไทย เพื่อเตรียมพร้อมรับมือภัยคุกคามและการเปลี่ยนแปลงทางเทคโนโลยีในอนาคต",
-    published_at: "2026-07-12 14:00:00"
-  }
-];
-
 export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchive }: NewsFeedProps) {
   const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -80,18 +41,14 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
         const res = await fetch(`${backendUrl}/news`);
         if (res.ok) {
           const data: NewsItem[] = await res.json();
-          if (data && data.length > 0) {
-            const filtered = data.filter(item => item.category === "scholarship" || item.category === "competition");
-            setNews(filtered); // Fetch all internal news (no slice limit)
-            return;
-          }
+          const filtered = (data ?? []).filter(item => item.category === "scholarship" || item.category === "competition");
+          setNews(filtered);
+          return;
         }
       } catch (err) {
         console.error("Failed to fetch news:", err);
       }
-      // Fallback to mock data
-      const filteredMock = mockNews.filter(item => item.category === "scholarship" || item.category === "competition");
-      setNews(filteredMock);
+      setNews([]);
     };
 
     fetchNews();
@@ -157,7 +114,14 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
     }
   };
 
-  if (news.length === 0) return null;
+  if (news.length === 0) {
+    if (onlyArchive) return null;
+    return (
+      <div className="w-full flex items-center justify-center bg-white/50 dark:bg-black/30 border border-dashed border-blue-200 dark:border-zinc-800 rounded-xl p-12 text-zinc-500 dark:text-zinc-400">
+        {isTh ? "ยังไม่มีข่าวสารในขณะนี้" : "No news yet."}
+      </div>
+    );
+  }
 
   if (onlyArchive) {
     const archiveItems = news.slice(5);
@@ -189,11 +153,13 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                 }}
               >
                 {/* Background image */}
-                <img
-                  src={item.image || "/image/news_placeholder.jpg?v=2"}
-                  alt={item.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-                />
+                {item.image && (
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                  />
+                )}
 
                 {/* Edit News button (Admins/Writers only) */}
                 {isLoggedIn && item.id && (
@@ -289,11 +255,13 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
 
           {/* Large Image */}
           <div className="w-full aspect-[16/9] overflow-hidden bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 relative group">
-            <img
-              src={featuredNews.image || "/image/news_placeholder.jpg?v=2"}
-              alt={featuredNews.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
-            />
+            {featuredNews.image && (
+              <img
+                src={featuredNews.image}
+                alt={featuredNews.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
+              />
+            )}
             
             {/* Edit News button (Admins/Writers only) */}
             {isLoggedIn && featuredNews.id && (
@@ -362,11 +330,13 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                   }}
                 >
                   {/* Background image */}
-                  <img
-                    src={item.image || "/image/news_placeholder.jpg?v=2"}
-                    alt={item.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-                  />
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                    />
+                  )}
 
                   {/* Edit News button (Admins/Writers only) */}
                   {isLoggedIn && item.id && (
@@ -449,11 +419,13 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                   }}
                 >
                   {/* Background image */}
-                  <img
-                    src={item.image || "/image/news_placeholder.jpg?v=2"}
-                    alt={item.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-                  />
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                    />
+                  )}
 
                   {/* Edit News button (Admins/Writers only) */}
                   {isLoggedIn && item.id && (

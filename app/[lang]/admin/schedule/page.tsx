@@ -3,101 +3,16 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import {
+  api,
+  slotToExamItem,
+  examItemToSlot,
+  type ExamItem,
+} from "@/lib/api";
 
-interface ExamItem {
-  code: string;
-  nameEn: string;
-  nameTh: string;
-  dateRaw: string;
-  timeRaw: string;
-  startTimeRaw: string;
-  endTimeRaw: string;
-  midtermEn: string;
-  midtermTh: string;
-  finalsEn: string;
-  finalsTh: string;
-}
-
-const DEFAULT_EXAMS: ExamItem[] = [
-  {
-    code: "CPE 321",
-    nameEn: "Database Systems",
-    nameTh: "ระบบฐานข้อมูล",
-    dateRaw: "2026-10-12",
-    timeRaw: "09:00",
-    startTimeRaw: "09:00",
-    endTimeRaw: "12:00",
-    midtermEn: "Oct 12, 2026 (09:00 - 12:00)",
-    midtermTh: "12 ต.ค. 2569 (09:00 - 12:00)",
-    finalsEn: "Dec 14, 2026 (09:00 - 12:00)",
-    finalsTh: "14 ธ.ค. 2569 (09:00 - 12:00)",
-  },
-  {
-    code: "CPE 322",
-    nameEn: "Software Engineering",
-    nameTh: "วิศวกรรมซอฟต์แวร์",
-    dateRaw: "2026-10-13",
-    timeRaw: "13:00",
-    startTimeRaw: "13:00",
-    endTimeRaw: "16:00",
-    midtermEn: "Oct 13, 2026 (13:00 - 16:00)",
-    midtermTh: "13 ต.ค. 2569 (13:00 - 16:00)",
-    finalsEn: "Dec 15, 2026 (13:00 - 16:00)",
-    finalsTh: "15 ธ.ค. 2569 (13:00 - 16:00)",
-  },
-  {
-    code: "CPE 323",
-    nameEn: "Computer Networks",
-    nameTh: "เครือข่ายคอมพิวเตอร์",
-    dateRaw: "2026-10-14",
-    timeRaw: "09:00",
-    startTimeRaw: "09:00",
-    endTimeRaw: "12:00",
-    midtermEn: "Oct 14, 2026 (09:00 - 12:00)",
-    midtermTh: "14 ต.ค. 2569 (09:00 - 12:00)",
-    finalsEn: "Dec 16, 2026 (09:00 - 12:00)",
-    finalsTh: "16 ธ.ค. 2569 (09:00 - 12:00)",
-  },
-  {
-    code: "CPE 324",
-    nameEn: "Embedded Systems",
-    nameTh: "ระบบฝังตัว",
-    dateRaw: "2026-10-15",
-    timeRaw: "13:00",
-    startTimeRaw: "13:00",
-    endTimeRaw: "16:00",
-    midtermEn: "Oct 15, 2026 (13:00 - 16:00)",
-    midtermTh: "15 ต.ค. 2569 (13:00 - 16:00)",
-    finalsEn: "Dec 17, 2026 (13:00 - 16:00)",
-    finalsTh: "17 ธ.ค. 2569 (13:00 - 16:00)",
-  },
-  {
-    code: "CPE 325",
-    nameEn: "Artificial Intelligence",
-    nameTh: "ปัญญาประดิษฐ์",
-    dateRaw: "2026-10-16",
-    timeRaw: "09:00",
-    startTimeRaw: "09:00",
-    endTimeRaw: "12:00",
-    midtermEn: "Oct 16, 2026 (09:00 - 12:00)",
-    midtermTh: "16 ต.ค. 2569 (09:00 - 12:00)",
-    finalsEn: "Dec 18, 2026 (09:00 - 12:00)",
-    finalsTh: "18 ธ.ค. 2569 (09:00 - 12:00)",
-  },
-  {
-    code: "CPE 326",
-    nameEn: "Operating Systems",
-    nameTh: "ระบบปฏิบัติการ",
-    dateRaw: "2026-10-19",
-    timeRaw: "13:00",
-    startTimeRaw: "13:00",
-    endTimeRaw: "16:00",
-    midtermEn: "Oct 19, 2026 (13:00 - 16:00)",
-    midtermTh: "19 ต.ค. 2569 (13:00 - 16:00)",
-    finalsEn: "Dec 21, 2026 (13:00 - 16:00)",
-    finalsTh: "21 ธ.ค. 2569 (13:00 - 16:00)",
-  },
-];
+// ponytail: year/term hardcoded — add cohort selector when multiple years exist
+const SCHEDULE_YEAR = 3;
+const SCHEDULE_TERM = 1;
 
 const CLASS_OPTIONS = [
   { code: "CPE 321", nameEn: "Database Systems", nameTh: "ระบบฐานข้อมูล" },
@@ -136,13 +51,10 @@ export default function AdminSchedulePage({
     setIsLoggedIn(!!role);
 
     // Load exam items
-    const savedExams = localStorage.getItem("exam_schedules");
-    if (savedExams) {
-      setExams(JSON.parse(savedExams));
-    } else {
-      localStorage.setItem("exam_schedules", JSON.stringify(DEFAULT_EXAMS));
-      setExams(DEFAULT_EXAMS);
-    }
+    api
+      .examSchedule(SCHEDULE_YEAR, SCHEDULE_TERM)
+      .then((slots) => setExams(slots.map(slotToExamItem)))
+      .catch((e) => console.error("Failed to load exam schedule:", e));
   }, [params]);
 
   // Automatically trigger edit mode if query parameter ?edit=... is present in URL
@@ -225,11 +137,16 @@ export default function AdminSchedulePage({
 
   const handleDelete = (code: string) => {
     if (confirm(isTh ? `คุณต้องการลบวิชา ${code} ใช่หรือไม่?` : `Are you sure you want to delete ${code}?`)) {
-      const saved = localStorage.getItem("exam_schedules");
-      const list = saved ? JSON.parse(saved) : [...DEFAULT_EXAMS];
-      const updatedList = list.filter((x: any) => x.code.toLowerCase() !== code.toLowerCase());
-      localStorage.setItem("exam_schedules", JSON.stringify(updatedList));
+      const updatedList = exams.filter(
+        (x) => x.code.toLowerCase() !== code.toLowerCase()
+      );
       setExams(updatedList);
+      api
+        .saveExamSchedule(
+          SCHEDULE_YEAR,
+          updatedList.map(examItemToSlot)
+        )
+        .catch((e: any) => setError(e?.message ?? "Save failed"));
       if (editingCode === code) {
         handleCancelEdit();
       }
@@ -247,10 +164,9 @@ export default function AdminSchedulePage({
     setLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 600));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
-      const saved = localStorage.getItem("exam_schedules");
-      const list = saved ? JSON.parse(saved) : [...DEFAULT_EXAMS];
+      const list = [...exams];
 
       let formattedTh = "";
       let formattedEn = "";
@@ -328,7 +244,10 @@ export default function AdminSchedulePage({
         return 0;
       });
 
-      localStorage.setItem("exam_schedules", JSON.stringify(listToSave));
+      await api.saveExamSchedule(
+        SCHEDULE_YEAR,
+        listToSave.map(examItemToSlot)
+      );
       setExams(listToSave);
 
       setSuccess(true);

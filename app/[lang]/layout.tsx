@@ -38,8 +38,7 @@ export default async function LangLayout({
   const cookieStore = await cookies();
   const theme = cookieStore.get("theme")?.value || "dark";
 
-  const videoFileName = lang === "th" ? "Footage_CE04_remake.mp4" : "Footage_CE04.mp4";
-  const videoSrc = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/Video/${videoFileName}`;
+  const videoSrc = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/Video/ce_hero_footage.mp4`;
 
   return (
     <html
