@@ -3,7 +3,7 @@ import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
 import { api } from "@/lib/api";
 import Link from "next/link";
 import { Student } from "@/lib/types";
-
+import { StudentGridClient } from "./student-grid-client";
 
 export default async function CohortPage({
   params,
@@ -15,6 +15,7 @@ export default async function CohortPage({
   if (!/^CE\d{2}$/.test(cohortUpper)) notFound();
 
   const dict = await getDictionary(lang as Locale);
+  const isCE04 = cohortUpper === "CE04";
 
   let students: Student[] = [];
   try {
@@ -23,6 +24,54 @@ export default async function CohortPage({
     console.error("Failed to fetch students:", error);
   }
 
+  if (isCE04) {
+    return (
+      <div className="min-h-screen bg-[#cad9f0]/40 dark:bg-[#0a192f]/40 transition-colors duration-300">
+
+        {/* News section (full-width, h-screen, empty box with CE_04.webp background) */}
+        <div className="relative h-screen w-full p-12 md:p-16 flex flex-col justify-end items-start transition-all duration-300 overflow-hidden">
+          {/* Background Image with bottom 35% fade-out mask */}
+          <img 
+            src="/students/ce_04/CE_04.webp"
+            alt="CE04 Background"
+            className="absolute inset-0 w-full h-full object-cover z-0"
+            style={{
+              objectPosition: "50% 55%",
+              maskImage: "linear-gradient(to bottom, black 35%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, black 35%, transparent 100%)"
+            }}
+          />
+          {/* Contrast overlay with bottom 35% fade-out mask */}
+          <div 
+            className="absolute inset-0 bg-black/35 dark:bg-black/55 z-10 transition-colors duration-300"
+            style={{
+              maskImage: "linear-gradient(to bottom, black 35%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, black 35%, transparent 100%)"
+            }}
+          />
+
+          {/* Section Header (Bottom-Left aligned with drop shadows for readability) */}
+          <div className="relative z-20 text-left mb-16 md:mb-24 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
+            <h2 className="text-4xl font-extrabold text-white tracking-tight select-none">
+              THIRD YEAR
+            </h2>
+            <p className="mt-2 text-sky-400 dark:text-sky-300 text-4xl font-extrabold select-none tracking-tight">
+              JUNIOR
+            </p>
+          </div>
+        </div>
+
+        {/* Student list section (below news section) */}
+        <div className="py-12 md:py-16">
+          <section className="mx-auto max-w-7xl px-12 md:px-16 w-full">
+            <StudentGridClient students={students} lang={lang} dict={dict} />
+          </section>
+        </div>
+      </div>
+    );
+  }
+
+  // Original render for other cohorts (remains completely unchanged)
   return (
     <div className="min-h-screen bg-[#cad9f0]/40 dark:bg-[#0a192f]/40 transition-colors duration-300 py-12 md:py-16">
       <section className="mx-auto max-w-6xl px-12 md:px-16">

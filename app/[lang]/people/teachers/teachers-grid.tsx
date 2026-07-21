@@ -93,7 +93,7 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
           >
             {/* Actual Card Container (with overflow-hidden) */}
             <div
-              className={`w-full h-full border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-500 hover:shadow-lg cursor-pointer select-none flex flex-col justify-end relative bg-gradient-to-b from-[#a7c7f2] to-[#2b5c9e] ${
+              className={`w-full h-full border border-zinc-200 dark:border-zinc-800 overflow-hidden isolate will-change-transform transition-all duration-500 hover:shadow-lg cursor-pointer select-none flex flex-col justify-end relative bg-gradient-to-b from-[#a7c7f2] to-[#2b5c9e] ${
                 isAthasart
                   ? "hover:from-[#fbc6a9] hover:to-[#e06e30] hover:shadow-orange-500/20"
                   : isRattikorn
@@ -116,18 +116,18 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
               <img
                 src="/ce_logo.webp?v=8"
                 alt="CE Logo"
-                className={`absolute top-4 left-4 w-48 h-auto z-20 object-contain pointer-events-none filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] contrast-[1.15] brightness-[1.05] opacity-25 transition-opacity duration-500 ${
+                className={`absolute top-4 left-4 w-[35%] max-w-[180px] min-w-[80px] h-auto z-20 object-contain pointer-events-none filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] contrast-[1.15] brightness-[1.05] opacity-25 transition-opacity duration-500 ${
                   teacher.id === 6 ? "group-hover:opacity-0" : ""
                 }`}
               />
 
               {/* Full Background Portrait Image */}
               {teacher.photo ? (
-                <div className="absolute inset-0 w-full h-full z-10 pointer-events-none">
+                <div className="absolute inset-0 w-full h-full z-10 pointer-events-none overflow-hidden">
                   <img
                     src={`${teacher.photo}?v=8`}
                     alt={name}
-                    className={`absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 transition-opacity duration-500 ease-in-out ${
+                    className={`absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 transition-opacity duration-500 ease-in-out ${
                       [3, 4, 5].includes(teacher.id) ? "group-hover:opacity-0" : ""
                     }`}
                   />
@@ -135,21 +135,21 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                     <img
                       src="/professors/pisakorn-alt.webp?v=8"
                       alt={`${name} alternative`}
-                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
+                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
                   {teacher.id === 4 && (
                     <img
                       src="/professors/silar-alt.webp?v=8"
                       alt={`${name} alternative`}
-                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
+                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
                   {teacher.id === 5 && (
                     <img
                       src="/professors/sakawkarn-alt.webp?v=8"
                       alt={`${name} alternative`}
-                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
+                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
                   {teacher.id === 6 && (
