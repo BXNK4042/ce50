@@ -189,11 +189,13 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                 }}
               >
                 {/* Background image */}
-                <img
-                  src={item.image || "/image/news_placeholder.jpg?v=2"}
-                  alt={item.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-                />
+                {item.image && (
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                  />
+                )}
 
                 {/* Edit News button (Admins/Writers only) */}
                 {isLoggedIn && item.id && (
@@ -289,11 +291,13 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
 
           {/* Large Image */}
           <div className="w-full aspect-[16/9] overflow-hidden bg-zinc-100 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 relative group">
-            <img
-              src={featuredNews.image || "/image/news_placeholder.jpg?v=2"}
-              alt={featuredNews.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
-            />
+            {featuredNews.image && (
+              <img
+                src={featuredNews.image}
+                alt={featuredNews.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-102"
+              />
+            )}
             
             {/* Edit News button (Admins/Writers only) */}
             {isLoggedIn && featuredNews.id && (
@@ -362,11 +366,13 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                   }}
                 >
                   {/* Background image */}
-                  <img
-                    src={item.image || "/image/news_placeholder.jpg?v=2"}
-                    alt={item.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-                  />
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                    />
+                  )}
 
                   {/* Edit News button (Admins/Writers only) */}
                   {isLoggedIn && item.id && (
@@ -449,11 +455,13 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                   }}
                 >
                   {/* Background image */}
-                  <img
-                    src={item.image || "/image/news_placeholder.jpg?v=2"}
-                    alt={item.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-                  />
+                  {item.image && (
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                    />
+                  )}
 
                   {/* Edit News button (Admins/Writers only) */}
                   {isLoggedIn && item.id && (

@@ -15,7 +15,7 @@ export default async function HomePage({
         {/* Relative container for the logo and overlay text */}
         <div className="relative z-10 h-[450px] w-[450px] flex items-center justify-center transition-transform duration-300 hover:scale-105 group select-none">
           <img
-            src="/CE.webp"
+            src="/ce_logo.webp"
             alt="CE Logo"
             className="h-full w-full object-contain"
           />

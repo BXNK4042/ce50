@@ -57,40 +57,6 @@ const mockNews: NewsItem[] = [
   }
 ];
 
-const getNewsImage = (item: NewsItem) => {
-  if (item.image) return item.image;
-  const title = item.title.toLowerCase();
-  
-  if (title.includes("anniversary") || title.includes("สถาปนา") || title.includes("30 ปี")) {
-    return "/image/news_anniversary.jpg";
-  }
-  if (title.includes("cyber") || title.includes("security") || title.includes("cybersecurity") || title.includes("blockchain") || title.includes("บล็อกเชน") || title.includes("ความปลอดภัยไซเบอร์")) {
-    return "/image/news_cybersecurity.jpg";
-  }
-  if (title.includes("hackathon") || title.includes("แข่ง") || title.includes("แข่งขัน") || title.includes("ประกวด")) {
-    if (title.includes("robot") || title.includes("หุ่นยนต์")) {
-      return "/image/news_robotics.jpg";
-    }
-    return "/image/news_hackathon.jpg";
-  }
-  if (title.includes("robot") || title.includes("หุ่นยนต์")) {
-    return "/image/news_robotics.jpg";
-  }
-  if (title.includes("scholarship") || title.includes("ทุน") || title.includes("ทุนการศึกษา")) {
-    return "/image/news_scholarship.jpg";
-  }
-  
-  // Category fallbacks
-  if (item.category === "competition") {
-    return "/image/news_hackathon.jpg";
-  }
-  if (item.category === "scholarship") {
-    return "/image/news_scholarship.jpg";
-  }
-  
-  return "/image/news_placeholder.jpg";
-};
-
 export default function NewsSlider({ lang, title }: NewsSliderProps) {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -323,11 +289,13 @@ export default function NewsSlider({ lang, title }: NewsSliderProps) {
                 }}
               >
                 {/* Background image */}
-                <img
-                  src={getNewsImage(item)}
-                  alt={item.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-0"
-                />
+                {item.image && (
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 z-0"
+                  />
+                )}
 
                 {/* Edit News button (Admins/Writers only) */}
                 {isLoggedIn && item.id && (

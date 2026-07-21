@@ -60,4 +60,4 @@ next-env.d.ts
 *.db-journal
 
 # video backups
-server/Video/*_original.mp4
+server/video/*_original.mp4

@@ -100,7 +100,7 @@ export default async function CohortPage({
                 >
                   {/* Photo area */}
                   <div className="h-48 relative overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 dark:from-zinc-900 dark:to-zinc-950 flex items-center justify-center">
-                    {student.photo && student.photo !== "/image/std1.png" && student.photo !== "/image/std2.png" && student.photo !== "/image/std3.png" && student.photo !== "/image/std4.png" && student.photo !== "/image/std5.png" && student.photo !== "/image/std6.png" ? (
+                    {student.photo ? (
                       <img
                         src={student.photo}
                         alt={name}

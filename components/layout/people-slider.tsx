@@ -14,7 +14,7 @@ const people = [
     roleTh: "หัวหน้าสาขาวิชา",
     roleEn: "Head of Program",
     email: "athasart.n@ce.ac.th",
-    image: "/image/athasart.webp",
+    image: "/professors/athasart.webp",
   },
   {
     nameTh: "ดร.รัตติกร สมบัติแก้ว",
@@ -22,7 +22,7 @@ const people = [
     roleTh: "อาจารย์ประจำสาขา",
     roleEn: "Lecturer",
     email: "rattikorn.s@ce.ac.th",
-    image: "/image/rattikorn.webp",
+    image: "/professors/rattikorn.webp",
   },
   {
     nameTh: "อาจารย์นภัสรพี สิทธิวัจน์",
@@ -30,7 +30,7 @@ const people = [
     roleTh: "อาจารย์ประจำสาขา",
     roleEn: "Lecturer",
     email: "pisakorn.s@ce.ac.th",
-    image: "/image/pisakorn.webp",
+    image: "/professors/pisakorn.webp",
   },
   {
     nameTh: "ว่าที่ร้อยตรี ศิลา ศิริมาสกุล",
@@ -38,7 +38,7 @@ const people = [
     roleTh: "อาจารย์ประจำสาขา",
     roleEn: "Lecturer",
     email: "silar.s@ce.ac.th",
-    image: "/image/silar.webp",
+    image: "/professors/silar.webp",
   },
   {
     nameTh: "อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช",
@@ -46,7 +46,7 @@ const people = [
     roleTh: "อาจารย์ประจำสาขา",
     roleEn: "Lecturer",
     email: "sakawkarn.p@ce.ac.th",
-    image: "/image/sakawkarn.webp",
+    image: "/professors/sakawkarn.webp",
   },
   {
     nameTh: "นายจตุรงค์ เกตุนิมิต",
@@ -54,7 +54,7 @@ const people = [
     roleTh: "นักวิชาการคอมพิวเตอร์",
     roleEn: "Computer Technical Officer",
     email: "jaturong.k@ce.ac.th",
-    image: "/image/jaturong.webp",
+    image: "/professors/jaturong.webp",
   },
 ];
 

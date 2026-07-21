@@ -20,7 +20,7 @@ app.add_middleware(
 BASE_DIR = Path(__file__).resolve().parent
 
 app.mount("/image", StaticFiles(directory=UPLOAD_DIR), name="image")
-app.mount("/Video", StaticFiles(directory=BASE_DIR / "Video"), name="video")
+app.mount("/Video", StaticFiles(directory=BASE_DIR / "video"), name="video")
 
 for r in (people, works, news, schedule, auth, rooms, internship, videos):
     app.include_router(r.router)
