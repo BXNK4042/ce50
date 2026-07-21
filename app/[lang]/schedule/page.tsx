@@ -1,7 +1,23 @@
-export default function SchedulePage() {
+import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
+import ScheduleClient from "./schedule-client";
+
+export default async function SchedulePage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<{ type?: string; term?: string }>;
+}) {
+  const { lang } = await params;
+  const { type, term } = (await searchParams) || {};
+  const dict = await getDictionary(lang as Locale);
+
   return (
-    <section className="mx-auto max-w-5xl px-6 py-16">
-      <h1 className="text-3xl font-semibold">Schedule — ตารางสอน/สอบ</h1>
-    </section>
+    <ScheduleClient
+      lang={lang}
+      dict={dict}
+      type={type}
+      term={term}
+    />
   );
 }

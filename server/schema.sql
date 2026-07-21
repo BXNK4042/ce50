@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS news_items (
   category TEXT NOT NULL CHECK (category IN ('competition','scholarship','other')),
   body TEXT,
   link TEXT,
+  image TEXT,
   published_at TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
@@ -57,13 +58,15 @@ CREATE TABLE IF NOT EXISTS schedules (
   updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
--- 5. ผู้ดูแลระบบ — Admins (1–3 per year)
-CREATE TABLE IF NOT EXISTS admins (
+-- 5. ผู้ใช้งานระบบ — Users (including Admins & Writers)
+CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  year INTEGER NOT NULL,         -- which year this admin manages
   username TEXT NOT NULL UNIQUE,
   password_hash TEXT NOT NULL,
-  role TEXT DEFAULT 'editor',
+  email TEXT NOT NULL UNIQUE,
+  full_name TEXT,
+  role TEXT DEFAULT 'writer',    -- 'superadmin', 'admin', 'writer'
+  year INTEGER NOT NULL DEFAULT 1, -- which year this user manages
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -82,6 +85,18 @@ CREATE TABLE IF NOT EXISTS internship_topics (
   host_branch TEXT NOT NULL,     -- สาขาที่ไปฝึก
   title TEXT NOT NULL,
   description TEXT,
+  year INTEGER,
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 8. วิดีโอ — Videos
+CREATE TABLE IF NOT EXISTS videos (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  description TEXT,
+  file_path TEXT NOT NULL,
+  thumbnail TEXT,
+  category TEXT,
   year INTEGER,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
