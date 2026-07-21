@@ -32,20 +32,15 @@ else
     BackendCmd="uvicorn main:app --reload --app-dir server"
 fi
 
-echo "[3/3] Launching frontend and backend..." >&2
+echo "[3/3] Launching frontend and backend in tmux..." >&2
 
-Cleanup() {
-    echo
-    echo "Stopping dev servers..."
-    [[ -n "${FrontPid:-}" ]] && kill "$FrontPid" 2>/dev/null || true
-    [[ -n "${BackPid:-}" ]]  && kill "$BackPid" 2>/dev/null || true
-}
-trap Cleanup EXIT INT TERM
+Session="ce50-dev"
 
-( cd "$ProjectRoot" && npm run dev ) &
-FrontPid=$!
+if tmux has-session -t "$Session" 2>/dev/null; then
+    echo "tmux session '$Session' exists. Attach: tmux attach -t $Session" >&2
+    exit 0
+fi
 
-eval "( cd \"$ProjectRoot\" && $BackendCmd )" &
-BackPid=$!
-
-wait
+tmux new-session -d -s "$Session" -n dev -c "$ProjectRoot" "$BackendCmd"
+tmux split-window -h -t "$Session:dev" -c "$ProjectRoot" "npm run dev"
+tmux attach-session -t "$Session:dev"
