@@ -1,5 +1,9 @@
 # Dev sample data. Run: python seed.py  (after `python db.py`)
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 from db import db_cursor
 from auth_utils import hash_password
 
@@ -65,30 +69,44 @@ def main() -> None:
                     (name_th, name_en, photo_path, advise_years)
                 )
 
-        # Seed students
-        students_data = [
-            ("65010001", "นายณัฐพงษ์ แก้วดี", "Nattapong Kaewdee", None, 4, "หัวหน้าห้อง (Leader)", "CE04-A", "nattapong@ce.ac.th"),
-            ("65010002", "นางสาวศิริพร สมบูรณ์", "Siriporn Somboon", None, 4, "เหรัญญิก (Treasurer)", "CE04-B", "siriporn@ce.ac.th"),
-            ("66010001", "นายสมชาย ทรงจำ", "Somchai Songjam", None, 3, "หัวหน้าห้อง (Leader)", "CE05-A", "somchai.s@ce.ac.th"),
-            ("66010002", "นางสาวกานดา รักเรียน", "Kanda Rakrian", None, 3, "เลขานุการ (Secretary)", "CE05-B", "kanda@ce.ac.th"),
-            ("67010001", "นายปกรณ์ เจริญชัย", "Pakorn Charoenchai", None, 2, "หัวหน้าห้อง (Leader)", "CE06-A", "pakorn@ce.ac.th"),
-            ("67010002", "นางสาวอลิสา สวยงาม", "Alisa Suayngam", None, 2, "ประชาสัมพันธ์ (PR)", "CE06-B", "alisa@ce.ac.th"),
-        ]
+        # Seed students — mirror server/students.csv
+        csv_file = Path(__file__).resolve().parent / "students.csv"
+        if csv_file.exists():
+            from import_students import import_students_csv
+            import_students_csv(csv_file)
+        else:
+            students_data = [
+                ("67200412", "นายรุจิณัฐ อาศิรเมธี", "Mr. Rujinat Asirametee", None, 2, "", "006", "Tel: 0800479886 | IG: @Rujinat_Fah"),
+                ("67200014", "นางสาวกัณฐมณี กอบการ", "Miss Kantamanee Kobkarn", None, 2, "เลขา", "339", "Tel: 0875732080 | IG: @kwin_mhy"),
+                ("67200099", "นายทัชภูมิ ใจดี", "Mr. Thatchaphum Jaidee", "https://lh3.googleusercontent.com/d/1qtBsJy4cM5r7Ovv4HJnB_MN2fJsGcfpE", 2, "", "787", "Tel: 0986782950 | IG: @pipe2bot"),
+                ("67200049", "นายเจษฎา ศรีสง่า", "Mr. Jetsada Srisanga", "https://lh3.googleusercontent.com/d/1SXI_dmqWRXNX4-eI33agXBUlpm_Jp6Tk", 2, "ประธานชั้นปีที่3", "538", "Tel: 0626253837 | IG: @p_Jetsada_p"),
+                ("67200102", "นายทีปกิติ์ พรหมสัตยพรต", "Mr. Teepakit Phormmasattayaprot", "https://lh3.googleusercontent.com/d/18UJVl9rXqwwGd6-gpUB1bAaTqZBhOL7W", 2, "", "444", "Tel: 0973016465 | IG: @lil_weirx"),
+                ("67200350", "นางสาวณัฏฐ์ชยา จำปา", "Miss Natchaya Champa", "https://lh3.googleusercontent.com/d/1RoTQN5O5PtHr6daYfgr7Swvx1Smbk1qW", 2, "เหรัญญิก", "123", "Tel: 0985364534 | IG: @Waa_.zz"),
+                ("67200235", "นางสาวรินรดา บุญมี", "Miss Rinrada Boonmee", "https://lh3.googleusercontent.com/d/1bXX1vRrza1G0pstpM8vARqVIW_x4iR17", 2, "", "800", "Tel: 0937764085 | IG: @nnoey.rb"),
+                ("67200079", "นางสาวณัฐธิดา เกื้อประจง", "Miss Natthida Kueaprajong", "https://lh3.googleusercontent.com/d/1W0R11Fh1FllelBo4L2ST8XzYXVzTEme8", 2, "เหรัญญิก", "007", "Tel: 0801585306 | IG: @ntd.axn"),
+                ("67200223", "นายมีสุข เอกพงษ์", "Mr. Misuk Aekkaphong", "https://lh3.googleusercontent.com/d/1JabgCf7dMnlsPbr3Iwx6bOEi8xum4rZ1", 2, "", "800", "Tel: 0831508487 | IG: @Messily ekkaphong"),
+                ("67200369", "นายธีรศาสนต์ คงเกิด", "Mr. Thirasan Khongkoed", "https://lh3.googleusercontent.com/d/1yTZ4cBwptUrxCHQe4-qL5Db-FFpVOpg-", 2, "", "T800", "Tel: 0656709042 | IG: @Teeuytee"),
+                ("67200030", "นายคณพัฒน์ รุ่งรพีพรพงษ์", "Mr. Kanaphat Rungrapeepornpong", "https://lh3.googleusercontent.com/d/1IgmPbQfAoSDoqSqEd37pp-B6PCPRCNjC", 2, "รองประธานสาขา", "224", "Tel: 00810247384 | IG: @pooh_2134"),
+                ("67200093", "นายตระกูลชัย เเซ่ติ้ง", "Mr. trakoonchai saeting", "https://lh3.googleusercontent.com/d/1hWEVqP_-ownLCOXKKcmSaI8HddbqXL-x", 2, "", "006", "Tel: 0980850838"),
+                ("67200324", "นายกนกพัฒน์ โพธิ", "Mr. Kanokphat Pothi", "https://lh3.googleusercontent.com/d/1mr754nIk5mKljPNgyeBgIo3BsZTI6DQQ", 2, "", "444", "Tel: 0926577824 | IG: @lxo_xelxeoo"),
+                ("67200348", "นายณรงค์รักษ์ เรืองศักดิ์", "Mr. Narongrak Rueangsak", "https://lh3.googleusercontent.com/d/1qrXsveGP22oi4hEPa8PDb7UFeBoPUiBz", 2, "", "999", "Tel: 0929744516 | IG: @ainxri"),
+                ("67200380", "นายปรินทร คงทอง", "Mr. Parinthon Kongthong", "https://lh3.googleusercontent.com/d/1HV97qfvNuisqQujttmAVlXvO_x9GRqH4", 2, "", "339", "Tel: 0631102883 | IG: @bank.parinthon"),
+            ]
 
-        for std_id, name_th, name_en, photo, year, role, track, contact in students_data:
-            cursor = conn.cursor()
-            cursor.execute("SELECT id FROM students WHERE student_id = ?", (std_id,))
-            row = cursor.fetchone()
-            if row:
-                cursor.execute(
-                    "UPDATE students SET name_th = ?, name_en = ?, photo = ?, year = ?, class_role = ?, track = ?, contact = ? WHERE student_id = ?",
-                    (name_th, name_en, photo, year, role, track, contact, std_id)
-                )
-            else:
-                cursor.execute(
-                    "INSERT INTO students (student_id, name_th, name_en, photo, year, class_role, track, contact) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                    (std_id, name_th, name_en, photo, year, role, track, contact)
-                )
+            for std_id, name_th, name_en, photo, year, role, track, contact in students_data:
+                cursor = conn.cursor()
+                cursor.execute("SELECT id FROM students WHERE student_id = ?", (std_id,))
+                row = cursor.fetchone()
+                if row:
+                    cursor.execute(
+                        "UPDATE students SET name_th = ?, name_en = ?, photo = ?, year = ?, class_role = ?, track = ?, contact = ? WHERE student_id = ?",
+                        (name_th, name_en, photo, year, role, track, contact, std_id)
+                    )
+                else:
+                    cursor.execute(
+                        "INSERT INTO students (student_id, name_th, name_en, photo, year, class_role, track, contact) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                        (std_id, name_th, name_en, photo, year, role, track, contact)
+                    )
 
         # Seed class schedule (year=3, term=1) — flat cells, mirrors DEFAULT_CLASSES in schedule-client.tsx
         SEED_YEAR, SEED_TERM = 3, 1

@@ -1,5 +1,11 @@
+import sys
 import os
 from pathlib import Path
+
+# Add user site-packages if running from MSYS2/other python environments
+user_site = Path(os.path.expanduser("~")) / "AppData/Local/Packages/PythonSoftwareFoundation.Python.3.11_qbz5n2kfra8p0/LocalCache/local-packages/Python311/site-packages"
+if user_site.exists() and str(user_site) not in sys.path:
+    sys.path.append(str(user_site))
 
 BASE_DIR = Path(__file__).resolve().parent
 
