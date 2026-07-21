@@ -2,7 +2,7 @@ import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
 
-from config import DB_PATH
+from config import DB_PATH, UPLOAD_DIR
 
 
 def get_db() -> sqlite3.Connection:
@@ -24,6 +24,7 @@ def db_cursor():
 
 
 def init_db() -> None:
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
     schema = (Path(__file__).parent / "schema.sql").read_text(encoding="utf-8")
     with db_cursor() as conn:
         conn.executescript(schema)

@@ -1,8 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-import sqlite3
 from auth_utils import decode_access_token
-from config import DB_PATH
+from db import get_db
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/admin/login")
 
@@ -13,27 +12,26 @@ def get_current_admin(token: str = Depends(oauth2_scheme)) -> dict:
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or expired authentication token"
         )
-    
+
     username = payload.get("sub")
     if not username:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token payload is missing subject"
         )
-        
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
+
+    conn = get_db()
     cursor = conn.cursor()
     cursor.execute("SELECT id, username, role, year FROM users WHERE username = ?", (username,))
     admin = cursor.fetchone()
     conn.close()
-    
+
     if not admin:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Admin user not found"
         )
-        
+
     return dict(admin)
 
 def check_admin_auth(admin: dict, required_year: int = None, min_role: str = "writer"):

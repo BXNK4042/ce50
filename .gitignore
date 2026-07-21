@@ -62,3 +62,6 @@ next-env.d.ts
 
 # video backups
 server/video/*_original.mp4
+
+# editor / agent tooling artifacts
+/.zcode/
