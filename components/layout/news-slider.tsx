@@ -18,45 +18,6 @@ interface NewsSliderProps {
   title: string;
 }
 
-const mockNews: NewsItem[] = [
-  {
-    title: "ทีมนักศึกษา CE คว้ารางวัลชนะเลิศระดับประเทศการแข่ง Hackathon 2026",
-    category: "competition",
-    body: "ทีมนักศึกษาชั้นปีที่ 3 และ 4 สาขาวิชาวิศวกรรมคอมพิวเตอร์ คว้ารางวัลชนะเลิศอันดับหนึ่งจากการแข่งขันพัฒนาซอฟต์แวร์นวัตกรรมและเทคโนโลยีระดับประเทศ Hackathon 2026 ณ ศูนย์การประชุมแห่งชาติสิริกิติ์",
-    published_at: "2026-07-18 10:00:00"
-  },
-  {
-    title: "เปิดรับสมัครทุนการศึกษาเรียนดีแต่ขาดแคลนทุนทรัพย์ ประจำภาคเรียนที่ 1/2569",
-    category: "scholarship",
-    body: "สาขาวิชาวิศวกรรมคอมพิวเตอร์เปิดรับสมัครขอรับทุนสนับสนุนการศึกษาสำหรับนักศึกษาที่มีผลการเรียนดีแต่ขาดแคลนทุนทรัพย์ ประจำปีการศึกษา 2569 โดยสามารถยื่นเอกสารได้ที่สำนักงานสาขาจนถึงสิ้นเดือนนี้",
-    published_at: "2026-07-17 09:00:00"
-  },
-  {
-    title: "ขอเชิญชวนศิษย์เก่าและนักศึกษาปัจจุบันร่วมงานสถาปนาครบรอบ 30 ปี วิศวกรรมคอมพิวเตอร์",
-    category: "other",
-    body: "ร่วมเฉลิมฉลองและสานสัมพันธ์เครือข่ายพี่น้องคอมพิวเตอร์ในงานครบรอบ 30 ปีการก่อตั้งสาขาวิชา พบกับกิจกรรมเสวนาวิชาการโดยศิษย์เก่าผู้ทรงคุณวุฒิ และงานเลี้ยงสังสรรค์ในภาคค่ำ",
-    published_at: "2026-07-16 13:30:00"
-  },
-  {
-    title: "CE04 เป็นตัวแทนประเทศไทยเข้าร่วมแข่งขันโอลิมปิกหุ่นยนต์ระดับนานาชาติ ณ ประเทศญี่ปุ่น",
-    category: "competition",
-    body: "ทีมนักศึกษา CE04 คว้ารางวัลเหรียญทองจากการคัดเลือกตัวแทนระดับประเทศ และได้รับสิทธิ์เดินทางไปเข้าร่วมประกวดนวัตกรรมหุ่นยนต์อัตโนมัติรอบชิงแชมป์โลก ณ เมืองโตเกียว ประเทศญี่ปุ่น",
-    published_at: "2026-07-15 11:15:00"
-  },
-  {
-    title: "ทุนสนับสนุนการวิจัยและฝึกงานต่างประเทศสำหรับนักศึกษาชั้นปีที่ 4 สนับสนุนโดยสมาคมศิษย์เก่า",
-    category: "scholarship",
-    body: "สมาคมศิษย์เก่าวิศวกรรมคอมพิวเตอร์ มอบทุนการศึกษาและตั๋วเครื่องบินสำหรับศึกษาดูงานและฝึกงานระยะสั้น ณ มหาวิทยาลัยคู่ความร่วมมือในต่างประเทศ สำหรับนักศึกษาที่มีผลการเรียนและทักษะภาษาอังกฤษดีเด่น",
-    published_at: "2026-07-14 15:45:00"
-  },
-  {
-    title: "การบรรยายพิเศษเรื่องความปลอดภัยไซเบอร์ (Cybersecurity) และบล็อกเชนในโลกยุคใหม่",
-    category: "other",
-    body: "ขอเชิญผู้สนใจเข้าร่วมฟังการสัมมนาจากกูรูผู้เชี่ยวชาญด้านความปลอดภัยทางไซเบอร์และบล็อกเชนระดับแนวหน้าของไทย เพื่อเตรียมพร้อมรับมือภัยคุกคามและการเปลี่ยนแปลงทางเทคโนโลยีในอนาคต",
-    published_at: "2026-07-12 14:00:00"
-  }
-];
-
 export default function NewsSlider({ lang, title }: NewsSliderProps) {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -85,18 +46,14 @@ export default function NewsSlider({ lang, title }: NewsSliderProps) {
         const res = await fetch(`${backendUrl}/news`);
         if (res.ok) {
           const data: NewsItem[] = await res.json();
-          if (data && data.length > 0) {
-            const filtered = data.filter(item => item.category === "other");
-            setNews(filtered.slice(0, 6));
-            return;
-          }
+          const filtered = (data ?? []).filter(item => item.category === "other").slice(0, 6);
+          setNews(filtered);
+          return;
         }
       } catch (err) {
         console.error("Failed to fetch news:", err);
       }
-      // Fallback to mock data (filtered by 'other') if empty or failed
-      const filteredMock = mockNews.filter(item => item.category === "other");
-      setNews(filteredMock.slice(0, 6));
+      setNews([]);
     };
 
     fetchNews();
@@ -213,6 +170,22 @@ export default function NewsSlider({ lang, title }: NewsSliderProps) {
         };
     }
   };
+
+  if (news.length === 0) {
+    return (
+      <div className="w-full flex flex-col gap-6 min-h-0">
+        <div className="flex items-center gap-3.5 select-none">
+          <span className="inline-block w-1.5 h-[0.9em] bg-blue-600 dark:bg-sky-500 rounded-full shrink-0" />
+          <h2 className="text-3xl font-bold text-blue-950 dark:text-white tracking-tight">
+            {title}
+          </h2>
+        </div>
+        <div className="w-full flex items-center justify-center bg-white/50 dark:bg-black/30 border border-dashed border-blue-200 dark:border-zinc-800 rounded-xl p-12 text-zinc-500 dark:text-zinc-400">
+          {isTh ? "ยังไม่มีข่าวสารในขณะนี้" : "No news yet."}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col gap-6 min-h-0">
