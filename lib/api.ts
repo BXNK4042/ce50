@@ -177,8 +177,9 @@ async function postAuth<T>(path: string, body: any): Promise<T> {
 
 export const api = {
   teachers: () => get<Teacher[]>("/people/teachers"),
-  students: (year?: number) =>
-    get<Student[]>("/people/students", year ? { year: String(year) } : undefined),
+  cohorts: () => get<string[]>("/people/cohorts"),
+  students: (cohort?: string) =>
+    get<Student[]>("/people/students", cohort ? { cohort } : undefined),
   works: (year?: number) =>
     get<Work[]>("/works", year ? { year: String(year) } : undefined),
   news: (category?: NewsCategory) =>

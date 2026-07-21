@@ -8,10 +8,12 @@ export default function Navbar({
   lang,
   dict,
   initialTheme = "dark",
+  cohorts = [],
 }: {
   lang: string;
   dict: any;
   initialTheme?: "light" | "dark";
+  cohorts?: string[];
 }) {
   const [theme, setTheme] = useState<"light" | "dark">(initialTheme);
   const [shouldAnimate, setShouldAnimate] = useState(false);
@@ -286,24 +288,15 @@ export default function Navbar({
                           <div className="px-4 py-1.5 text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
                             {dict.people.students}
                           </div>
-                          <Link
-                            href={`/${lang}/people/students/CE04`}
-                            className="block px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
-                          >
-                            CE04
-                          </Link>
-                          <Link
-                            href={`/${lang}/people/students/CE05`}
-                            className="block px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
-                          >
-                            CE05
-                          </Link>
-                          <Link
-                            href={`/${lang}/people/students/CE06`}
-                            className="block px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
-                          >
-                            CE06
-                          </Link>
+                          {cohorts.map((c) => (
+                            <Link
+                              key={c}
+                              href={`/${lang}/people/students/${c}`}
+                              className="block px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+                            >
+                              {c}
+                            </Link>
+                          ))}
                         </div>
                       </div>
                     </li>

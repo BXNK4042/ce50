@@ -11,26 +11,14 @@ export default async function CohortPage({
   params: Promise<{ lang: string; cohort: string }>;
 }) {
   const { lang, cohort } = await params;
-  
-  // Validate and map cohort to academic year
   const cohortUpper = cohort.toUpperCase();
-  let year = 0;
-  if (cohortUpper === "CE04") {
-    year = 4;
-  } else if (cohortUpper === "CE05") {
-    year = 3;
-  } else if (cohortUpper === "CE06") {
-    year = 2;
-  } else {
-    notFound();
-  }
+  if (!/^CE\d{2}$/.test(cohortUpper)) notFound();
 
   const dict = await getDictionary(lang as Locale);
-  
-  // Fetch students for this year from the backend
+
   let students: Student[] = [];
   try {
-    students = await api.students(year);
+    students = await api.students(cohortUpper);
   } catch (error) {
     console.error("Failed to fetch students:", error);
   }

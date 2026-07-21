@@ -8,6 +8,7 @@ import HomeBackgroundVideo from "@/components/layout/hero-video";
 
 import { getDictionary, Locale } from "./dictionaries";
 import { cookies } from "next/headers";
+import { api } from "@/lib/api";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,13 @@ export default async function LangLayout({
   const cookieStore = await cookies();
   const theme = cookieStore.get("theme")?.value || "dark";
 
+  let cohorts: string[] = [];
+  try {
+    cohorts = await api.cohorts();
+  } catch {
+    // ponytail: empty navbar cohort list on backend hiccup — page still renders
+  }
+
   const videoSrc = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/Video/ce_hero_footage.mp4`;
 
   return (
@@ -51,7 +59,7 @@ export default async function LangLayout({
       </head>
       <body className="min-h-full flex flex-col transition-colors duration-300">
         <HomeBackgroundVideo src={videoSrc} />
-        <Navbar lang={lang} dict={dict} initialTheme={theme as "light" | "dark"} />
+        <Navbar lang={lang} dict={dict} initialTheme={theme as "light" | "dark"} cohorts={cohorts} />
         <main className="flex-1 relative z-10">{children}</main>
         <Footer lang={lang} />
       </body>
