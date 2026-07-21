@@ -20,16 +20,19 @@ if (!(Test-Path "$ProjectRoot\node_modules")) {
 # Locate Python Virtual Environment
 $VenvPython = "$ProjectRoot\.venv\Scripts\python.exe"
 if (!(Test-Path $VenvPython)) {
+    $VenvPython = "$ProjectRoot\venv\Scripts\python.exe"
+}
+if (!(Test-Path $VenvPython)) {
     $VenvPython = "$ProjectRoot\.venv\bin\python.exe"
 }
 $BackendCmd = ""
 
 if (Test-Path $VenvPython) {
-    Write-Host "[2/3] Found Python virtual environment at .venv." -ForegroundColor Cyan
+    Write-Host "[2/3] Found Python virtual environment." -ForegroundColor Cyan
     $BackendCmd = "`"$VenvPython`" -m uvicorn main:app --reload --app-dir server"
 } else {
-    Write-Host "[2/3] Virtual environment not found at .venv. Will fall back to global uvicorn." -ForegroundColor Yellow
-    $BackendCmd = "uvicorn main:app --reload --app-dir server"
+    Write-Host "[2/3] Virtual environment not found. Will use 'py -m uvicorn'." -ForegroundColor Yellow
+    $BackendCmd = "py -m uvicorn main:app --reload --app-dir server"
 }
 
 Write-Host "[3/3] Checking for Windows Terminal (wt)..." -ForegroundColor Cyan
