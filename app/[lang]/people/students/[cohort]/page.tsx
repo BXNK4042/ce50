@@ -4,6 +4,7 @@ import { api } from "@/lib/api";
 import Link from "next/link";
 import { Student } from "@/lib/types";
 import { StudentGridClient } from "./student-grid-client";
+import { formatCohortLabel } from "@/lib/cohort";
 
 export default async function CohortPage({
   params,
@@ -85,19 +86,19 @@ export default async function CohortPage({
             {dict.people.title}
           </Link>
           <span>/</span>
-          <span className="text-zinc-900 dark:text-white font-medium">{cohortUpper}</span>
+          <span className="text-zinc-900 dark:text-white font-medium">{formatCohortLabel(cohortUpper, lang)}</span>
         </div>
 
         {/* Page Title & Subtitle */}
         <div className="mb-12 text-left relative">
           <div className="absolute -left-4 top-0 bottom-0 w-1 bg-blue-600 dark:bg-sky-500 rounded-full" />
           <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white select-none">
-            {lang === "th" ? `นักศึกษา ${cohortUpper}` : `${cohortUpper} Students`}
+            {lang === "th" ? `นักศึกษา ${formatCohortLabel(cohortUpper, "th")} (${cohortUpper})` : `${formatCohortLabel(cohortUpper, "en")} (${cohortUpper})`}
           </h1>
           <p className="mt-2 text-zinc-500 dark:text-zinc-400 text-sm">
             {lang === "th" 
-              ? `ข้อมูลรายชื่อและรายละเอียดของนักศึกษาภาควิชาวิศวกรรมคอมพิวเตอร์ รุ่น ${cohortUpper}`
-              : `Student list and details for Computer Engineering cohort ${cohortUpper}`}
+              ? `ข้อมูลรายชื่อและรายละเอียดของนักศึกษาภาควิชาวิศวกรรมคอมพิวเตอร์ ${formatCohortLabel(cohortUpper, "th")}`
+              : `Student list and details for Computer Engineering ${formatCohortLabel(cohortUpper, "en")}`}
           </p>
         </div>
 

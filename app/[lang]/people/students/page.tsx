@@ -1,5 +1,6 @@
 import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
 import Link from "next/link";
+import { formatCohortLabel } from "@/lib/cohort";
 
 export default async function StudentsPage({
   params,
@@ -84,7 +85,7 @@ export default async function StudentsPage({
                 </div>
 
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors">
-                  {isTh ? cohort.yearTh : cohort.yearEn}
+                  {isTh ? `${cohort.yearTh} (${formatCohortLabel(cohort.code, "th")})` : `${cohort.yearEn} (${formatCohortLabel(cohort.code, "en")})`}
                 </h2>
                 
                 <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
