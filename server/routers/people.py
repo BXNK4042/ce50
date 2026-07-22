@@ -82,7 +82,7 @@ def list_cohorts():
 
     for p in prefixes:
         num = int(p)
-        if num >= 50:
+        if num >= 40:
             gen = num - 63
             if gen > 0:
                 codes_set.add(f"CE{gen:02d}")
