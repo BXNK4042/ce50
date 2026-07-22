@@ -28,12 +28,10 @@ class TeacherUpdate(BaseModel):
 
 @router.get("/teachers")
 def list_teachers():
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM teachers ORDER BY id ASC")
-    teachers = [dict(row) for row in cursor.fetchall()]
-    conn.close()
-    return teachers
+    with db_cursor() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM teachers ORDER BY id ASC")
+        return [dict(row) for row in cursor.fetchall()]
 
 
 @router.post("/teachers")
@@ -47,20 +45,16 @@ def create_teacher(payload: TeacherCreate, admin: dict = Depends(get_current_adm
         else:
             advise_years_str = payload.advise_years
 
-    conn = get_db()
-    cursor = conn.cursor()
     try:
-        cursor.execute(
-            "INSERT INTO teachers (name_th, name_en, photo, advise_years, contact) "
-            "VALUES (?, ?, ?, ?, ?)",
-            (payload.name_th, payload.name_en, payload.photo, advise_years_str, payload.contact),
-        )
-        conn.commit()
-        new_id = cursor.lastrowid
-        conn.close()
-        return {"status": "success", "id": new_id}
+        with db_cursor() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO teachers (name_th, name_en, photo, advise_years, contact) "
+                "VALUES (?, ?, ?, ?, ?)",
+                (payload.name_th, payload.name_en, payload.photo, advise_years_str, payload.contact),
+            )
+            return {"status": "success", "id": cursor.lastrowid}
     except Exception as e:
-        conn.close()
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -68,35 +62,32 @@ def create_teacher(payload: TeacherCreate, admin: dict = Depends(get_current_adm
 def update_teacher(id: int, payload: TeacherUpdate, admin: dict = Depends(get_current_admin)):
     check_admin_auth(admin, min_role="writer")
 
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id FROM teachers WHERE id = ?", (id,))
-    if not cursor.fetchone():
-        conn.close()
-        raise HTTPException(status_code=404, detail="Teacher not found")
-
     update_dict = payload.dict(exclude_unset=True)
     if "advise_years" in update_dict:
         val = update_dict["advise_years"]
         if isinstance(val, list):
             update_dict["advise_years"] = json.dumps(val)
 
-    if not update_dict:
-        conn.close()
-        return {"status": "success", "message": "No changes made"}
-
-    update_fields = [f"{key} = ?" for key in update_dict.keys()]
-    params = list(update_dict.values())
-    params.append(id)
-
-    query_str = f"UPDATE teachers SET {', '.join(update_fields)} WHERE id = ?"
     try:
-        cursor.execute(query_str, params)
-        conn.commit()
-        conn.close()
-        return {"status": "success", "message": "Teacher updated successfully"}
+        with db_cursor() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id FROM teachers WHERE id = ?", (id,))
+            if not cursor.fetchone():
+                raise HTTPException(status_code=404, detail="Teacher not found")
+
+            if not update_dict:
+                return {"status": "success", "message": "No changes made"}
+
+            update_fields = [f"{key} = ?" for key in update_dict.keys()]
+            params = list(update_dict.values())
+            params.append(id)
+
+            query_str = f"UPDATE teachers SET {', '.join(update_fields)} WHERE id = ?"
+            cursor.execute(query_str, params)
+            return {"status": "success", "message": "Teacher updated successfully"}
+    except HTTPException:
+        raise
     except Exception as e:
-        conn.close()
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -104,20 +95,18 @@ def update_teacher(id: int, payload: TeacherUpdate, admin: dict = Depends(get_cu
 def delete_teacher(id: int, admin: dict = Depends(get_current_admin)):
     check_admin_auth(admin, min_role="writer")
 
-    conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id FROM teachers WHERE id = ?", (id,))
-    if not cursor.fetchone():
-        conn.close()
-        raise HTTPException(status_code=404, detail="Teacher not found")
-
     try:
-        cursor.execute("DELETE FROM teachers WHERE id = ?", (id,))
-        conn.commit()
-        conn.close()
-        return {"status": "success", "message": "Teacher deleted successfully"}
+        with db_cursor() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id FROM teachers WHERE id = ?", (id,))
+            if not cursor.fetchone():
+                raise HTTPException(status_code=404, detail="Teacher not found")
+
+            cursor.execute("DELETE FROM teachers WHERE id = ?", (id,))
+            return {"status": "success", "message": "Teacher deleted successfully"}
+    except HTTPException:
+        raise
     except Exception as e:
-        conn.close()
         raise HTTPException(status_code=500, detail=str(e))
 
 
