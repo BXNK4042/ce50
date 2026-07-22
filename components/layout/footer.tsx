@@ -4,7 +4,7 @@ export default function Footer({ lang }: { lang: string }) {
   const isTh = lang === "th";
 
   return (
-    <footer className="bg-transparent text-zinc-600 dark:text-zinc-400 border-t border-zinc-200 dark:border-zinc-900 pt-16 pb-8 transition-colors duration-300">
+    <footer className="relative z-10 bg-white dark:bg-black text-zinc-600 dark:text-zinc-400 border-t border-zinc-200 dark:border-zinc-900 pt-16 pb-8 transition-colors duration-300">
       <div className="mx-auto max-w-7xl px-6 md:px-12 grid grid-cols-1 md:grid-cols-4 gap-10">
         
         {/* Column 1: Brand & Bio */}
