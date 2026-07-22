@@ -133,21 +133,21 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                   />
                   {teacher.id === 3 && (
                     <img
-                      src="/professors/pisakorn-alt.webp?v=8"
+                      src="/image/pisakorn-alt.webp?v=8"
                       alt={`${name} alternative`}
                       className="absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
                   {teacher.id === 4 && (
                     <img
-                      src="/professors/silar-alt.webp?v=8"
+                      src="/image/silar-alt.webp?v=8"
                       alt={`${name} alternative`}
                       className="absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
                   {teacher.id === 5 && (
                     <img
-                      src="/professors/sakawkarn-alt.webp?v=8"
+                      src="/image/sakawkarn-alt.webp?v=8"
                       alt={`${name} alternative`}
                       className="absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
@@ -363,7 +363,7 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                         {/* Portrait */}
                         <div className="relative flex-1 my-2 bg-slate-950/70 rounded-lg overflow-hidden border border-purple-500/30 flex items-center justify-center z-10">
                           <img
-                            src="/professors/rattikorn-alt.webp?v=8"
+                            src="/image/rattikorn-alt.webp?v=8"
                             alt="ป้าจุ๋ม"
                             className="absolute bottom-0 w-[95%] h-auto object-contain object-bottom pointer-events-none"
                           />

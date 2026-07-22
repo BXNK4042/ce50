@@ -540,7 +540,7 @@ export default function AdminTeachersClient({ lang }: AdminTeachersClientProps) 
                 <input
                   type="text"
                   placeholder={
-                    isTh ? "หรือวาง URL รูปภาพ /professors/..." : "Or image URL /professors/..."
+                    isTh ? "หรือวาง URL รูปภาพ /image/..." : "Or image URL /image/..."
                   }
                   value={formPhoto}
                   onChange={(e) => setFormPhoto(e.target.value)}
