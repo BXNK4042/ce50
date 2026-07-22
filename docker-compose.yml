@@ -10,7 +10,7 @@ services:
     environment:
       CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
       # Required — server/config.py refuses to start without a non-default JWT_SECRET.
-      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required (generate with: python3 -c "import secrets; print(secrets.token_hex(32))")}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET required - see README Docker section}
       DB_PATH: /data/ce50.db
       UPLOAD_DIR: /data/uploads
     restart: unless-stopped
