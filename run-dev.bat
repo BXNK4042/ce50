@@ -37,8 +37,19 @@ if exist "%PROJECT_ROOT%\!VENV_PYTHON!" (
     echo [2/3] Found Python virtual environment.
     set "BACKEND_CMD=!VENV_PYTHON! -m uvicorn main:app --reload --app-dir server"
 ) else (
-    echo [2/3] Virtual environment not found at .venv or venv. Will fall back to py launcher.
-    set "BACKEND_CMD=py -m uvicorn main:app --reload --app-dir server"
+    set "PY_EXE=python"
+    where python >nul 2>nul
+    if !ERRORLEVEL! neq 0 (
+        where py >nul 2>nul
+        if !ERRORLEVEL! equ 0 (
+            set "PY_EXE=py"
+        ) else (
+            where python3 >nul 2>nul
+            if !ERRORLEVEL! equ 0 set "PY_EXE=python3"
+        )
+    )
+    echo [2/3] Virtual environment not found. Using '!PY_EXE! -m uvicorn'.
+    set "BACKEND_CMD=!PY_EXE! -m uvicorn main:app --reload --app-dir server"
 )
 
 echo [3/3] Checking for Windows Terminal (wt)...

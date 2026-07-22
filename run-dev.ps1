@@ -31,8 +31,16 @@ if (Test-Path $VenvPython) {
     Write-Host "[2/3] Found Python virtual environment." -ForegroundColor Cyan
     $BackendCmd = "`"$VenvPython`" -m uvicorn main:app --reload --app-dir server"
 } else {
-    Write-Host "[2/3] Virtual environment not found. Will use 'py -m uvicorn'." -ForegroundColor Yellow
-    $BackendCmd = "py -m uvicorn main:app --reload --app-dir server"
+    $PyExe = "python"
+    if (!(Get-Command python -ErrorAction SilentlyContinue)) {
+        if (Get-Command py -ErrorAction SilentlyContinue) {
+            $PyExe = "py"
+        } elseif (Get-Command python3 -ErrorAction SilentlyContinue) {
+            $PyExe = "python3"
+        }
+    }
+    Write-Host "[2/3] Virtual environment not found. Using '$PyExe -m uvicorn'." -ForegroundColor Yellow
+    $BackendCmd = "$PyExe -m uvicorn main:app --reload --app-dir server"
 }
 
 Write-Host "[3/3] Checking for Windows Terminal (wt)..." -ForegroundColor Cyan
