@@ -67,3 +67,4 @@ server/video/*_original.mp4
 
 # editor / agent tooling artifacts
 /.zcode/
+.agents/
