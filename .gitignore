@@ -45,6 +45,8 @@ next-env.d.ts
 /server/ce50.db
 /server/*.db
 /server/*.db.bak.*
+/server/server/
+
 /server/static/uploads/*
 !server/static/uploads/.gitkeep
 **/__pycache__/
