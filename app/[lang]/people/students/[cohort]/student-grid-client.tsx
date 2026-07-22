@@ -37,7 +37,7 @@ export function StudentGridClient({ students, lang, dict }: StudentGridClientPro
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
         {students.map((student) => {
           const name = lang === "th" ? student.name_th : (student.name_en || student.name_th);
           const initials = student.name_en 
@@ -99,7 +99,7 @@ export function StudentGridClient({ students, lang, dict }: StudentGridClientPro
           />
 
           {/* Modal Container */}
-          <div className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-white dark:bg-zinc-950 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 z-10 transform scale-100 transition-all duration-300 flex flex-col">
+          <div className="relative w-full max-w-sm bg-white dark:bg-zinc-950 rounded-2xl overflow-hidden shadow-2xl border border-zinc-200 dark:border-zinc-800 z-10 transform scale-100 transition-all duration-300 flex flex-col">
             
             {/* Top Close Button */}
             <button
