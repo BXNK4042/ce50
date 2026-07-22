@@ -303,7 +303,10 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                       }}
                     >
                       {/* FRONT FACE (อาจารย์rattikorn) */}
-                      <div className="absolute inset-0 w-full h-full backface-hidden rounded-2xl border-[3px] border-amber-400 bg-gradient-to-b from-[#1b3b6f] to-[#091e3a] p-3 flex flex-col justify-between overflow-hidden shadow-inner">
+                      <div
+                        className="absolute inset-0 w-full h-full backface-hidden rounded-2xl border-[3px] border-amber-400 bg-gradient-to-b from-[#1b3b6f] to-[#091e3a] p-3 flex flex-col justify-between overflow-hidden shadow-inner"
+                        style={{ transform: "rotateY(0deg) translateZ(1px)", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+                      >
                         {/* Foil shining effect */}
                         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full animate-shimmer pointer-events-none z-30" />
                         
@@ -327,7 +330,7 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                         </div>
 
                         {/* Title and stats */}
-                        <div className="z-10 bg-black/40 backdrop-blur-xs p-2.5 rounded-lg border border-amber-400/20 text-left">
+                        <div className="z-10 bg-black/70 p-2.5 rounded-lg border border-amber-400/20 text-left">
                           <h4 className="text-sm font-black text-amber-300 tracking-wide text-center">
                             อาจารย์rattikorn
                           </h4>
@@ -344,8 +347,10 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                       </div>
 
                       {/* BACK FACE (ป้าจุ๋ม) */}
-                      <div className="absolute inset-0 w-full h-full backface-hidden rounded-2xl border-[3px] border-purple-500 bg-gradient-to-b from-[#2e1065] to-[#0f052d] p-3 flex flex-col justify-between overflow-hidden shadow-inner transform rotate-y-180"
-                           style={{ transform: "rotateY(180deg)" }}>
+                      <div
+                        className="absolute inset-0 w-full h-full backface-hidden rounded-2xl border-[3px] border-purple-500 bg-gradient-to-b from-[#2e1065] to-[#0f052d] p-3 flex flex-col justify-between overflow-hidden shadow-inner"
+                        style={{ transform: "rotateY(180deg) translateZ(1px)", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+                      >
                         {/* Mystic violet shining effect */}
                         <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-purple-400/20 to-transparent -translate-x-full animate-shimmer pointer-events-none z-30" />
                         
@@ -365,7 +370,7 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                         </div>
 
                         {/* Title and stats */}
-                        <div className="z-10 bg-black/50 backdrop-blur-xs p-2.5 rounded-lg border border-purple-500/20 text-left">
+                        <div className="z-10 bg-black/70 p-2.5 rounded-lg border border-purple-500/20 text-left">
                           <h4 className="text-sm font-black text-purple-300 tracking-wide text-center drop-shadow-[0_2px_4px_rgba(168,85,247,0.8)]">
                             ป้าจุ๋ม
                           </h4>
