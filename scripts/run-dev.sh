@@ -6,7 +6,8 @@
 set -euo pipefail
 
 ScriptDir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ProjectRoot="$ScriptDir"
+ProjectRoot="$(cd "$ScriptDir/.." && pwd)"
+
 
 echo "[1/3] Verifying project files..."
 if [[ ! -f "$ProjectRoot/package.json" ]]; then
