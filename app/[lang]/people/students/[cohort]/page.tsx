@@ -30,7 +30,7 @@ export default async function CohortPage({
       <div className="min-h-screen bg-[#cad9f0]/40 dark:bg-[#0a192f]/40 transition-colors duration-300">
 
         {/* News section (full-width, h-screen, empty box with CE_04.webp background) */}
-        <div className="relative h-screen w-full p-12 md:p-16 flex flex-col justify-end items-start transition-all duration-300 overflow-hidden">
+        <div className="relative h-screen w-full pb-16 md:pb-24 flex flex-col justify-end items-center transition-all duration-300 overflow-hidden">
           {/* Background Image with bottom 35% fade-out mask */}
           <img 
             src="/students/ce_04/CE_04.webp"
@@ -51,8 +51,8 @@ export default async function CohortPage({
             }}
           />
 
-          {/* Section Header (Bottom-Left aligned with drop shadows for readability) */}
-          <div className="relative z-20 text-left mb-16 md:mb-24 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
+          {/* Section Header (Identical max-w-7xl px-12 md:px-16 container matching student grid below) */}
+          <div className="relative z-20 mx-auto max-w-7xl px-12 md:px-16 w-full text-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
             <h2 className="text-4xl font-extrabold text-white tracking-tight select-none">
               THIRD YEAR
             </h2>
