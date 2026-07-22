@@ -3,7 +3,7 @@ export interface CohortInfo {
   prefix: string;     // e.g. "67"
   generation: number; // e.g. 4
   labelTh: string;    // "รุ่นที่ 4"
-  labelEn: string;    // "Cohort 4"
+  labelEn: string;    // "CE04"
 }
 
 /**
@@ -19,8 +19,8 @@ export function getGenerationFromPrefix(prefix: string | number): number | null 
 
 /**
  * Formats student ID prefix or cohort code into localized generation label
- * e.g. "67200412" -> "รุ่นที่ 4" (th) / "Cohort 4" (en)
- * e.g. "CE04" -> "รุ่นที่ 4" (th) / "Cohort 4" (en)
+ * e.g. "67200412" -> "รุ่นที่ 4" (th) / "CE04" (en)
+ * e.g. "CE04" -> "รุ่นที่ 4" (th) / "CE04" (en)
  */
 export function formatCohortLabel(input: string | null | undefined, lang: string = "th"): string {
   if (!input) return "";
@@ -38,7 +38,8 @@ export function formatCohortLabel(input: string | null | undefined, lang: string
   }
 
   if (gen !== null && gen > 0) {
-    return lang === "th" ? `รุ่นที่ ${gen}` : `Cohort ${gen}`;
+    const formattedGen = gen < 10 ? `0${gen}` : `${gen}`;
+    return lang === "th" ? `รุ่นที่ ${gen}` : `CE${formattedGen}`;
   }
 
   return str;
