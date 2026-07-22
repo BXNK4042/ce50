@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { formatCohortLabel } from "@/lib/cohort";
 
 export default function Navbar({
   lang,
@@ -291,10 +292,10 @@ export default function Navbar({
                           {cohorts.map((c) => (
                             <Link
                               key={c}
-                              href={`/${lang}/people/students/${c}`}
+                              href={`/${lang}/people/students/${c.toLowerCase()}`}
                               className="block px-4 py-2 text-xs text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
                             >
-                              {c}
+                              {formatCohortLabel(c, lang)}
                             </Link>
                           ))}
                         </div>
