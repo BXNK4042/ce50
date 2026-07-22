@@ -32,7 +32,7 @@ export default async function CohortPage({
         <div className="relative h-screen w-full p-12 md:p-16 flex flex-col justify-end items-start transition-all duration-300 overflow-hidden">
           {/* Background Image with bottom 35% fade-out mask */}
           <img 
-            src="/students/ce_04/CE_04.webp"
+            src="/students/ce_04/ce_04.webp"
             alt="CE04 Background"
             className="absolute inset-0 w-full h-full object-cover z-0"
             style={{
