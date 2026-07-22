@@ -10,6 +10,19 @@ from auth_utils import hash_password
 
 def main() -> None:
     with db_cursor() as conn:
+        # Wipe all existing table data & reset autoincrement sequences
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA foreign_keys = OFF")
+        tables = [
+            "users", "teachers", "students", "works", "news_items",
+            "class_schedules", "exam_schedules", "rooms",
+            "internship_topics", "videos"
+        ]
+        for tbl in tables:
+            cursor.execute(f"DELETE FROM {tbl}")
+            cursor.execute("DELETE FROM sqlite_sequence WHERE name = ?", (tbl,))
+        cursor.execute("PRAGMA foreign_keys = ON")
+
         # Seed users
         users_data = [
             ("superadmin", hash_password("super1234"), "superadmin@ce.ac.th", "Super Admin", "superadmin", 0),
@@ -85,9 +98,9 @@ def main() -> None:
                 ("67200235", "นางสาวรินรดา บุญมี", "Miss Rinrada Boonmee", None, 2, "", "800", "Tel: 0937764085 | IG: @nnoey.rb"),
                 ("67200079", "นางสาวณัฐธิดา เกื้อประจง", "Miss Natthida Kueaprajong", None, 2, "เหรัญญิก", "007", "Tel: 0801585306 | IG: @ntd.axn"),
                 ("67200223", "นายมีสุข เอกพงษ์", "Mr. Misuk Aekkaphong", None, 2, "", "800", "Tel: 0831508487 | IG: @Messily ekkaphong"),
-                ("67200369", "นายธีรศาสนต์ คงเกิด", "Mr. Thirasan Khongkoed", None, 2, "", "T800", "Tel: 0656709042 | IG: @Teeuytee"),
+                ("67200369", "นายธีรศาสนต์ คงเกิด", "Mr. Thirasan Khongkoed", None, 2, "", "800", "Tel: 0656709042 | IG: @Teeuytee"),
                 ("67200030", "นายคณพัฒน์ รุ่งรพีพรพงษ์", "Mr. Kanaphat Rungrapeepornpong", None, 2, "รองประธานสาขา", "224", "Tel: 00810247384 | IG: @pooh_2134"),
-                ("67200093", "นายตระกูลชัย เเซ่ติ้ง", "Mr. trakoonchai saeting", None, 2, "", "006", "Tel: 0980850838"),
+                ("67200093", "นายตระกูลชัย เเซ่ติ้ง", "Mr. trakoonchai saeting", None, 2, "", "006", "Tel: 0980850838 | IG: NULL"),
                 ("67200324", "นายกนกพัฒน์ โพธิ", "Mr. Kanokphat Pothi", None, 2, "", "444", "Tel: 0926577824 | IG: @lxo_xelxeoo"),
                 ("67200348", "นายณรงค์รักษ์ เรืองศักดิ์", "Mr. Narongrak Rueangsak", None, 2, "", "999", "Tel: 0929744516 | IG: @ainxri"),
                 ("67200380", "นายปรินทร คงทอง", "Mr. Parinthon Kongthong", None, 2, "", "339", "Tel: 0631102883 | IG: @bank.parinthon"),
