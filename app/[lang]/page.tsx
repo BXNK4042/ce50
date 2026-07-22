@@ -56,6 +56,12 @@ export default async function HomePage({
   } catch (e) {
     console.error("Failed to fetch homepage teachers:", e);
   }
+  let cohorts: string[] = [];
+  try {
+    cohorts = await api.cohorts();
+  } catch (e) {
+    console.error("Failed to fetch homepage cohorts:", e);
+  }
   const featured = news.slice(0, 3);
   const [big, small1, small2] = featured;
   return (
@@ -159,7 +165,7 @@ export default async function HomePage({
 
       {/* Section 3: Equal size to Section 2, matching Section 1 background in all themes */}
       <div className="relative h-screen w-full bg-background p-12 md:p-16 flex flex-col gap-6">
-        <PeopleSlider lang={lang} title={dict.home.people} people={teachers} />
+        <PeopleSlider lang={lang} title={dict.home.people} people={teachers} cohorts={cohorts} />
       </div>
     </>
   );

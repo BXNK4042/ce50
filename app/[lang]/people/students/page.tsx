@@ -1,5 +1,6 @@
 import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
 import Link from "next/link";
+import { formatCohortLabel } from "@/lib/cohort";
 
 export default async function StudentsPage({
   params,
@@ -79,8 +80,13 @@ export default async function StudentsPage({
             >
               <div>
                 {/* Cohort Badge/Header */}
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${cohort.color} flex items-center justify-center font-bold text-xl ${cohort.textColor} mb-4 shadow-inner`}>
-                  {cohort.code}
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${cohort.color} flex items-center justify-center font-bold text-xl ${cohort.textColor} shadow-inner`}>
+                    {cohort.code}
+                  </div>
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 dark:bg-sky-950/50 text-blue-600 dark:text-sky-400 border border-blue-100 dark:border-sky-900/40">
+                    {formatCohortLabel(cohort.code, lang)}
+                  </span>
                 </div>
 
                 <h2 className="text-xl font-bold text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors">
