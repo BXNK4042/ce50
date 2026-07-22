@@ -120,7 +120,9 @@ def upload_teacher_image(file: UploadFile = File(...), admin: dict = Depends(get
         raise HTTPException(status_code=400, detail="Only image files are allowed")
 
     new_filename = f"teacher_{uuid.uuid4()}.{ext}"
-    dest_path = UPLOAD_DIR / new_filename
+    prof_dir = UPLOAD_DIR / "professors"
+    prof_dir.mkdir(parents=True, exist_ok=True)
+    dest_path = prof_dir / new_filename
 
     try:
         with open(dest_path, "wb") as buffer:
@@ -128,7 +130,8 @@ def upload_teacher_image(file: UploadFile = File(...), admin: dict = Depends(get
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save image: {str(e)}")
 
-    return {"url": f"/image/{new_filename}"}
+    return {"url": f"/image/professors/{new_filename}"}
+
 
 
 @router.get("/students")

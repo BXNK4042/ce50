@@ -67,7 +67,7 @@ def main() -> None:
         ]
 
         for name_th, name_en, photo_filename, advise_years, contact in teachers_data:
-            photo_path = f"/image/{photo_filename}"
+            photo_path = f"/image/professors/{photo_filename}"
             cursor = conn.cursor()
             cursor.execute("SELECT id FROM teachers WHERE name_th = ?", (name_th,))
             row = cursor.fetchone()

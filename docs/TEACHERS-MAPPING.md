@@ -42,12 +42,12 @@ CREATE TABLE IF NOT EXISTS teachers (
 
 | `id` | `name_th` | `name_en` | `photo` | `advise_years` | `contact` |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1** | อาจารย์อรรถศาสตร์ นาคเทวัญ | Athasart Narkthewan | `/image/athasart.webp` | `["1"]` | `athasart.n@ce.ac.th` |
-| **2** | ดร.รัตติกร สมบัติแก้ว | Rattikorn Sombutkaew | `/image/rattikorn.webp` | `["2"]` | `rattikorn.s@ce.ac.th` |
-| **3** | อาจารย์นภัสรพี สิทธิวัจน์ | Pisakorn Sittiwatjana | `/image/pisakorn.webp` | `["3"]` | `pisakorn.s@ce.ac.th` |
-| **4** | ว่าที่ร้อยตรี ศิลา ศิริมาสกุล | Silar Sirimasakul | `/image/silar.webp` | `["4"]` | `silar.s@ce.ac.th` |
-| **5** | อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช | Sakawkarn Piyawitwanich | `/image/sakawkarn.webp` | `["1", "2"]` | `sakawkarn.p@ce.ac.th` |
-| **6** | นายจตุรงค์ เกตุนิมิต | Jaturong Katenimit | `/image/jaturong.webp` | `[]` | `jaturong.k@ce.ac.th` |
+| **1** | อาจารย์อรรถศาสตร์ นาคเทวัญ | Athasart Narkthewan | `/image/professors/athasart.webp` | `["1"]` | `athasart.n@ce.ac.th` |
+| **2** | ดร.รัตติกร สมบัติแก้ว | Rattikorn Sombutkaew | `/image/professors/rattikorn.webp` | `["2"]` | `rattikorn.s@ce.ac.th` |
+| **3** | อาจารย์นภัสรพี สิทธิวัจน์ | Pisakorn Sittiwatjana | `/image/professors/pisakorn.webp` | `["3"]` | `pisakorn.s@ce.ac.th` |
+| **4** | ว่าที่ร้อยตรี ศิลา ศิริมาสกุล | Silar Sirimasakul | `/image/professors/silar.webp` | `["4"]` | `silar.s@ce.ac.th` |
+| **5** | อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช | Sakawkarn Piyawitwanich | `/image/professors/sakawkarn.webp` | `["1", "2"]` | `sakawkarn.p@ce.ac.th` |
+| **6** | นายจตุรงค์ เกตุนิมิต | Jaturong Katenimit | `/image/professors/jaturong.webp` | `[]` | `jaturong.k@ce.ac.th` |
 
 ---
 
