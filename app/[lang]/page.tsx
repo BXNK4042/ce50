@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getDictionary, hasLocale } from "./dictionaries";
 import PeopleSlider from "@/components/layout/people-slider";
 import { api } from "@/lib/api";
-import type { NewsCategory } from "@/lib/types";
+import type { NewsCategory, Teacher } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +49,12 @@ export default async function HomePage({
     news = await api.news();
   } catch (e) {
     console.error("Failed to fetch homepage news:", e);
+  }
+  let teachers: Teacher[] = [];
+  try {
+    teachers = await api.teachers();
+  } catch (e) {
+    console.error("Failed to fetch homepage teachers:", e);
   }
   const featured = news.slice(0, 3);
   const [big, small1, small2] = featured;
@@ -112,7 +118,7 @@ export default async function HomePage({
               <div className="flex flex-col gap-6">
                 {small1 && (
                   <a
-                    href={small1.link || "#"}
+                    href={small1.link || "#"} 
                     className="flex-1 bg-white dark:bg-black border border-blue-100 dark:border-zinc-800/50 p-6 shadow-md shadow-black/10 dark:shadow-black/20 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-3 cursor-pointer select-none group"
                   >
                     <span className={`inline-block px-2.5 py-0.5 text-[11px] font-semibold rounded-full border uppercase tracking-wider ${CATEGORY_STYLE[small1.category as NewsCategory]?.badge ?? CATEGORY_STYLE.other.badge}`}>
@@ -153,7 +159,7 @@ export default async function HomePage({
 
       {/* Section 3: Equal size to Section 2, matching Section 1 background in all themes */}
       <div className="relative h-screen w-full bg-background p-12 md:p-16 flex flex-col gap-6">
-        <PeopleSlider lang={lang} title={dict.home.people} />
+        <PeopleSlider lang={lang} title={dict.home.people} people={teachers} />
       </div>
     </>
   );

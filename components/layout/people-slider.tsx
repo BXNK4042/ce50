@@ -1,64 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import type { Teacher } from "@/lib/types";
 
 interface PeopleSliderProps {
   lang: string;
   title: string;
+  people: Teacher[];
 }
 
-const people = [
-  {
-    nameTh: "อาจารย์อรรถศาสตร์ นาคเทวัญ",
-    nameEn: "Athasart Narkthewan",
-    roleTh: "หัวหน้าสาขาวิชา",
-    roleEn: "Head of Program",
-    email: "athasart.n@ce.ac.th",
-    image: "/professors/athasart.webp",
-  },
-  {
-    nameTh: "ดร.รัตติกร สมบัติแก้ว",
-    nameEn: "Rattikorn Sombutkaew",
-    roleTh: "อาจารย์ประจำสาขา",
-    roleEn: "Lecturer",
-    email: "rattikorn.s@ce.ac.th",
-    image: "/professors/rattikorn.webp",
-  },
-  {
-    nameTh: "อาจารย์นภัสรพี สิทธิวัจน์",
-    nameEn: "Pisakorn Sittiwatjana",
-    roleTh: "อาจารย์ประจำสาขา",
-    roleEn: "Lecturer",
-    email: "pisakorn.s@ce.ac.th",
-    image: "/professors/pisakorn.webp",
-  },
-  {
-    nameTh: "ว่าที่ร้อยตรี ศิลา ศิริมาสกุล",
-    nameEn: "Silar Sirimasakul",
-    roleTh: "อาจารย์ประจำสาขา",
-    roleEn: "Lecturer",
-    email: "silar.s@ce.ac.th",
-    image: "/professors/silar.webp",
-  },
-  {
-    nameTh: "อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช",
-    nameEn: "Sakawkarn Piyawitwanich",
-    roleTh: "อาจารย์ประจำสาขา",
-    roleEn: "Lecturer",
-    email: "sakawkarn.p@ce.ac.th",
-    image: "/professors/sakawkarn.webp",
-  },
-  {
-    nameTh: "นายจตุรงค์ เกตุนิมิต",
-    nameEn: "Jaturong Katenimit",
-    roleTh: "นักวิชาการคอมพิวเตอร์",
-    roleEn: "Computer Technical Officer",
-    email: "jaturong.k@ce.ac.th",
-    image: "/professors/jaturong.webp",
-  },
-];
-
-export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
+export default function PeopleSlider({ lang, title, people }: PeopleSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(4);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
@@ -137,6 +88,19 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
   // Duplicate items at the end of the array to create a seamless looping effect
   const duplicatedPeople = [...people, ...people.slice(0, visibleCount)];
 
+  if (people.length === 0) {
+    return (
+      <div className="w-full flex flex-col gap-6 min-h-0">
+        <h2 className="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+          {title}
+        </h2>
+        <div className="flex items-center justify-center bg-white/50 dark:bg-black/30 border border-dashed border-blue-200 dark:border-zinc-800 rounded-xl p-12 text-zinc-500 dark:text-zinc-400">
+          {lang === "th" ? "ไม่พบข้อมูลคณาจารย์" : "No faculty records found."}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full flex flex-col gap-6 min-h-0">
       {/* Slider Header: Title + Navigation buttons */}
@@ -197,8 +161,8 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
             >
               {/* Full Background Portrait Image */}
               <img
-                src={`${person.image}?v=8`}
-                alt={lang === "th" ? person.nameTh : person.nameEn}
+                src={person.photo ?? ""}
+                alt={lang === "th" ? person.name_th : (person.name_en ?? person.name_th)}
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
               />
               {/* Premium Dark Gradient Overlay at the bottom for readability */}
@@ -206,18 +170,15 @@ export default function PeopleSlider({ lang, title }: PeopleSliderProps) {
 
               {/* Profile Info - Floated at the bottom-left */}
               <div className="p-6 flex flex-col gap-3 z-20 text-left w-full">
-                <div>
-                  <span className="inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-white rounded-md border border-white/20 uppercase tracking-wider select-none">
-                    {lang === "th" ? person.roleTh : person.roleEn}
-                  </span>
-                  <h3 className="text-lg font-bold text-white mt-2 group-hover:text-sky-300 transition-colors line-clamp-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]">
-                    {lang === "th" ? person.nameTh : person.nameEn}
-                  </h3>
-                </div>
-                <div className="text-xs text-white/70 mt-1 border-t border-white/10 pt-3 flex items-center justify-between">
-                  <span className="truncate drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">{person.email}</span>
-                  <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
-                </div>
+                <h3 className="text-lg font-bold text-white group-hover:text-sky-300 transition-colors line-clamp-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] [text-shadow:_0_1px_3px_rgba(0,0,0,0.8)]">
+                  {lang === "th" ? person.name_th : (person.name_en ?? person.name_th)}
+                </h3>
+                {person.contact && (
+                  <div className="text-xs text-white/70 mt-1 border-t border-white/10 pt-3 flex items-center justify-between">
+                    <span className="truncate drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">{person.contact}</span>
+                    <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                )}
               </div>
             </div>
           ))}
