@@ -65,8 +65,16 @@ python3 -m venv .venv
 
 ## 🐳 Docker (คำสั่งเดียว)
 
-รันทั้งสองบริการพร้อมกัน (ส่วนหน้า :3000 + ส่วนหลัง :8000) ด้วยคำสั่งเดียว
-เหมาะสำหรับ onboarding และ deploy บน VPS:
+รันทั้งสองบริการพร้อมกัน (ส่วนหน้า :3000 + ส่วนหลัง :8000)
+เหมาะสำหรับ onboarding และ deploy บน VPS
+
+ก่อนรันครั้งแรก ต้องตั้ง `JWT_SECRET` — เซิร์ฟเวอร์จะไม่ start ถ้าไม่มี (ดู `server/config.py`):
+
+```bash
+export JWT_SECRET=$(python3 -c "import secrets; print(secrets.token_hex(32))")
+```
+
+จากนั้นสั่งรัน:
 
 ```bash
 docker compose up --build      # → http://localhost:3000  (API ที่ http://localhost:8000)
@@ -87,7 +95,7 @@ docker compose up --build      # → http://localhost:3000  (API ที่ http:
 | `DB_PATH` | หลัง | ตำแหน่งไฟล์ SQLite (ค่ามาตรฐาน `server/ce50.db`) |
 | `UPLOAD_DIR` | หลัง | โฟลเดอร์เก็บรูป (ค่ามาตรฐาน `server/static/uploads`) |
 | `CORS_ORIGINS` | หลัง | origin ของส่วนหน้าที่อนุญาต |
-| `ADMIN_SECRET` | หลัง | secret สำหรับยืนยันตัวแอดมิน |
+| `JWT_SECRET` | หลัง | secret สำหรับลงนาม token — **จำเป็นต้องตั้ง** ไม่งั้นเซิร์ฟเวอร์จะไม่ start |
 
 ## 🗄️ ฐานข้อมูล
 
@@ -131,7 +139,9 @@ Schema อยู่ที่ `server/schema.sql` (สร้างอัตโน
 
 **VPS (แนะนำ):** ใช้ `docker-compose.yml` ที่มาพร้อมโปรเจกต์ — เหมาะกับการรันทั้งสองบริการบนเครื่องเดียว
 ```bash
-NEXT_PUBLIC_API_URL=http://<vps-host>:8000 ADMIN_SECRET=<secret> docker compose up --build -d
+JWT_SECRET=$(python3 -c "import secrets; print(secrets.token_hex(32))") \
+NEXT_PUBLIC_API_URL=http://<vps-host>:8000 \
+docker compose up --build -d
 ```
 
 **ทางเลือกอื่น**
