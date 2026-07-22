@@ -3,7 +3,8 @@ import shutil
 import uuid
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from pydantic import BaseModel
-from db import get_db
+from db import db_cursor, get_db
+
 from dependencies import check_admin_auth, get_current_admin
 from config import UPLOAD_DIR
 
