@@ -3,8 +3,10 @@
 # Starts both frontend (Next.js) and backend (FastAPI/Uvicorn)
 # =====================================================================
 
-$ProjectRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$ProjectRoot = Split-Path -Parent $ScriptDir
 if (!$ProjectRoot) { $ProjectRoot = Get-Location }
+
 
 Write-Host "[1/3] Verifying project files..." -ForegroundColor Cyan
 if (!(Test-Path "$ProjectRoot\package.json")) {

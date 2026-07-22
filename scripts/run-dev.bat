@@ -6,9 +6,9 @@
 
 setlocal enabledelayedexpansion
 
-:: Store the root directory (where this script resides) and remove trailing backslash
-set "PROJECT_ROOT=%~dp0"
-if "%PROJECT_ROOT:~-1%"=="\" set "PROJECT_ROOT=%PROJECT_ROOT:~0,-1%"
+:: Store script directory and get parent repo root
+for %%I in ("%~dp0..") do set "PROJECT_ROOT=%%~fI"
+
 
 echo [1/3] Verifying project files...
 if not exist "%PROJECT_ROOT%\package.json" (
