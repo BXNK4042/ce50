@@ -1,6 +1,8 @@
 import { api } from "@/lib/api";
 import { Teacher } from "@/lib/types";
 import TeachersGrid from "./teachers-grid";
+import Link from "next/link";
+import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +13,10 @@ export default async function TeachersPage({
 }) {
   const { lang } = await params;
   const isTh = lang === "th";
+
+  const cookieStore = await cookies();
+  const role = cookieStore.get("admin_role")?.value;
+  const isSuperAdmin = role === "superadmin";
 
   let dbTeachers: any[] = [];
   try {
@@ -37,39 +43,51 @@ export default async function TeachersPage({
 
   return (
     <section className="w-full px-12 md:px-16 py-12 md:py-16">
-      <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-zinc-900 dark:text-white">
-        {isTh ? (
-          <>
-            วิศวกรรมคอมพิวเตอร์
-            <br />
-            <span className="text-[#4483cc]">
-              <span className="relative inline-block">
-                คณา
-                <span className="absolute -bottom-1.5 left-0 w-full h-1 bg-[#4483cc] rounded-full" />
-              </span>
-              จารย์
-            </span>{" "}
-            ปี 2026
-          </>
-        ) : (
-          <>
-            COMPUTER ENGINEERING
-            <br />
-            <span className="text-[#4483cc]">
-              <span className="relative inline-block">
-                FAC
-                <span className="absolute -bottom-1.5 left-0 w-full h-1 bg-[#4483cc] rounded-full" />
-              </span>
-              ULTY
-            </span>{" "}
-            2026
-          </>
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-zinc-900 dark:text-white">
+          {isTh ? (
+            <>
+              วิศวกรรมคอมพิวเตอร์
+              <br />
+              <span className="text-[#4483cc]">
+                <span className="relative inline-block">
+                  คณา
+                  <span className="absolute -bottom-1.5 left-0 w-full h-1 bg-[#4483cc] rounded-full" />
+                </span>
+                จารย์
+              </span>{" "}
+              ปี 2026
+            </>
+          ) : (
+            <>
+              COMPUTER ENGINEERING
+              <br />
+              <span className="text-[#4483cc]">
+                <span className="relative inline-block">
+                  FAC
+                  <span className="absolute -bottom-1.5 left-0 w-full h-1 bg-[#4483cc] rounded-full" />
+                </span>
+                ULTY
+              </span>{" "}
+              2026
+            </>
+          )}
+        </h1>
+
+        {isSuperAdmin && (
+          <Link
+            href={`/${lang}/admin/teachers`}
+            className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-[#4483cc] hover:bg-[#356fb3] shadow-md transition-all shrink-0"
+          >
+            <span>⚙️</span>
+            <span>{isTh ? "จัดการข้อมูลคณาจารย์" : "Manage Faculty (Admin)"}</span>
+          </Link>
         )}
-      </h1>
+      </div>
 
       {/* Teachers Grid */}
       {teachers.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-black/50 border border-blue-100 dark:border-zinc-800 rounded-xl p-8 text-center mt-12">
+        <div className="flex flex-col items-center justify-center py-20 bg-white dark:bg-black/50 border border-blue-100 dark:border-zinc-800 rounded-xl p-8 text-center mt-4">
           <p className="text-zinc-500 dark:text-zinc-400 font-medium">
             {isTh ? "ไม่พบข้อมูลคณาจารย์" : "No faculty records found."}
           </p>
@@ -80,3 +98,4 @@ export default async function TeachersPage({
     </section>
   );
 }
+

@@ -175,8 +175,60 @@ async function postAuth<T>(path: string, body: any): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+async function putAuth<T>(path: string, body: any): Promise<T> {
+  const url = new URL(path, BASE);
+  const token = adminToken();
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) throw new Error(`${res.status} ${url.toString()}`);
+  return res.json() as Promise<T>;
+}
+
+async function deleteAuth<T>(path: string): Promise<T> {
+  const url = new URL(path, BASE);
+  const token = adminToken();
+  const res = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+  if (!res.ok) throw new Error(`${res.status} ${url.toString()}`);
+  return res.json() as Promise<T>;
+}
+
+async function uploadFileAuth<T>(path: string, file: File): Promise<T> {
+  const url = new URL(path, BASE);
+  const token = adminToken();
+  const formData = new FormData();
+  formData.append("file", file);
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    body: formData,
+  });
+  if (!res.ok) throw new Error(`${res.status} ${url.toString()}`);
+  return res.json() as Promise<T>;
+}
+
 export const api = {
   teachers: () => get<Teacher[]>("/people/teachers"),
+  createTeacher: (data: Partial<Teacher>) =>
+    postAuth<{ status: string; id: number }>("/people/teachers", data),
+  updateTeacher: (id: number, data: Partial<Teacher>) =>
+    putAuth<{ status: string }>("/people/teachers/" + id, data),
+  deleteTeacher: (id: number) =>
+    deleteAuth<{ status: string }>("/people/teachers/" + id),
+  uploadTeacherImage: (file: File) =>
+    uploadFileAuth<{ url: string }>("/people/teachers/upload-image", file),
   cohorts: () => get<string[]>("/people/cohorts"),
   students: (cohort?: string) =>
     get<Student[]>("/people/students", cohort ? { cohort } : undefined),
