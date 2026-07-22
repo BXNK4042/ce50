@@ -25,6 +25,12 @@ services:
     container_name: ce50-web
     ports:
       - "3000:3000"
+    environment:
+      # ponytail: server-side fetches (SSR + route handlers) run inside this
+      # container, where localhost = Next (3000), not the API. The API is on the
+      # compose network as http://api:8000 — point server fetches there. Browsers
+      # keep using NEXT_PUBLIC_API_URL (baked at build) to reach the public host.
+      API_INTERNAL_URL: http://api:8000
     depends_on:
       - api
     restart: unless-stopped

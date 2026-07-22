@@ -127,7 +127,16 @@ export function examItemToSlot(e: ExamItem): ExamSlot {
   };
 }
 
-const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+// ponytail: server-side SSR/route handlers run inside the web container, where
+// localhost points at Next (3000), not the API. The API is reachable via Docker
+// DNS (http://api:8000). Browser fetches still need the public host URL, so pick
+// the base by execution context: server → API_INTERNAL_URL, browser → NEXT_PUBLIC_API_URL.
+const BASE =
+  typeof window === "undefined"
+    ? process.env.API_INTERNAL_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      "http://localhost:8000"
+    : process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 async function get<T>(path: string, params?: Record<string, string>): Promise<T> {
   const url = new URL(path, BASE);

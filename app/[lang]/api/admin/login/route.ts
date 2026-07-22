@@ -9,7 +9,12 @@ export async function POST(
     const body = await request.json();
     const { username, password } = body;
 
-    const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+    // ponytail: route handler runs server-side inside the web container — prefer
+    // the Docker-internal API URL; fall back to the public URL for local dev.
+    const backendUrl =
+      process.env.API_INTERNAL_URL ||
+      process.env.NEXT_PUBLIC_API_URL ||
+      "http://localhost:8000";
 
     const response = await fetch(`${backendUrl}/admin/login`, {
       method: "POST",
