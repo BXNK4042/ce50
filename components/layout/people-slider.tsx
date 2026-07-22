@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from "react";
 import type { Teacher } from "@/lib/types";
+import StudentCohortDropdown from "./student-cohort-dropdown";
 
 interface PeopleSliderProps {
   lang: string;
   title: string;
   people: Teacher[];
+  cohorts?: string[];
 }
 
-export default function PeopleSlider({ lang, title, people }: PeopleSliderProps) {
+export default function PeopleSlider({ lang, title, people, cohorts = [] }: PeopleSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(4);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
@@ -30,7 +32,7 @@ export default function PeopleSlider({ lang, title, people }: PeopleSliderProps)
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const maxIndex = people.length; // 5
+  const maxIndex = people.length;
 
   const handleNext = () => {
     if (isTransitioning) return;
@@ -43,11 +45,9 @@ export default function PeopleSlider({ lang, title, people }: PeopleSliderProps)
     if (isTransitioning) return;
     setIsTransitioning(true);
     if (currentIndex === 0) {
-      // Snap instantly to the duplicate index at the end
       setTransitionEnabled(false);
       setCurrentIndex(maxIndex);
 
-      // Slide smoothly to the previous real index (maxIndex - 1 = 4) in the next frame
       setTimeout(() => {
         setTransitionEnabled(true);
         setCurrentIndex(maxIndex - 1);
@@ -61,13 +61,11 @@ export default function PeopleSlider({ lang, title, people }: PeopleSliderProps)
   const handleTransitionEnd = () => {
     setIsTransitioning(false);
     if (currentIndex >= maxIndex) {
-      // Snap instantly back to start (index 0)
       setTransitionEnabled(false);
       setCurrentIndex(0);
     }
   };
 
-  // Auto scroll every 10 seconds (resets whenever currentIndex or visibleCount changes)
   useEffect(() => {
     const timer = setInterval(() => {
       handleNext();
@@ -85,15 +83,17 @@ export default function PeopleSlider({ lang, title, people }: PeopleSliderProps)
     return `translateX(calc(-${currentIndex} * (25% + 6px)))`;
   };
 
-  // Duplicate items at the end of the array to create a seamless looping effect
   const duplicatedPeople = [...people, ...people.slice(0, visibleCount)];
 
   if (people.length === 0) {
     return (
       <div className="w-full flex flex-col gap-6 min-h-0">
-        <h2 className="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
-          {title}
-        </h2>
+        <div className="flex items-center justify-between select-none">
+          <h2 className="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
+            {title}
+          </h2>
+          <StudentCohortDropdown cohorts={cohorts} lang={lang} />
+        </div>
         <div className="flex items-center justify-center bg-white/50 dark:bg-black/30 border border-dashed border-blue-200 dark:border-zinc-800 rounded-xl p-12 text-zinc-500 dark:text-zinc-400">
           {lang === "th" ? "ไม่พบข้อมูลคณาจารย์" : "No faculty records found."}
         </div>
@@ -103,45 +103,49 @@ export default function PeopleSlider({ lang, title, people }: PeopleSliderProps)
 
   return (
     <div className="w-full flex flex-col gap-6 min-h-0">
-      {/* Slider Header: Title + Navigation buttons */}
+      {/* Slider Header: Title + Student Cohort Dropdown + Navigation buttons */}
       <div className="flex items-center justify-between select-none">
         <h2 className="text-4xl font-extrabold text-zinc-900 dark:text-white tracking-tight">
           {title}
         </h2>
-        {/* Arrow Navigation Controls */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handlePrev}
-            className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-black/80 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-colors shadow-xs cursor-pointer"
-            aria-label="Previous slide"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2.5}
-              stroke="currentColor"
-              className="w-5 h-5"
+        <div className="flex items-center gap-3">
+          <StudentCohortDropdown cohorts={cohorts} lang={lang} />
+
+          {/* Arrow Navigation Controls */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrev}
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-black/80 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-colors shadow-xs cursor-pointer"
+              aria-label="Previous slide"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
-            </svg>
-          </button>
-          <button
-            onClick={handleNext}
-            className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-black/80 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-colors shadow-xs cursor-pointer"
-            aria-label="Next slide"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2.5}
-              stroke="currentColor"
-              className="w-5 h-5"
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button>
+            <button
+              onClick={handleNext}
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-black/80 hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-700 dark:text-zinc-300 transition-colors shadow-xs cursor-pointer"
+              aria-label="Next slide"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-            </svg>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2.5}
+                stroke="currentColor"
+                className="w-5 h-5"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 

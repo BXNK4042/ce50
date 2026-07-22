@@ -25,10 +25,19 @@ fi
 
 BackendCmd=""
 if [[ -x "$VenvPython" ]]; then
-    echo "[2/3] Found Python venv at .venv."
+    echo "[2/3] Found Python virtual environment."
     BackendCmd="\"$VenvPython\" -m uvicorn main:app --reload --app-dir server"
+elif command -v python &>/dev/null; then
+    echo "[2/3] venv not found. Using 'python -m uvicorn'."
+    BackendCmd="python -m uvicorn main:app --reload --app-dir server"
+elif command -v py &>/dev/null; then
+    echo "[2/3] venv not found. Using 'py -m uvicorn'."
+    BackendCmd="py -m uvicorn main:app --reload --app-dir server"
+elif command -v python3 &>/dev/null; then
+    echo "[2/3] venv not found. Using 'python3 -m uvicorn'."
+    BackendCmd="python3 -m uvicorn main:app --reload --app-dir server"
 else
-    echo "[2/3] venv not found at .venv. Falling back to global uvicorn."
+    echo "[2/3] venv not found. Falling back to global uvicorn."
     BackendCmd="uvicorn main:app --reload --app-dir server"
 fi
 
