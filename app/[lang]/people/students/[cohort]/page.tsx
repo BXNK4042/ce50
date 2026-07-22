@@ -29,13 +29,13 @@ export default async function CohortPage({
     return (
       <div className="min-h-screen bg-[#cad9f0]/40 dark:bg-[#0a192f]/40 transition-colors duration-300">
 
-        {/* News section (full-width, responsive min-h, empty box with CE_04.webp background) */}
-        <div className="relative min-h-[80vh] 2xl:min-h-screen w-full flex flex-col justify-end items-center transition-all duration-300 overflow-hidden">
+        {/* News section (full-width, h-screen, empty box with CE_04.webp background) */}
+        <div className="relative h-screen w-full pb-16 md:pb-24 flex flex-col justify-end items-center transition-all duration-300 overflow-hidden">
           {/* Background Image with bottom 35% fade-out mask */}
           <img 
             src="/students/ce_04/ce_04.webp"
             alt="CE04 Background"
-            className="absolute inset-0 w-full h-full object-cover scale-100 2xl:scale-105 3xl:scale-110 origin-center z-0 transition-transform duration-300"
+            className="absolute inset-0 w-full h-full object-cover z-0"
             style={{
               objectPosition: "50% 55%",
               maskImage: "linear-gradient(to bottom, black 35%, transparent 100%)",
@@ -51,20 +51,20 @@ export default async function CohortPage({
             }}
           />
 
-          {/* Section Header (Bottom-Left aligned with drop shadows for readability) */}
-          <div className="relative z-20 text-left mb-8 sm:mb-14 md:mb-20 w-full max-w-7xl px-6 sm:px-10 md:px-16 drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
-            <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight select-none">
+          {/* Section Header (Identical max-w-7xl px-12 md:px-16 container matching student grid below) */}
+          <div className="relative z-20 mx-auto max-w-7xl px-12 md:px-16 w-full text-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
+            <h2 className="text-4xl font-extrabold text-white tracking-tight select-none">
               THIRD YEAR
             </h2>
-            <p className="mt-1 sm:mt-2 text-sky-400 dark:text-sky-300 text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold select-none tracking-tight">
+            <p className="mt-2 text-sky-400 dark:text-sky-300 text-4xl font-extrabold select-none tracking-tight">
               JUNIOR
             </p>
           </div>
         </div>
 
         {/* Student list section (below news section) */}
-        <div className="py-8 sm:py-12 md:py-16">
-          <section className="mx-auto max-w-7xl px-4 sm:px-8 md:px-16 w-full">
+        <div className="py-12 md:py-16">
+          <section className="mx-auto max-w-7xl px-12 md:px-16 w-full">
             <StudentGridClient students={students} lang={lang} dict={dict} />
           </section>
         </div>
