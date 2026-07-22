@@ -154,7 +154,7 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                   )}
                   {teacher.id === 6 && (
                     <img
-                      src="/backgrounds/niyomcha.webp?v=8"
+                      src="/image/backgrounds/niyomcha.webp?v=8"
                       alt="Niyomcha background"
                       className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0"
                     />

@@ -120,7 +120,7 @@ export function getCohortHeroData(cohortCode: string): CohortHeroData {
 
   return {
     ...info,
-    bgImage: `/students/${codeLower}/backgrounds/${codeLower}.webp`,
+    bgImage: `/image/students/${codeLower}/backgrounds/${codeLower}.webp`,
   };
 }
 
