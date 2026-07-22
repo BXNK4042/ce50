@@ -76,3 +76,51 @@ export function formatCohortLabel(input: string | null | undefined, lang: string
 
   return String(input);
 }
+
+export interface CohortHeroData {
+  titleEn: string;
+  titleTh: string;
+  subTitleEn: string;
+  subTitleTh: string;
+  bgImage: string;
+}
+
+export function getCohortHeroData(cohortCode: string): CohortHeroData {
+  const code = cohortCode.toUpperCase();
+  const gen = getCohortNumber(code);
+  const codeLower = code.toLowerCase();
+
+  const heroMap: Record<string, Omit<CohortHeroData, "bgImage">> = {
+    CE04: {
+      titleEn: "THIRD YEAR",
+      titleTh: "นักศึกษาชั้นปีที่ 3",
+      subTitleEn: "JUNIOR",
+      subTitleTh: "รุ่นที่ 4 (CE04)",
+    },
+    CE05: {
+      titleEn: "SECOND YEAR",
+      titleTh: "นักศึกษาชั้นปีที่ 2",
+      subTitleEn: "SOPHOMORE",
+      subTitleTh: "รุ่นที่ 5 (CE05)",
+    },
+    CE06: {
+      titleEn: "FIRST YEAR",
+      titleTh: "นักศึกษาชั้นปีที่ 1",
+      subTitleEn: "FRESHMAN",
+      subTitleTh: "รุ่นที่ 6 (CE06)",
+    },
+  };
+
+  const info = heroMap[code] || {
+    titleEn: `COHORT ${code}`,
+    titleTh: `นักศึกษา ${code}`,
+    subTitleEn: gen ? `CE GENERATION ${gen}` : code,
+    subTitleTh: gen ? `รุ่นที่ ${gen}` : code,
+  };
+
+  return {
+    ...info,
+    bgImage: `/students/${codeLower}/backgrounds/${codeLower}.webp`,
+  };
+}
+

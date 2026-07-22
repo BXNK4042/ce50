@@ -42,8 +42,75 @@ export default function LoginForm({ lang }: LoginFormProps) {
     }
   };
 
+  const handleQuickSignIn = async (u: string, p: string) => {
+    setUsername(u);
+    setPassword(p);
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await fetch(`/${lang}/api/admin/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: u, password: p }),
+      });
+
+      if (res.ok) {
+        setShowSuccess(true);
+        setTimeout(() => {
+          window.location.href = `/${lang}`;
+        }, 1200);
+      } else {
+        setError(isTh ? "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" : "Invalid username or password");
+      }
+    } catch (err) {
+      setError(isTh ? "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์" : "Connection error, please try again");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      {/* Quick Test Sign-In Buttons */}
+      <div className="flex flex-col gap-2.5 p-4 bg-zinc-100/70 dark:bg-zinc-900/70 border border-dashed border-zinc-300 dark:border-zinc-800 rounded-none">
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+            ⚡ {isTh ? "ทดสอบเข้าสู่ระบบด่วน" : "Quick Test Sign-In"}
+          </span>
+          <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono">Dev Mode</span>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => handleQuickSignIn("superadmin", "super1234")}
+            className="px-2 py-2 text-xs font-semibold bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30 transition-all text-center rounded-none cursor-pointer disabled:opacity-50"
+            title="superadmin / super1234"
+          >
+            Super Admin
+          </button>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => handleQuickSignIn("admin_y1", "admin1234")}
+            className="px-2 py-2 text-xs font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-sky-300 border border-blue-500/30 transition-all text-center rounded-none cursor-pointer disabled:opacity-50"
+            title="admin_y1 / admin1234"
+          >
+            Admin (Y1)
+          </button>
+          <button
+            type="button"
+            disabled={loading}
+            onClick={() => handleQuickSignIn("writer_y1", "writer1234")}
+            className="px-2 py-2 text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 transition-all text-center rounded-none cursor-pointer disabled:opacity-50"
+            title="writer_y1 / writer1234"
+          >
+            Writer (Y1)
+          </button>
+        </div>
+      </div>
+
       {showSuccess && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center">
           <div className="bg-emerald-100 dark:bg-emerald-950/90 border border-emerald-500 text-emerald-700 dark:text-emerald-300 font-semibold px-6 py-3 rounded-none shadow-2xl flex items-center gap-3 backdrop-blur-md">
@@ -170,3 +237,4 @@ export default function LoginForm({ lang }: LoginFormProps) {
     </form>
   );
 }
+
