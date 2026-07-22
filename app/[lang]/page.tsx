@@ -163,8 +163,8 @@ export default async function HomePage({
         </div>
       </div>
 
-      {/* Section 3: Equal size to Section 2, matching Section 1 background in all themes */}
-      <div className="relative h-screen w-full bg-background p-12 md:p-16 flex flex-col gap-6">
+      {/* Section 3: People Section */}
+      <div className="relative w-full bg-background px-12 md:px-16 py-12 md:py-16 flex flex-col gap-6">
         <PeopleSlider lang={lang} title={dict.home.people} people={teachers} cohorts={cohorts} />
       </div>
     </>
