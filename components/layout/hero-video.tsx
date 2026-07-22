@@ -22,7 +22,7 @@ export default function HomeBackgroundVideo({ src }: { src: string }) {
       
       // Styled with fixed, full-bleed positioning, pointer-events-none, and z-index -10 to place it behind all contents
       video.className = "fixed inset-0 w-full h-full object-cover pointer-events-none transition-opacity duration-500";
-      video.style.zIndex = "-10";
+      video.style.zIndex = "0";
       video.style.opacity = "0";
       
       document.body.appendChild(video);
