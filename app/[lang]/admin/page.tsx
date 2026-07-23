@@ -3,6 +3,9 @@
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ImageUploader from "@/components/admin/ImageUploader";
+import ClassScheduleGrid from "@/components/admin/ClassScheduleGrid";
+import ExamScheduleTable from "@/components/admin/ExamScheduleTable";
 
 interface AdminPageProps {
   params: Promise<{ lang: string }>;
@@ -16,7 +19,9 @@ type TabType =
   | "works"
   | "teachers"
   | "rooms"
-  | "users";
+  | "users"
+  | "internship"
+  | "videos";
 
 export default function CentralAdminPage({ params, searchParams }: AdminPageProps) {
   const resolvedParams = use(params);
@@ -36,6 +41,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
   const initialTab = (resolvedSearchParams.tab as TabType) || "schedules_class";
   const [activeTab, setActiveTab] = useState<TabType>(initialTab);
   const [selectedYear, setSelectedYear] = useState<number>(1);
+  const [selectedTerm, setSelectedTerm] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Data States
@@ -70,7 +76,9 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
   // Fetch Data on Tab / Year / Auth change
   useEffect(() => {
     if (!isLoggedIn) return;
-    fetchData();
+    if (activeTab !== "schedules_class" && activeTab !== "schedules_exam") {
+      fetchData();
+    }
   }, [activeTab, selectedYear, isLoggedIn]);
 
   const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
@@ -84,17 +92,17 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
       if (token) headers["Authorization"] = `Bearer ${token}`;
 
       switch (activeTab) {
-        case "schedules_class":
-          endpoint = `/schedule/class?year=${selectedYear}`;
-          break;
-        case "schedules_exam":
-          endpoint = `/schedule/exam?year=${selectedYear}`;
-          break;
         case "students":
           endpoint = `/people/students?year=${selectedYear}`;
           break;
         case "works":
           endpoint = `/works?year=${selectedYear}`;
+          break;
+        case "internship":
+          endpoint = `/internship?year=${selectedYear}`;
+          break;
+        case "videos":
+          endpoint = `/videos?year=${selectedYear}`;
           break;
         case "teachers":
           endpoint = `/people/teachers`;
@@ -106,6 +114,8 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           endpoint = `/users`;
           break;
       }
+
+      if (!endpoint) return;
 
       const res = await fetch(`${backendUrl}${endpoint}`, { headers });
       if (!res.ok) {
@@ -130,6 +140,9 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
     if (activeTab === "users") {
       initialForm.role = "admin";
       initialForm.year = 1;
+    }
+    if (activeTab === "videos") {
+      initialForm.category = "General";
     }
     setFormData(initialForm);
     setIsDrawerOpen(true);
@@ -156,6 +169,12 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           break;
         case "works":
           endpoint = `/works/${id}`;
+          break;
+        case "internship":
+          endpoint = `/internship/${id}`;
+          break;
+        case "videos":
+          endpoint = `/videos/${id}`;
           break;
         case "teachers":
           endpoint = `/people/teachers/${id}`;
@@ -198,7 +217,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
       const payload = { ...formData };
 
       // Make sure year is included for year-scoped entities
-      if (["schedules_class", "schedules_exam", "students", "works"].includes(activeTab)) {
+      if (["students", "works", "internship", "videos"].includes(activeTab)) {
         payload.year = Number(payload.year || selectedYear);
       }
 
@@ -208,6 +227,12 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           break;
         case "works":
           endpoint = editingItem ? `/works/${editingItem.id}` : `/works`;
+          break;
+        case "internship":
+          endpoint = editingItem ? `/internship/${editingItem.id}` : `/internship`;
+          break;
+        case "videos":
+          endpoint = editingItem ? `/videos/${editingItem.id}` : `/videos`;
           break;
         case "teachers":
           endpoint = editingItem ? `/people/teachers/${editingItem.id}` : `/people/teachers`;
@@ -245,11 +270,36 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
     }
   };
 
+  // Helper for Teachers advise_years multi-select checkboxes
+  const getTeacherAdviseYears = (): number[] => {
+    if (!formData.advise_years) return [];
+    if (Array.isArray(formData.advise_years)) return formData.advise_years.map(Number);
+    if (typeof formData.advise_years === "string") {
+      try {
+        const parsed = JSON.parse(formData.advise_years);
+        return Array.isArray(parsed) ? parsed.map(Number) : [];
+      } catch {
+        return formData.advise_years.split(",").map(Number).filter((n) => !isNaN(n));
+      }
+    }
+    return [];
+  };
+
+  const toggleTeacherAdviseYear = (yearNum: number) => {
+    const current = new Set(getTeacherAdviseYears());
+    if (current.has(yearNum)) {
+      current.delete(yearNum);
+    } else {
+      current.add(yearNum);
+    }
+    setFormData({ ...formData, advise_years: Array.from(current) });
+  };
+
   // Permission Checks
   const isSuperadmin = role === "superadmin";
   const canEditTab =
     isSuperadmin ||
-    ["schedules_class", "schedules_exam", "students", "works"].includes(activeTab);
+    ["schedules_class", "schedules_exam", "students", "works", "internship", "videos"].includes(activeTab);
 
   if (authLoading) {
     return (
@@ -375,6 +425,33 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
             </button>
 
             <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider px-3 mt-6 mb-2">
+              {isTh ? "ฝึกงาน & มีเดีย" : "Internship & Media"}
+            </div>
+            <button
+              onClick={() => setActiveTab("internship")}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all ${
+                activeTab === "internship"
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                  : "hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+              }`}
+            >
+              <span>{isTh ? "หัวข้อการฝึกงาน" : "Internship Topics"}</span>
+              <span className="text-xs opacity-75">💼</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("videos")}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-left transition-all ${
+                activeTab === "videos"
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                  : "hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-600 dark:text-zinc-400"
+              }`}
+            >
+              <span>{isTh ? "สื่อวิดีโอ" : "Video Media"}</span>
+              <span className="text-xs opacity-75">🎥</span>
+            </button>
+
+            <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider px-3 mt-6 mb-2">
               {isTh ? "สถานที่ & ผู้ใช้" : "Infrastructure"}
             </div>
             <button
@@ -436,7 +513,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
 
           <div className="flex items-center gap-3">
             {/* Year Selector Filter */}
-            {["schedules_class", "schedules_exam", "students", "works"].includes(activeTab) && (
+            {["schedules_class", "schedules_exam", "students", "works", "internship", "videos"].includes(activeTab) && (
               <div className="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-1.5 shadow-sm">
                 <span className="text-xs font-semibold text-zinc-400">
                   {isTh ? "ชั้นปี:" : "Year:"}
@@ -457,6 +534,23 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
                     Year {adminYear}
                   </span>
                 )}
+              </div>
+            )}
+
+            {/* Term Selector Filter for Schedules */}
+            {["schedules_class", "schedules_exam"].includes(activeTab) && (
+              <div className="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl px-3 py-1.5 shadow-sm">
+                <span className="text-xs font-semibold text-zinc-400">
+                  {isTh ? "ภาคเรียน:" : "Term:"}
+                </span>
+                <select
+                  value={selectedTerm}
+                  onChange={(e) => setSelectedTerm(Number(e.target.value))}
+                  className="bg-transparent text-sm font-bold text-blue-600 dark:text-sky-400 focus:outline-none cursor-pointer"
+                >
+                  <option value={1}>Term 1</option>
+                  <option value={2}>Term 2</option>
+                </select>
               </div>
             )}
 
@@ -485,196 +579,237 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           </div>
         )}
 
-        {/* Search Bar */}
-        <div className="mb-6">
-          <input
-            type="text"
-            placeholder={isTh ? "ค้นหาข้อมูล..." : "Search records..."}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full max-w-md px-4 py-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm"
+        {/* Dynamic Views: Schedules or Standard CRUD Table */}
+        {activeTab === "schedules_class" ? (
+          <ClassScheduleGrid
+            year={selectedYear}
+            term={selectedTerm}
+            token={token}
+            onSaveSuccess={() => {
+              setSuccessMsg(isTh ? "บันทึกตารางเรียนเรียบร้อยแล้ว" : "Class schedule saved successfully");
+              setTimeout(() => setSuccessMsg(""), 3000);
+            }}
           />
-        </div>
+        ) : activeTab === "schedules_exam" ? (
+          <ExamScheduleTable
+            year={selectedYear}
+            term={selectedTerm}
+            token={token}
+            onSaveSuccess={() => {
+              setSuccessMsg(isTh ? "บันทึกตารางสอบเรียบร้อยแล้ว" : "Exam schedule saved successfully");
+              setTimeout(() => setSuccessMsg(""), 3000);
+            }}
+          />
+        ) : (
+          <>
+            {/* Search Bar */}
+            <div className="mb-6">
+              <input
+                type="text"
+                placeholder={isTh ? "ค้นหาข้อมูล..." : "Search records..."}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full max-w-md px-4 py-2.5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all shadow-sm"
+              />
+            </div>
 
-        {/* Data Table */}
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
-          {loading ? (
-            <div className="p-12 text-center text-zinc-500 font-medium">
-              {isTh ? "กำลังโหลดข้อมูล..." : "Loading records..."}
-            </div>
-          ) : filteredData.length === 0 ? (
-            <div className="p-12 text-center text-zinc-500">
-              {isTh ? "ไม่พบข้อมูลในระบบ" : "No records found."}
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm border-collapse">
-                <thead>
-                  <tr className="bg-zinc-100/70 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 font-semibold border-b border-zinc-200 dark:border-zinc-800">
-                    <th className="p-4">ID</th>
-                    {activeTab === "students" && (
-                      <>
-                        <th className="p-4">Student ID</th>
-                        <th className="p-4">Name</th>
-                        <th className="p-4">Track/Cohort</th>
-                        <th className="p-4">Class Role</th>
-                      </>
-                    )}
-                    {activeTab === "works" && (
-                      <>
-                        <th className="p-4">Title</th>
-                        <th className="p-4">Scope</th>
-                        <th className="p-4">Authors</th>
-                      </>
-                    )}
-                    {activeTab === "teachers" && (
-                      <>
-                        <th className="p-4">Name (TH)</th>
-                        <th className="p-4">Name (EN)</th>
-                        <th className="p-4">Contact</th>
-                      </>
-                    )}
-                    {activeTab === "rooms" && (
-                      <>
-                        <th className="p-4">Room Name</th>
-                        <th className="p-4">Description</th>
-                      </>
-                    )}
-                    {activeTab === "users" && (
-                      <>
-                        <th className="p-4">Username</th>
-                        <th className="p-4">Role</th>
-                        <th className="p-4">Assigned Year</th>
-                        <th className="p-4">Email</th>
-                      </>
-                    )}
-                    {activeTab === "schedules_class" && (
-                      <>
-                        <th className="p-4">Day</th>
-                        <th className="p-4">Time</th>
-                        <th className="p-4">Code</th>
-                        <th className="p-4">Name</th>
-                        <th className="p-4">Room</th>
-                      </>
-                    )}
-                    {activeTab === "schedules_exam" && (
-                      <>
-                        <th className="p-4">Code</th>
-                        <th className="p-4">Name</th>
-                        <th className="p-4">Date</th>
-                        <th className="p-4">Time</th>
-                      </>
-                    )}
-                    <th className="p-4 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                  {filteredData.map((item, idx) => (
-                    <tr
-                      key={item.id || idx}
-                      className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors"
-                    >
-                      <td className="p-4 font-medium text-zinc-400">#{item.id || idx + 1}</td>
-                      {activeTab === "students" && (
-                        <>
-                          <td className="p-4 font-semibold text-blue-600 dark:text-sky-400">
-                            {item.student_id}
-                          </td>
-                          <td className="p-4 font-bold">{item.name_th}</td>
-                          <td className="p-4">{item.track || "-"}</td>
-                          <td className="p-4">{item.class_role || "-"}</td>
-                        </>
-                      )}
-                      {activeTab === "works" && (
-                        <>
-                          <td className="p-4 font-bold">{item.title}</td>
-                          <td className="p-4 capitalize">
-                            <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300 text-xs font-semibold rounded-full">
-                              {item.scope}
-                            </span>
-                          </td>
-                          <td className="p-4 text-xs text-zinc-500">{item.author_ids || "-"}</td>
-                        </>
-                      )}
-                      {activeTab === "teachers" && (
-                        <>
-                          <td className="p-4 font-bold">{item.name_th}</td>
-                          <td className="p-4 text-zinc-500">{item.name_en || "-"}</td>
-                          <td className="p-4">{item.contact || "-"}</td>
-                        </>
-                      )}
-                      {activeTab === "rooms" && (
-                        <>
-                          <td className="p-4 font-bold">{item.name}</td>
-                          <td className="p-4 text-zinc-500">{item.description || "-"}</td>
-                        </>
-                      )}
-                      {activeTab === "users" && (
-                        <>
-                          <td className="p-4 font-bold">{item.username}</td>
-                          <td className="p-4">
-                            <span
-                              className={`px-2.5 py-0.5 text-xs font-bold rounded-full uppercase ${
-                                item.role === "superadmin"
-                                  ? "bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300"
-                                  : "bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300"
-                              }`}
-                            >
-                              {item.role}
-                            </span>
-                          </td>
-                          <td className="p-4 font-semibold">Year {item.year}</td>
-                          <td className="p-4 text-zinc-500">{item.email}</td>
-                        </>
-                      )}
-                      {activeTab === "schedules_class" && (
-                        <>
-                          <td className="p-4 font-semibold capitalize">{item.day}</td>
-                          <td className="p-4 text-xs">{item.time_slot}</td>
-                          <td className="p-4 font-bold text-blue-600 dark:text-sky-400">{item.code}</td>
-                          <td className="p-4">{item.name_th || item.name_en}</td>
-                          <td className="p-4">{item.room || "-"}</td>
-                        </>
-                      )}
-                      {activeTab === "schedules_exam" && (
-                        <>
-                          <td className="p-4 font-bold text-blue-600 dark:text-sky-400">{item.code}</td>
-                          <td className="p-4">{item.name_th || item.name_en}</td>
-                          <td className="p-4 text-xs">{item.date_raw || "-"}</td>
-                          <td className="p-4 text-xs">{item.start_time} - {item.end_time}</td>
-                        </>
-                      )}
-                      <td className="p-4 text-right space-x-2">
-                        {canEditTab ? (
+            {/* Data Table */}
+            <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-sm overflow-hidden">
+              {loading ? (
+                <div className="p-12 text-center text-zinc-500 font-medium">
+                  {isTh ? "กำลังโหลดข้อมูล..." : "Loading records..."}
+                </div>
+              ) : filteredData.length === 0 ? (
+                <div className="p-12 text-center text-zinc-500">
+                  {isTh ? "ไม่พบข้อมูลในระบบ" : "No records found."}
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-sm border-collapse">
+                    <thead>
+                      <tr className="bg-zinc-100/70 dark:bg-zinc-800/50 text-zinc-500 dark:text-zinc-400 font-semibold border-b border-zinc-200 dark:border-zinc-800">
+                        <th className="p-4">ID</th>
+                        {activeTab === "students" && (
                           <>
-                            <button
-                              onClick={() => handleEdit(item)}
-                              className="px-3 py-1 bg-zinc-100 hover:bg-blue-50 dark:bg-zinc-800 dark:hover:bg-blue-950 text-blue-600 dark:text-sky-400 text-xs font-semibold rounded-lg transition-all cursor-pointer"
-                            >
-                              {isTh ? "แก้ไข" : "Edit"}
-                            </button>
-                            {item.id && (
-                              <button
-                                onClick={() => handleDelete(item.id)}
-                                className="px-3 py-1 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 text-xs font-semibold rounded-lg transition-all cursor-pointer"
-                              >
-                                {isTh ? "ลบ" : "Delete"}
-                              </button>
-                            )}
+                            <th className="p-4">Student ID</th>
+                            <th className="p-4">Name</th>
+                            <th className="p-4">Track/Cohort</th>
+                            <th className="p-4">Class Role</th>
+                            <th className="p-4">Contact</th>
                           </>
-                        ) : (
-                          <span className="text-xs text-zinc-400 italic">
-                            {isTh ? "ดูได้อย่างเดียว" : "Read-only"}
-                          </span>
                         )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        {activeTab === "works" && (
+                          <>
+                            <th className="p-4">Title</th>
+                            <th className="p-4">Scope</th>
+                            <th className="p-4">Authors</th>
+                          </>
+                        )}
+                        {activeTab === "teachers" && (
+                          <>
+                            <th className="p-4">Name (TH)</th>
+                            <th className="p-4">Name (EN)</th>
+                            <th className="p-4">Advise Years</th>
+                            <th className="p-4">Contact</th>
+                          </>
+                        )}
+                        {activeTab === "internship" && (
+                          <>
+                            <th className="p-4">Host / Branch</th>
+                            <th className="p-4">Topic Title</th>
+                            <th className="p-4">Description</th>
+                            <th className="p-4">Year</th>
+                          </>
+                        )}
+                        {activeTab === "videos" && (
+                          <>
+                            <th className="p-4">Title</th>
+                            <th className="p-4">Category</th>
+                            <th className="p-4">File Path / Link</th>
+                            <th className="p-4">Year</th>
+                          </>
+                        )}
+                        {activeTab === "rooms" && (
+                          <>
+                            <th className="p-4">Room Name</th>
+                            <th className="p-4">Description</th>
+                          </>
+                        )}
+                        {activeTab === "users" && (
+                          <>
+                            <th className="p-4">Username</th>
+                            <th className="p-4">Role</th>
+                            <th className="p-4">Assigned Year</th>
+                            <th className="p-4">Email</th>
+                          </>
+                        )}
+                        <th className="p-4 text-right">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
+                      {filteredData.map((item, idx) => (
+                        <tr
+                          key={item.id || idx}
+                          className="hover:bg-zinc-50 dark:hover:bg-zinc-800/40 transition-colors"
+                        >
+                          <td className="p-4 font-medium text-zinc-400">#{item.id || idx + 1}</td>
+                          {activeTab === "students" && (
+                            <>
+                              <td className="p-4 font-semibold text-blue-600 dark:text-sky-400">
+                                {item.student_id}
+                              </td>
+                              <td className="p-4 font-bold">{item.name_th}</td>
+                              <td className="p-4">{item.track || "-"}</td>
+                              <td className="p-4">{item.class_role || "-"}</td>
+                              <td className="p-4 text-zinc-500">{item.contact || "-"}</td>
+                            </>
+                          )}
+                          {activeTab === "works" && (
+                            <>
+                              <td className="p-4 font-bold">{item.title}</td>
+                              <td className="p-4 capitalize">
+                                <span className="px-2 py-0.5 bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300 text-xs font-semibold rounded-full">
+                                  {item.scope}
+                                </span>
+                              </td>
+                              <td className="p-4 text-xs text-zinc-500">{item.author_ids || "-"}</td>
+                            </>
+                          )}
+                          {activeTab === "teachers" && (
+                            <>
+                              <td className="p-4 font-bold">{item.name_th}</td>
+                              <td className="p-4 text-zinc-500">{item.name_en || "-"}</td>
+                              <td className="p-4 text-xs font-semibold">
+                                {item.advise_years
+                                  ? String(item.advise_years).replace(/[\[\]"]/g, "")
+                                  : "-"}
+                              </td>
+                              <td className="p-4 text-zinc-500">{item.contact || "-"}</td>
+                            </>
+                          )}
+                          {activeTab === "internship" && (
+                            <>
+                              <td className="p-4 font-bold text-blue-600 dark:text-sky-400">
+                                {item.host_branch}
+                              </td>
+                              <td className="p-4 font-semibold">{item.title}</td>
+                              <td className="p-4 text-xs text-zinc-500 max-w-xs truncate">
+                                {item.description || "-"}
+                              </td>
+                              <td className="p-4 font-semibold">Year {item.year}</td>
+                            </>
+                          )}
+                          {activeTab === "videos" && (
+                            <>
+                              <td className="p-4 font-bold">{item.title}</td>
+                              <td className="p-4">
+                                <span className="px-2.5 py-0.5 bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 text-xs font-semibold rounded-full">
+                                  {item.category || "General"}
+                                </span>
+                              </td>
+                              <td className="p-4 text-xs text-zinc-500 max-w-xs truncate">
+                                {item.file_path}
+                              </td>
+                              <td className="p-4 font-semibold">Year {item.year}</td>
+                            </>
+                          )}
+                          {activeTab === "rooms" && (
+                            <>
+                              <td className="p-4 font-bold">{item.name}</td>
+                              <td className="p-4 text-zinc-500">{item.description || "-"}</td>
+                            </>
+                          )}
+                          {activeTab === "users" && (
+                            <>
+                              <td className="p-4 font-bold">{item.username}</td>
+                              <td className="p-4">
+                                <span
+                                  className={`px-2.5 py-0.5 text-xs font-bold rounded-full uppercase ${
+                                    item.role === "superadmin"
+                                      ? "bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300"
+                                      : "bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-sky-300"
+                                  }`}
+                                >
+                                  {item.role}
+                                </span>
+                              </td>
+                              <td className="p-4 font-semibold">Year {item.year}</td>
+                              <td className="p-4 text-zinc-500">{item.email}</td>
+                            </>
+                          )}
+                          <td className="p-4 text-right space-x-2">
+                            {canEditTab ? (
+                              <>
+                                <button
+                                  onClick={() => handleEdit(item)}
+                                  className="px-3 py-1 bg-zinc-100 hover:bg-blue-50 dark:bg-zinc-800 dark:hover:bg-blue-950 text-blue-600 dark:text-sky-400 text-xs font-semibold rounded-lg transition-all cursor-pointer"
+                                >
+                                  {isTh ? "แก้ไข" : "Edit"}
+                                </button>
+                                {item.id && (
+                                  <button
+                                    onClick={() => handleDelete(item.id)}
+                                    className="px-3 py-1 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/60 text-red-600 dark:text-red-400 text-xs font-semibold rounded-lg transition-all cursor-pointer"
+                                  >
+                                    {isTh ? "ลบ" : "Delete"}
+                                  </button>
+                                )}
+                              </>
+                            ) : (
+                              <span className="text-xs text-zinc-400 italic">
+                                {isTh ? "ดูได้อย่างเดียว" : "Read-only"}
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
       </main>
 
       {/* Slide-Over Drawer for Create / Edit Form */}
@@ -694,7 +829,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
                 </h3>
                 <button
                   onClick={() => setIsDrawerOpen(false)}
-                  className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 text-xl font-bold"
+                  className="p-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 text-xl font-bold cursor-pointer"
                 >
                   ✕
                 </button>
@@ -704,6 +839,13 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
                 {/* Students Form */}
                 {activeTab === "students" && (
                   <>
+                    <ImageUploader
+                      uploadEndpoint="/people/students/upload-image"
+                      token={token}
+                      initialUrl={formData.photo || ""}
+                      onUploadSuccess={(url) => setFormData({ ...formData, photo: url })}
+                      label="Student Photo"
+                    />
                     <div>
                       <label className="block text-xs font-semibold text-zinc-500 mb-1">Student ID *</label>
                       <input
@@ -755,12 +897,37 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
                         className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
                       />
                     </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Class Role (e.g. หัวหน้าห้อง)</label>
+                      <input
+                        type="text"
+                        value={formData.class_role || ""}
+                        onChange={(e) => setFormData({ ...formData, class_role: e.target.value })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Contact Info</label>
+                      <input
+                        type="text"
+                        value={formData.contact || ""}
+                        onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      />
+                    </div>
                   </>
                 )}
 
                 {/* Student Works Form */}
                 {activeTab === "works" && (
                   <>
+                    <ImageUploader
+                      uploadEndpoint="/works/upload-image"
+                      token={token}
+                      initialUrl={formData.image || ""}
+                      onUploadSuccess={(url) => setFormData({ ...formData, image: url })}
+                      label="Work Cover Image"
+                    />
                     <div>
                       <label className="block text-xs font-semibold text-zinc-500 mb-1">Title *</label>
                       <input
@@ -784,6 +951,19 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
                       </select>
                     </div>
                     <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Academic Year *</label>
+                      <select
+                        value={formData.year || selectedYear}
+                        onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      >
+                        <option value={1}>Year 1</option>
+                        <option value={2}>Year 2</option>
+                        <option value={3}>Year 3</option>
+                        <option value={4}>Year 4</option>
+                      </select>
+                    </div>
+                    <div>
                       <label className="block text-xs font-semibold text-zinc-500 mb-1">Description</label>
                       <textarea
                         rows={3}
@@ -798,6 +978,13 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
                 {/* Teachers Form */}
                 {activeTab === "teachers" && (
                   <>
+                    <ImageUploader
+                      uploadEndpoint="/people/teachers/upload-image"
+                      token={token}
+                      initialUrl={formData.photo || ""}
+                      onUploadSuccess={(url) => setFormData({ ...formData, photo: url })}
+                      label="Teacher Photo"
+                    />
                     <div>
                       <label className="block text-xs font-semibold text-zinc-500 mb-1">Name (TH) *</label>
                       <input
@@ -818,6 +1005,22 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
                       />
                     </div>
                     <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Advise Years (1-4)</label>
+                      <div className="flex items-center gap-4 p-3 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl">
+                        {[1, 2, 3, 4].map((yNum) => (
+                          <label key={yNum} className="flex items-center gap-1.5 text-xs font-medium cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={getTeacherAdviseYears().includes(yNum)}
+                              onChange={() => toggleTeacherAdviseYear(yNum)}
+                              className="rounded text-blue-600 focus:ring-blue-500"
+                            />
+                            <span>Year {yNum}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
                       <label className="block text-xs font-semibold text-zinc-500 mb-1">Contact Info</label>
                       <input
                         type="text"
@@ -829,9 +1032,133 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
                   </>
                 )}
 
+                {/* Internship Topics Form */}
+                {activeTab === "internship" && (
+                  <>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Host Branch / Company *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Software Engineering / Tech Corp"
+                        value={formData.host_branch || ""}
+                        onChange={(e) => setFormData({ ...formData, host_branch: e.target.value })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Topic Title *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Cloud & AI Systems Architecture"
+                        value={formData.title || ""}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Description</label>
+                      <textarea
+                        rows={3}
+                        value={formData.description || ""}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Target Academic Year *</label>
+                      <select
+                        value={formData.year || selectedYear}
+                        onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      >
+                        <option value={1}>Year 1</option>
+                        <option value={2}>Year 2</option>
+                        <option value={3}>Year 3</option>
+                        <option value={4}>Year 4</option>
+                      </select>
+                    </div>
+                  </>
+                )}
+
+                {/* Video Media Form */}
+                {activeTab === "videos" && (
+                  <>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Video Title *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Introduction to Embedded Systems"
+                        value={formData.title || ""}
+                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">File Path / Stream URL *</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. /videos/embedded.mp4 or https://youtube.com/..."
+                        value={formData.file_path || ""}
+                        onChange={(e) => setFormData({ ...formData, file_path: e.target.value })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Category</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Lecture, Tutorial, Workshop"
+                        value={formData.category || ""}
+                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      />
+                    </div>
+                    <ImageUploader
+                      uploadEndpoint="/works/upload-image"
+                      token={token}
+                      initialUrl={formData.thumbnail || ""}
+                      onUploadSuccess={(url) => setFormData({ ...formData, thumbnail: url })}
+                      label="Video Thumbnail"
+                    />
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Description</label>
+                      <textarea
+                        rows={3}
+                        value={formData.description || ""}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Academic Year *</label>
+                      <select
+                        value={formData.year || selectedYear}
+                        onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      >
+                        <option value={1}>Year 1</option>
+                        <option value={2}>Year 2</option>
+                        <option value={3}>Year 3</option>
+                        <option value={4}>Year 4</option>
+                      </select>
+                    </div>
+                  </>
+                )}
+
                 {/* Rooms Form */}
                 {activeTab === "rooms" && (
                   <>
+                    <ImageUploader
+                      uploadEndpoint="/rooms/upload-image"
+                      token={token}
+                      initialUrl={formData.image || ""}
+                      onUploadSuccess={(url) => setFormData({ ...formData, image: url })}
+                      label="Room Photo"
+                    />
                     <div>
                       <label className="block text-xs font-semibold text-zinc-500 mb-1">Room Name *</label>
                       <input
