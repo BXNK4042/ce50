@@ -1,12 +1,6 @@
-import AdminTeachersClient from "./admin-teachers-client";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default async function AdminTeachersPage({
-  params,
-}: {
-  params: Promise<{ lang: string }>;
-}) {
+export default async function TeachersAdminRedirect({ params }: { params: Promise<{ lang: string }> }) {
   const { lang } = await params;
-  return <AdminTeachersClient lang={lang} />;
+  redirect(`/${lang}/admin?tab=teachers`);
 }

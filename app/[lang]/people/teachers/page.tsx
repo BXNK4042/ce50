@@ -73,16 +73,6 @@ export default async function TeachersPage({
             </>
           )}
         </h1>
-
-        {isSuperAdmin && (
-          <Link
-            href={`/${lang}/admin/teachers`}
-            className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-[#4483cc] hover:bg-[#356fb3] shadow-md transition-all shrink-0"
-          >
-            <span>⚙️</span>
-            <span>{isTh ? "จัดการข้อมูลคณาจารย์" : "Manage Faculty (Admin)"}</span>
-          </Link>
-        )}
       </div>
 
       {/* Teachers Grid */}

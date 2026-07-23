@@ -390,19 +390,28 @@ export default function Navbar({
           </div>
         </div>
 
-        {/* Right Section: Login / Logout Button */}
-        <div className="ml-auto flex items-center shrink-0 z-10 relative">
+        {/* Right Section: Admin Dashboard & Login/Logout Buttons */}
+        <div className="ml-auto flex items-center gap-2 shrink-0 z-10 relative">
+          <Link
+            href={`/${lang}/admin`}
+            className="text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-3 h-9 flex items-center gap-1.5 rounded-md transition-all duration-300 shadow-sm shrink-0"
+            title={lang === "th" ? "ไปยังหน้าแผงควบคุมกลาง" : "Go to Central Admin Dashboard"}
+          >
+            <span>⚙️</span>
+            <span>{lang === "th" ? "จัดการระบบ" : "Admin Dashboard"}</span>
+          </Link>
+
           {isLoggedIn ? (
             <button
               onClick={handleLogout}
-              className="text-sm font-semibold hover:underline bg-red-100 hover:bg-red-200 text-red-600 dark:bg-red-950/40 dark:hover:bg-red-950/60 dark:text-red-400 w-[110px] h-9 flex items-center justify-center rounded-md transition-all duration-300 shrink-0 cursor-pointer"
+              className="text-xs font-semibold bg-red-100 hover:bg-red-200 text-red-600 dark:bg-red-950/40 dark:hover:bg-red-950/60 dark:text-red-400 px-3 h-9 flex items-center justify-center rounded-md transition-all duration-300 shrink-0 cursor-pointer"
             >
               {lang === "th" ? "ออกจากระบบ" : "Logout"}
             </button>
           ) : (
             <Link
               href={`/${lang}/admin/login`}
-              className="text-sm font-semibold hover:underline bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 w-[110px] h-9 flex items-center justify-center rounded-md transition-all duration-300 shrink-0"
+              className="text-xs font-semibold bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 px-3 h-9 flex items-center justify-center rounded-md transition-all duration-300 shrink-0"
             >
               {lang === "th" ? "เข้าสู่ระบบ" : "Login"}
             </Link>

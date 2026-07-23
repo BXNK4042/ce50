@@ -27,6 +27,28 @@ class TeacherUpdate(BaseModel):
     contact: str | None = None
 
 
+class StudentCreate(BaseModel):
+    student_id: str
+    name_th: str
+    name_en: str | None = None
+    photo: str | None = None
+    year: int
+    class_role: str | None = None
+    track: str | None = None
+    contact: str | None = None
+
+
+class StudentUpdate(BaseModel):
+    student_id: str | None = None
+    name_th: str | None = None
+    name_en: str | None = None
+    photo: str | None = None
+    year: int | None = None
+    class_role: str | None = None
+    track: str | None = None
+    contact: str | None = None
+
+
 @router.get("/teachers")
 def list_teachers():
     with db_cursor() as conn:
@@ -37,7 +59,7 @@ def list_teachers():
 
 @router.post("/teachers")
 def create_teacher(payload: TeacherCreate, admin: dict = Depends(get_current_admin)):
-    check_admin_auth(admin, min_role="writer")
+    check_admin_auth(admin, min_role="superadmin")
 
     advise_years_str = None
     if payload.advise_years is not None:
@@ -61,7 +83,7 @@ def create_teacher(payload: TeacherCreate, admin: dict = Depends(get_current_adm
 
 @router.put("/teachers/{id}")
 def update_teacher(id: int, payload: TeacherUpdate, admin: dict = Depends(get_current_admin)):
-    check_admin_auth(admin, min_role="writer")
+    check_admin_auth(admin, min_role="superadmin")
 
     update_dict = payload.dict(exclude_unset=True)
     if "advise_years" in update_dict:
@@ -94,7 +116,7 @@ def update_teacher(id: int, payload: TeacherUpdate, admin: dict = Depends(get_cu
 
 @router.delete("/teachers/{id}")
 def delete_teacher(id: int, admin: dict = Depends(get_current_admin)):
-    check_admin_auth(admin, min_role="writer")
+    check_admin_auth(admin, min_role="superadmin")
 
     try:
         with db_cursor() as conn:
@@ -113,7 +135,7 @@ def delete_teacher(id: int, admin: dict = Depends(get_current_admin)):
 
 @router.post("/teachers/upload-image")
 def upload_teacher_image(file: UploadFile = File(...), admin: dict = Depends(get_current_admin)):
-    check_admin_auth(admin, min_role="writer")
+    check_admin_auth(admin, min_role="superadmin")
 
     ext = file.filename.split(".")[-1].lower() if file.filename else "webp"
     if ext not in ("jpg", "jpeg", "png", "webp", "gif"):
@@ -133,6 +155,7 @@ def upload_teacher_image(file: UploadFile = File(...), admin: dict = Depends(get
     return {"url": f"/image/professors/{new_filename}"}
 
 
+# --- Students Section ---
 
 @router.get("/students")
 def list_students(year: int = Query(None), cohort: str = Query(None)):
@@ -174,23 +197,116 @@ def list_students(year: int = Query(None), cohort: str = Query(None)):
     return students
 
 
+@router.post("/students")
+def create_student(payload: StudentCreate, admin: dict = Depends(get_current_admin)):
+    check_admin_auth(admin, required_year=payload.year, min_role="admin")
+    try:
+        with db_cursor() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "INSERT INTO students (student_id, name_th, name_en, photo, year, class_role, track, contact) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    payload.student_id,
+                    payload.name_th,
+                    payload.name_en,
+                    payload.photo,
+                    payload.year,
+                    payload.class_role,
+                    payload.track,
+                    payload.contact,
+                ),
+            )
+            return {"status": "success", "id": cursor.lastrowid}
+    except Exception as e:
+        if "UNIQUE" in str(e):
+            raise HTTPException(status_code=400, detail="Student ID already exists")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/students/{id}")
+def update_student(id: int, payload: StudentUpdate, admin: dict = Depends(get_current_admin)):
+    with db_cursor() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM students WHERE id = ?", (id,))
+        existing = cursor.fetchone()
+        if not existing:
+            raise HTTPException(status_code=404, detail="Student not found")
+        existing_dict = dict(existing)
+
+    check_admin_auth(admin, required_year=existing_dict["year"], min_role="admin")
+    if payload.year is not None and payload.year != existing_dict["year"]:
+        check_admin_auth(admin, required_year=payload.year, min_role="admin")
+
+    update_dict = payload.dict(exclude_unset=True)
+    if not update_dict:
+        return {"status": "success", "message": "No changes made"}
+
+    update_fields = [f"{key} = ?" for key in update_dict.keys()]
+    params = list(update_dict.values())
+    params.append(id)
+
+    try:
+        with db_cursor() as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"UPDATE students SET {', '.join(update_fields)} WHERE id = ?", params)
+            return {"status": "success", "message": "Student updated successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/students/{id}")
+def delete_student(id: int, admin: dict = Depends(get_current_admin)):
+    with db_cursor() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT year FROM students WHERE id = ?", (id,))
+        existing = cursor.fetchone()
+        if not existing:
+            raise HTTPException(status_code=404, detail="Student not found")
+
+    check_admin_auth(admin, required_year=existing["year"], min_role="admin")
+
+    try:
+        with db_cursor() as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM students WHERE id = ?", (id,))
+            return {"status": "success", "message": "Student deleted successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/students/upload-image")
+def upload_student_image(file: UploadFile = File(...), admin: dict = Depends(get_current_admin)):
+    check_admin_auth(admin, min_role="admin")
+
+    ext = file.filename.split(".")[-1].lower() if file.filename else "webp"
+    if ext not in ("jpg", "jpeg", "png", "webp", "gif"):
+        raise HTTPException(status_code=400, detail="Only image files are allowed")
+
+    new_filename = f"student_{uuid.uuid4()}.{ext}"
+    std_dir = UPLOAD_DIR / "students"
+    std_dir.mkdir(parents=True, exist_ok=True)
+    dest_path = std_dir / new_filename
+
+    try:
+        with open(dest_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save image: {str(e)}")
+
+    return {"url": f"/image/students/{new_filename}"}
+
+
 @router.get("/cohorts")
 def list_cohorts():
-    """
-    Returns list of cohort codes (e.g. ["CE06", "CE05", "CE04"]) dynamically derived from
-    both 2-digit student_id prefixes (67 -> CE04) and track prefixes in the database.
-    """
     conn = get_db()
     cursor = conn.cursor()
-
-    # 1. Distinct student_id prefixes (e.g. '67' from '67200412')
     cursor.execute(
         "SELECT DISTINCT SUBSTR(student_id, 1, 2) AS prefix "
         "FROM students WHERE student_id IS NOT NULL AND LENGTH(student_id) >= 2"
     )
     prefixes = [row["prefix"] for row in cursor.fetchall() if row["prefix"] and row["prefix"].isdigit()]
 
-    # 2. Distinct track prefixes (e.g. 'CE04')
     cursor.execute(
         "SELECT DISTINCT UPPER(SUBSTR(track, 1, 4)) AS cohort "
         "FROM students WHERE UPPER(track) LIKE 'CE%'"
@@ -199,7 +315,6 @@ def list_cohorts():
     conn.close()
 
     codes_set = set()
-
     for p in prefixes:
         num = int(p)
         if num >= 40:
@@ -211,7 +326,5 @@ def list_cohorts():
         if len(tc) == 4 and tc[2:].isdigit():
             codes_set.add(tc)
 
-    # Sort descending by generation number (e.g. CE06, CE05, CE04...)
     sorted_cohorts = sorted(list(codes_set), key=lambda code: int(code[2:]) if code[2:].isdigit() else 0, reverse=True)
     return sorted_cohorts
-

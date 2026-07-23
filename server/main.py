@@ -7,8 +7,7 @@ from fastapi.staticfiles import StaticFiles
 
 from config import CORS_ORIGINS, UPLOAD_DIR
 from db import init_db
-from routers import auth, news, people, schedule, videos
-
+from routers import auth, news, people, schedule, videos, works, rooms, users
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -37,7 +36,7 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 app.mount("/image", StaticFiles(directory=UPLOAD_DIR), name="image")
 app.mount("/Video", StaticFiles(directory=BASE_DIR / "video"), name="video")
 
-for r in (people, news, schedule, auth, videos):
+for r in (people, news, schedule, auth, videos, works, rooms, users):
     app.include_router(r.router)
 
 

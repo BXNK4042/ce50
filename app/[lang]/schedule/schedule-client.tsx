@@ -212,32 +212,6 @@ export default function ScheduleClient({
                     <span>{countdownText}</span>
                   </div>
                 )}
-                <Link
-                  href={`/${lang}/admin/schedule/exam`}
-                  className="p-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-all duration-300"
-                  title={lang === "th" ? "จัดการตารางสอบ" : "Manage Exam Schedule"}
-                >
-                  <svg
-                    className="w-6 h-6 transform hover:rotate-45 transition-transform duration-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </Link>
               </div>
             </div>
 
@@ -305,26 +279,6 @@ export default function ScheduleClient({
                       <td className="py-4 px-4 text-sm">
                         <div className="flex items-center gap-2">
                           <div className="font-bold text-zinc-900 dark:text-zinc-100">{exam.code}</div>
-                          <Link
-                            href={`/${lang}/admin/schedule?edit=${exam.code}`}
-                            className="p-1 text-zinc-400 hover:text-blue-600 dark:hover:text-sky-400 rounded hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
-                            title={lang === "th" ? "แก้ไขวิชานี้" : "Edit this subject"}
-                          >
-                            <svg
-                              className="w-3.5 h-3.5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                              />
-                            </svg>
-                          </Link>
                         </div>
                         <div className="text-xs text-zinc-500 mt-0.5">{lang === "th" ? exam.nameTh : exam.nameEn}</div>
                       </td>
@@ -364,33 +318,6 @@ export default function ScheduleClient({
                 </svg>
                 <span>{lang === "th" ? "ตารางเรียน" : "Weekly Timetable"}</span>
               </h2>
-
-              <Link
-                href={`/${lang}/admin/schedule/class`}
-                className="p-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-all duration-300"
-                title={lang === "th" ? "จัดการตารางเรียน" : "Manage Class Schedule"}
-              >
-                <svg
-                  className="w-6 h-6 transform hover:rotate-45 transition-transform duration-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </Link>
             </div>
 
             {/* Weekly Timetable Table */}
