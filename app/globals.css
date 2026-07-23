@@ -25,6 +25,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+body.hide-header-footer header,
+body.hide-header-footer footer {
+  display: none !important;
+}
+
 @keyframes marquee {
   0% {
     transform: translate3d(0, 0, 0);
@@ -36,6 +41,22 @@ body {
 
 .animate-marquee {
   animation: marquee 55s linear infinite;
+  will-change: transform;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-ticker {
+  display: inline-block;
+  white-space: nowrap;
+  animation: ticker 10s linear infinite;
   will-change: transform;
 }
 

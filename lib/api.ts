@@ -259,5 +259,7 @@ export const api = {
   rooms: () => get<Room[]>("/rooms"),
   internship: (host_branch?: string) =>
     get<InternshipTopic[]>("/internship", host_branch ? { host_branch } : undefined),
+  internshipStudents: () => get<any[]>("/internship/students"),
+  getInternshipStudent: (id: string) => get<any>("/internship/students/" + id),
   videos: () => get<Video[]>("/videos"),
 };
