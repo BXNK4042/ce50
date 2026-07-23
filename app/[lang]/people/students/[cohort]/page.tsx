@@ -7,6 +7,8 @@ import { StudentGridClient } from "./student-grid-client";
 import { CohortHeroImage } from "./cohort-hero-image";
 import { formatCohortLabel, getCohortHeroData, getCohortNumber } from "@/lib/cohort";
 
+export const dynamic = "force-dynamic";
+
 export default async function CohortPage({
   params,
 }: {
@@ -18,8 +20,8 @@ export default async function CohortPage({
   let cohortUpper = "";
   if (gen !== null && gen > 0) {
     cohortUpper = `CE${String(gen).padStart(2, "0")}`;
-  } else if (/^CE\d{1,2}$/i.test(cohort)) {
-    const num = parseInt(cohort.replace(/CE/i, ""), 10);
+  } else if (/^CE[-_]?\d{1,2}$/i.test(cohort)) {
+    const num = parseInt(cohort.replace(/CE[-_]?/i, ""), 10);
     cohortUpper = `CE${String(num).padStart(2, "0")}`;
   } else {
     notFound();
@@ -53,6 +55,21 @@ export default async function CohortPage({
 
         {/* Top Breadcrumbs */}
         <div className="relative z-20 mx-auto max-w-7xl px-12 md:px-16 pt-8 w-full">
+          <div className="flex items-center gap-2 text-xs text-zinc-300 dark:text-zinc-400 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
+            <Link href={`/${lang}`} className="hover:underline hover:text-white">
+              {isTh ? "หน้าแรก" : "Home"}
+            </Link>
+            <span>/</span>
+            <Link href={`/${lang}/people`} className="hover:underline hover:text-white">
+              {dict.people.title}
+            </Link>
+            <span>/</span>
+            <Link href={`/${lang}/people/students`} className="hover:underline hover:text-white">
+              {dict.people.students}
+            </Link>
+            <span>/</span>
+            <span className="text-white font-medium">{cohortUpper}</span>
+          </div>
         </div>
 
         {/* Section Header */}

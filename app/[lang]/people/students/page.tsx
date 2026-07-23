@@ -2,6 +2,8 @@ import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
 import Link from "next/link";
 import { formatCohortLabel } from "@/lib/cohort";
 
+export const dynamic = "force-dynamic";
+
 export default async function StudentsPage({
   params,
 }: {

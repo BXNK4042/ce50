@@ -32,9 +32,17 @@ export function getCohortNumber(cohortOrId: string): number | null {
     }
   }
 
-  const ceMatch = str.match(/^CE0*(\d+)$/);
+  const ceMatch = str.match(/^CE[-_]?0*(\d+)$/);
   if (ceMatch) {
     return parseInt(ceMatch[1], 10);
+  }
+
+  const genMatch = str.match(/^0*(\d{1,2})$/);
+  if (genMatch) {
+    const genNum = parseInt(genMatch[1], 10);
+    if (genNum > 0 && genNum < 40) {
+      return genNum;
+    }
   }
 
   return null;
