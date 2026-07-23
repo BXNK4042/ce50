@@ -9,6 +9,18 @@ import type {
   Video,
   Work,
 } from "./types";
+
+export type {
+  ClassCell,
+  ExamSlot,
+  InternshipTopic,
+  NewsCategory,
+  Room,
+  Student,
+  Teacher,
+  Video,
+  Work,
+};
 import { CLASS_DAYS, CLASS_TIME_SLOTS } from "./types";
 
 // Frontend-facing shapes (kept stable to minimize churn in 3 schedule TSX files).

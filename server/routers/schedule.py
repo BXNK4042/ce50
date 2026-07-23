@@ -77,7 +77,7 @@ def list_exam(year: int = Query(...), term: int = Query(1)):
 
 @router.post("/class")
 def save_class(body: ClassSaveBody, admin: dict = Depends(get_current_admin)):
-    check_admin_auth(admin, min_role="admin")
+    check_admin_auth(admin, required_year=body.year, min_role="admin")
     if any(c.day not in DAYS for c in body.rows):
         raise HTTPException(status_code=400, detail="Invalid day")
 
@@ -102,7 +102,7 @@ def save_class(body: ClassSaveBody, admin: dict = Depends(get_current_admin)):
 
 @router.post("/exam")
 def save_exam(body: ExamSaveBody, admin: dict = Depends(get_current_admin)):
-    check_admin_auth(admin, min_role="admin")
+    check_admin_auth(admin, required_year=body.year, min_role="admin")
 
     conn = get_db()
     cur = conn.cursor()

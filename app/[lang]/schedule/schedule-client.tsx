@@ -213,9 +213,9 @@ export default function ScheduleClient({
                   </div>
                 )}
                 <Link
-                  href={`/${lang}/admin/schedule`}
+                  href={`/${lang}/admin/schedule/exam`}
                   className="p-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-all duration-300"
-                  title={lang === "th" ? "ตั้งค่าตารางสอบ" : "Exam Schedule Settings"}
+                  title={lang === "th" ? "จัดการตารางสอบ" : "Manage Exam Schedule"}
                 >
                   <svg
                     className="w-6 h-6 transform hover:rotate-45 transition-transform duration-500"
@@ -366,9 +366,9 @@ export default function ScheduleClient({
               </h2>
 
               <Link
-                href={`/${lang}/admin/class-schedule`}
+                href={`/${lang}/admin/schedule/class`}
                 className="p-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-full transition-all duration-300"
-                title={lang === "th" ? "ตั้งค่าตารางเรียน" : "Weekly Timetable Settings"}
+                title={lang === "th" ? "จัดการตารางเรียน" : "Manage Class Schedule"}
               >
                 <svg
                   className="w-6 h-6 transform hover:rotate-45 transition-transform duration-500"
