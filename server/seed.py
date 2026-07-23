@@ -121,6 +121,27 @@ def main() -> None:
                         (std_id, name_th, name_en, photo, year, role, track, contact)
                     )
 
+        # Seed works from Work.csv
+        works_csv_file = Path(__file__).resolve().parent / "Work.csv"
+        if works_csv_file.exists():
+            from import_works import import_works_csv
+            import_works_csv(works_csv_file, conn=conn)
+
+        # Seed news from News-CE.csv
+        news_csv_file = Path(__file__).resolve().parent / "News-CE.csv"
+        if news_csv_file.exists():
+            from import_news import import_news_csv
+            import_news_csv(news_csv_file, conn=conn)
+
+        # Seed GNews global news if API Key is set
+        from config import GNEWS_API_KEY, GNEWS_QUERY
+        from services import gnews
+        if GNEWS_API_KEY:
+            try:
+                gnews.sync(conn, GNEWS_API_KEY, GNEWS_QUERY)
+            except Exception as e:
+                print(f"[Warning] GNews sync in seed failed: {e}")
+
         # Seed class schedule (year=3, term=1) — real KMITL schedule
         SEED_YEAR, SEED_TERM = 3, 1
         kmitl_classes = [

@@ -32,7 +32,7 @@ def should_sync(conn) -> bool:
         return True
 
 
-def sync(conn, apikey: str, query: str = GNEWS_QUERY, lang: str = "th", country: str = "th") -> int:
+def sync(conn, apikey: str, query: str = GNEWS_QUERY, lang: str = "en", country: str = "us") -> int:
     """Fetch from GNews, insert new articles (deduped by URL), trim 'other' to 50. Returns insert count."""
     safe_query = quote(query)
     url = (
