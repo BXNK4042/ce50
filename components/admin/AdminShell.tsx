@@ -101,7 +101,7 @@ export default function AdminShell({
           {/* Nav Links */}
           <nav className="space-y-5">
             <div>
-              <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 px-2 mb-1.5">
+              <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 px-2 mb-1.5">
                 {isTh ? "ตารางและแผน" : "Schedules"}
               </div>
               <div className="space-y-0.5">
@@ -116,11 +116,11 @@ export default function AdminShell({
                         onClick={() => onTabChange(item.key as TabType)}
                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           isActive
-                            ? "bg-zinc-800/90 text-white border border-zinc-700/80 shadow-xs"
-                            : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60"
+                            ? "bg-zinc-100 dark:bg-zinc-800/90 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700/80 shadow-xs font-semibold"
+                            : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60"
                         }`}
                       >
-                        <Icon size={16} weight={isActive ? "fill" : "regular"} className={isActive ? "text-blue-400" : "text-zinc-400"} />
+                        <Icon size={16} weight={isActive ? "fill" : "regular"} className={isActive ? "text-blue-600 dark:text-blue-400" : "text-zinc-400"} />
                         <span>{isTh ? item.labelTh : item.labelEn}</span>
                       </button>
                     );
@@ -129,7 +129,7 @@ export default function AdminShell({
             </div>
 
             <div>
-              <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 px-2 mb-1.5">
+              <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 px-2 mb-1.5">
                 {isTh ? "การจัดการข้อมูล" : "Entities & Data"}
               </div>
               <div className="space-y-0.5">
@@ -144,11 +144,11 @@ export default function AdminShell({
                         onClick={() => onTabChange(item.key as TabType)}
                         className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                           isActive
-                            ? "bg-zinc-800/90 text-white border border-zinc-700/80 shadow-xs"
-                            : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60"
+                            ? "bg-zinc-100 dark:bg-zinc-800/90 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700/80 shadow-xs font-semibold"
+                            : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60"
                         }`}
                       >
-                        <Icon size={16} weight={isActive ? "fill" : "regular"} className={isActive ? "text-emerald-400" : "text-zinc-400"} />
+                        <Icon size={16} weight={isActive ? "fill" : "regular"} className={isActive ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-400"} />
                         <span>{isTh ? item.labelTh : item.labelEn}</span>
                       </button>
                     );
@@ -158,7 +158,7 @@ export default function AdminShell({
 
             {role === "superadmin" && (
               <div>
-                <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-500 px-2 mb-1.5">
+                <div className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 dark:text-zinc-500 px-2 mb-1.5">
                   {isTh ? "ระบบ" : "System Access"}
                 </div>
                 <div className="space-y-0.5">
@@ -173,11 +173,11 @@ export default function AdminShell({
                           onClick={() => onTabChange(item.key as TabType)}
                           className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                             isActive
-                              ? "bg-zinc-800/90 text-white border border-zinc-700/80 shadow-xs"
-                              : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60"
+                              ? "bg-zinc-100 dark:bg-zinc-800/90 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700/80 shadow-xs font-semibold"
+                              : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60"
                           }`}
                         >
-                          <Icon size={16} weight={isActive ? "fill" : "regular"} className={isActive ? "text-rose-400" : "text-zinc-400"} />
+                          <Icon size={16} weight={isActive ? "fill" : "regular"} className={isActive ? "text-rose-600 dark:text-rose-400" : "text-zinc-400"} />
                           <span>{isTh ? item.labelTh : item.labelEn}</span>
                         </button>
                       );
@@ -189,13 +189,13 @@ export default function AdminShell({
         </div>
 
         {/* User Footer Profile */}
-        <div className="pt-4 border-t border-zinc-800/60 space-y-2">
-          <div className="px-3 py-2 rounded-lg bg-zinc-900/80 border border-zinc-800/80 flex items-center justify-between text-xs">
+        <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800/60 space-y-2">
+          <div className="px-3 py-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800/80 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
-              <ShieldCheck size={16} className="text-emerald-400" />
+              <ShieldCheck size={16} className="text-emerald-600 dark:text-emerald-400" />
               <div>
-                <p className="font-semibold text-zinc-200 capitalize">{role}</p>
-                <p className="text-[10px] font-mono text-zinc-400">Year {adminYear}</p>
+                <p className="font-semibold text-zinc-800 dark:text-zinc-200 capitalize">{role}</p>
+                <p className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400">Year {adminYear}</p>
               </div>
             </div>
             {/*
@@ -221,15 +221,15 @@ export default function AdminShell({
       {/* Main View Area */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top Filter & Context Bar */}
-        <header className="h-14 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-20 px-6 flex items-center justify-between gap-4">
+        <header className="h-14 border-b border-zinc-200 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-20 px-6 flex items-center justify-between gap-4">
           {/* Year/Term Selector Filters */}
           <div className="flex items-center gap-3">
-            <span className="text-xs font-medium text-zinc-400 flex items-center gap-1">
+            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400 flex items-center gap-1">
               <SlidersHorizontal size={14} />
               <span>{isTh ? "กรองตามชั้นปี:" : "Academic Cohort:"}</span>
             </span>
 
-            <div className="flex items-center bg-zinc-900 p-0.5 rounded-lg border border-zinc-800">
+            <div className="flex items-center bg-zinc-100 dark:bg-zinc-900 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800">
               {[1, 2, 3, 4].map((yr) => (
                 <button
                   key={yr}
@@ -237,10 +237,10 @@ export default function AdminShell({
                   disabled={role !== "superadmin" && yr !== adminYear}
                   className={`px-2.5 py-1 text-xs font-mono font-medium rounded-md transition-all ${
                     selectedYear === yr
-                      ? "bg-zinc-800 text-white shadow-xs"
+                      ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs border border-zinc-200 dark:border-zinc-700"
                       : role !== "superadmin" && yr !== adminYear
-                      ? "text-zinc-600 opacity-40 cursor-not-allowed"
-                      : "text-zinc-400 hover:text-zinc-200"
+                      ? "text-zinc-400 dark:text-zinc-600 opacity-40 cursor-not-allowed"
+                      : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
                   }`}
                 >
                   Y{yr}
@@ -250,15 +250,15 @@ export default function AdminShell({
 
             {/* Term Switcher for Schedules */}
             {(activeTab === "schedules_class" || activeTab === "schedules_exam") && (
-              <div className="flex items-center bg-zinc-900 p-0.5 rounded-lg border border-zinc-800">
+              <div className="flex items-center bg-zinc-100 dark:bg-zinc-900 p-0.5 rounded-lg border border-zinc-200 dark:border-zinc-800">
                 {[1, 2].map((t) => (
                   <button
                     key={t}
                     onClick={() => onTermChange(t)}
                     className={`px-2.5 py-1 text-xs font-mono font-medium rounded-md transition-all ${
                       selectedTerm === t
-                        ? "bg-zinc-800 text-white shadow-xs"
-                        : "text-zinc-400 hover:text-zinc-200"
+                        ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs border border-zinc-200 dark:border-zinc-700"
+                        : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
                     }`}
                   >
                     Term {t}
@@ -270,7 +270,7 @@ export default function AdminShell({
         </header>
 
         {/* Content Body */}
-        <main className="p-6 flex-1 bg-zinc-950">{children}</main>
+        <main className="p-6 flex-1 bg-zinc-50 dark:bg-zinc-950">{children}</main>
       </div>
     </div>
   );

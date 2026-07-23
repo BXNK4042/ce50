@@ -44,8 +44,8 @@ export default function AdminStatCards({
             onClick={() => onTabChange(stat.key)}
             className={`flex flex-col justify-between p-3.5 rounded-xl border text-left transition-all duration-150 relative overflow-hidden group ${
               isActive
-                ? "bg-zinc-900 border-zinc-700 text-white shadow-sm ring-1 ring-zinc-700/50 dark:bg-zinc-900 dark:border-zinc-700"
-                : "bg-white/80 dark:bg-zinc-900/60 border-zinc-200/80 dark:border-zinc-800/80 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/40"
+                ? "bg-zinc-900 text-white border-zinc-800 dark:bg-zinc-800 dark:border-zinc-700 shadow-sm ring-1 ring-zinc-800/50 dark:ring-zinc-700/50"
+                : "bg-white dark:bg-zinc-900/60 border-zinc-200 dark:border-zinc-800/80 text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-800/40"
             }`}
           >
             <div className="flex items-center justify-between w-full mb-2">

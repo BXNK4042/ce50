@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { formatCohortLabel } from "@/lib/cohort";
+import { Settings } from "lucide-react";
 
 export default function Navbar({
   lang,
@@ -398,7 +399,7 @@ export default function Navbar({
               className="text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-3 h-9 flex items-center gap-1.5 rounded-md transition-all duration-300 shadow-sm shrink-0"
               title={lang === "th" ? "ไปยังหน้าแผงควบคุมกลาง" : "Go to Central Admin Dashboard"}
             >
-              <span>⚙️</span>
+              <Settings className="w-3.5 h-3.5" />
               <span>{lang === "th" ? "จัดการระบบ" : "Admin Dashboard"}</span>
             </Link>
           )}
