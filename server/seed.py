@@ -58,11 +58,11 @@ def main() -> None:
 
         # Seed teachers
         teachers_data = [
-            ("อาจารย์อรรถศาสตร์ นาคเทวัญ", "Athasart Narkthewan", "athasart.webp", '["1"]', "athasart.n@ce.ac.th"),
-            ("ดร.รัตติกร สมบัติแก้ว", "Rattikorn Sombutkaew", "rattikorn.webp", '["2"]', "rattikorn.s@ce.ac.th"),
-            ("อาจารย์นภัสรพี สิทธิวัจน์", "Pisakorn Sittiwatjana", "pisakorn.webp", '["3"]', "pisakorn.s@ce.ac.th"),
-            ("ว่าที่ร้อยตรี ศิลา ศิริมาสกุล", "Silar Sirimasakul", "silar.webp", '["4"]', "silar.s@ce.ac.th"),
-            ("อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช", "Sakawkarn Piyawitwanich", "sakawkarn.webp", '["1", "2"]', "sakawkarn.p@ce.ac.th"),
+            ("อาจารย์อรรถศาสตร์ นาคเทวัญ", "Athasart Narkthewan", "athasart.webp", '["3"]', "athasart.n@ce.ac.th"),
+            ("ดร.รัตติกร สมบัติแก้ว", "Rattikorn Sombutkaew", "rattikorn.webp", '["4"]', "rattikorn.s@ce.ac.th"),
+            ("อาจารย์นภัสรพี สิทธิวัจน์", "Pisakorn Sittiwatjana", "pisakorn.webp", '["2"]', "pisakorn.s@ce.ac.th"),
+            ("ว่าที่ร้อยตรี ศิลา ศิริมาสกุล", "Silar Sirimasakul", "silar.webp", '["1"]', "silar.s@ce.ac.th"),
+            ("อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช", "Sakawkarn Piyawitwanich", "sakawkarn.webp", '["4"]', "sakawkarn.p@ce.ac.th"),
             ("นายจตุรงค์ เกตุนิมิต", "Jaturong Katenimit", "jaturong.webp", '[]', "jaturong.k@ce.ac.th")
         ]
 
@@ -99,7 +99,7 @@ def main() -> None:
                 ("67200079", "นางสาวณัฐธิดา เกื้อประจง", "Miss Natthida Kueaprajong", "/image/students/ce04/67200079.png", 3, "เหรัญญิก", "007", "Tel: 0801585306 | IG: @ntd.axn"),
                 ("67200223", "นายมีสุข เอกพงษ์", "Mr. Misuk Aekkaphong", "/image/students/ce04/67200223.png", 3, "", "800", "Tel: 0831508487 | IG: @Messily ekkaphong"),
                 ("67200369", "นายธีรศาสนต์ คงเกิด", "Mr. Thirasan Khongkoed", "/image/students/ce04/67200369.png", 3, "", "800", "Tel: 0656709042 | IG: @Teeuytee"),
-                ("67200030", "นายคณพัฒน์ รุ่งรพีพรพงษ์", "Mr. Kanaphat Rungrapeepornpong", "/image/students/ce04/67200030.png", 3, "รองประธานสาขา", "224", "Tel: 00810247384 | IG: @pooh_2134"),
+                ("67200030", "นายคณพัฒน์ รุ่งรพีพรพงษ์", "Mr. Kanaphat Rungrapeepornpong", "/image/students/ce04/67200030.png", 3, "รองประธานสาขา", "224", "Tel: 0810247384 | IG: @Gon Furikusu"),
                 ("67200093", "นายตระกูลชัย เเซ่ติ้ง", "Mr. trakoonchai saeting", "/image/students/ce04/67200093.png", 3, "", "006", "Tel: 0980850838 | IG: NULL"),
                 ("67200324", "นายกนกพัฒน์ โพธิ", "Mr. Kanokphat Pothi", "/image/students/ce04/67200324.png", 3, "", "444", "Tel: 0926577824 | IG: @lxo_xelxeoo"),
                 ("67200348", "นายณรงค์รักษ์ เรืองศักดิ์", "Mr. Narongrak Rueangsak", "/image/students/ce04/67200348.png", 3, "", "999", "Tel: 0929744516 | IG: @ainxri"),
