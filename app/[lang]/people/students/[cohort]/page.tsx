@@ -53,7 +53,7 @@ export default async function CohortPage({
           }}
         />
 
-        {/* Top Breadcrumbs */}
+        {/* Top Breadcrumbs 
         <div className="relative z-20 mx-auto max-w-7xl px-12 md:px-16 pt-8 w-full">
           <div className="flex items-center gap-2 text-xs text-zinc-300 dark:text-zinc-400 drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)]">
             <Link href={`/${lang}`} className="hover:underline hover:text-white">
@@ -70,7 +70,7 @@ export default async function CohortPage({
             <span>/</span>
             <span className="text-white font-medium">{cohortUpper}</span>
           </div>
-        </div>
+        </div>*/}
 
         {/* Section Header */}
         <div className="relative z-20 mx-auto max-w-7xl px-12 md:px-16 w-full text-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
