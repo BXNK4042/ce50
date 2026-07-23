@@ -160,12 +160,17 @@ def main() -> None:
 
         cursor = conn.cursor()
         cursor.execute("DELETE FROM class_schedules WHERE year=? AND term=?", (SEED_YEAR, SEED_TERM))
-        for day, time_slot, code, name_en, name_th, room, instr_en, instr_th in kmitl_classes:
-            cursor.execute(
-                "INSERT INTO class_schedules (year, term, day, time_slot, code, name_en, name_th, room, instructor_en, instructor_th) "
-                "VALUES (?,?,?,?,?,?,?,?,?,?)",
-                (SEED_YEAR, SEED_TERM, day, time_slot, code, name_en, name_th, room, instr_en, instr_th),
-            )
+        for day, raw_time_slot, code, name_en, name_th, room, instr_en, instr_th in kmitl_classes:
+            start_str, end_str = [s.strip() for s in raw_time_slot.split("-")]
+            start_h = int(start_str.split(":")[0])
+            end_h = int(end_str.split(":")[0])
+            for h in range(start_h, end_h):
+                time_slot = f"{h:02d}:00 - {h+1:02d}:00"
+                cursor.execute(
+                    "INSERT INTO class_schedules (year, term, day, time_slot, code, name_en, name_th, room, instructor_en, instructor_th) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?)",
+                    (SEED_YEAR, SEED_TERM, day, time_slot, code, name_en, name_th, room, instr_en, instr_th),
+                )
 
         # Seed exam schedule (year=3, term=1)
         exams_data = [
