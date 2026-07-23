@@ -79,9 +79,9 @@ export default function AdminShell({
   ];
 
   return (
-    <div className="min-h-[100dvh] bg-zinc-950 text-zinc-100 flex font-sans antialiased selection:bg-zinc-800">
+    <div className="min-h-[100dvh] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 flex font-sans antialiased selection:bg-zinc-200 dark:selection:bg-zinc-800">
       {/* Linear Sidebar */}
-      <aside className="w-64 border-r border-zinc-800/80 bg-zinc-950/90 flex flex-col justify-between p-4 sticky top-0 h-[100dvh] z-30">
+      <aside className="w-64 border-r border-zinc-200 dark:border-zinc-800/80 bg-white/90 dark:bg-zinc-950/90 flex flex-col justify-between p-4 sticky top-0 h-[100dvh] z-30">
         <div>
           {/* Brand Header 
           <div className="flex items-center justify-between pb-4 mb-4 border-b border-zinc-800/60">
