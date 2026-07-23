@@ -734,6 +734,19 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
                       />
                     </div>
                     <div>
+                      <label className="block text-xs font-semibold text-zinc-500 mb-1">Academic Year (1-4) *</label>
+                      <select
+                        value={formData.year || selectedYear}
+                        onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
+                        className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-sm"
+                      >
+                        <option value={1}>Year 1 (Freshman)</option>
+                        <option value={2}>Year 2 (Sophomore)</option>
+                        <option value={3}>Year 3 (Junior)</option>
+                        <option value={4}>Year 4 (Senior)</option>
+                      </select>
+                    </div>
+                    <div>
                       <label className="block text-xs font-semibold text-zinc-500 mb-1">Track / Cohort (e.g. CE04)</label>
                       <input
                         type="text"

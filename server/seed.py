@@ -89,21 +89,21 @@ def main() -> None:
             import_students_csv(csv_file)
         else:
             students_data = [
-                ("67200412", "นายรุจิณัฐ อาศิรเมธี", "Mr. Rujinat Asirametee", None, 2, "", "006", "Tel: 0800479886 | IG: @Rujinat_Fah"),
-                ("67200014", "นางสาวกัณฐมณี กอบการ", "Miss Kantamanee Kobkarn", None, 2, "เลขา", "339", "Tel: 0875732080 | IG: @kwin_mhy"),
-                ("67200099", "นายทัชภูมิ ใจดี", "Mr. Thatchaphum Jaidee", None, 2, "", "787", "Tel: 0986782950 | IG: @pipe2bot"),
-                ("67200049", "นายเจษฎา ศรีสง่า", "Mr. Jetsada Srisanga", None, 2, "ประธานชั้นปีที่3", "538", "Tel: 0626253837 | IG: @p_Jetsada_p"),
-                ("67200102", "นายทีปกิติ์ พรหมสัตยพรต", "Mr. Teepakit Phormmasattayaprot", None, 2, "", "444", "Tel: 0973016465 | IG: @lil_weirx"),
-                ("67200350", "นางสาวณัฏฐ์ชยา จำปา", "Miss Natchaya Champa", None, 2, "เหรัญญิก", "123", "Tel: 0985364534 | IG: @Waa_.zz"),
-                ("67200235", "นางสาวรินรดา บุญมี", "Miss Rinrada Boonmee", None, 2, "", "800", "Tel: 0937764085 | IG: @nnoey.rb"),
-                ("67200079", "นางสาวณัฐธิดา เกื้อประจง", "Miss Natthida Kueaprajong", None, 2, "เหรัญญิก", "007", "Tel: 0801585306 | IG: @ntd.axn"),
-                ("67200223", "นายมีสุข เอกพงษ์", "Mr. Misuk Aekkaphong", None, 2, "", "800", "Tel: 0831508487 | IG: @Messily ekkaphong"),
-                ("67200369", "นายธีรศาสนต์ คงเกิด", "Mr. Thirasan Khongkoed", None, 2, "", "800", "Tel: 0656709042 | IG: @Teeuytee"),
-                ("67200030", "นายคณพัฒน์ รุ่งรพีพรพงษ์", "Mr. Kanaphat Rungrapeepornpong", None, 2, "รองประธานสาขา", "224", "Tel: 00810247384 | IG: @pooh_2134"),
-                ("67200093", "นายตระกูลชัย เเซ่ติ้ง", "Mr. trakoonchai saeting", None, 2, "", "006", "Tel: 0980850838 | IG: NULL"),
-                ("67200324", "นายกนกพัฒน์ โพธิ", "Mr. Kanokphat Pothi", None, 2, "", "444", "Tel: 0926577824 | IG: @lxo_xelxeoo"),
-                ("67200348", "นายณรงค์รักษ์ เรืองศักดิ์", "Mr. Narongrak Rueangsak", None, 2, "", "999", "Tel: 0929744516 | IG: @ainxri"),
-                ("67200380", "นายปรินทร คงทอง", "Mr. Parinthon Kongthong", None, 2, "", "339", "Tel: 0631102883 | IG: @bank.parinthon"),
+                ("67200412", "นายรุจิณัฐ อาศิรเมธี", "Mr. Rujinat Asirametee", None, 3, "", "006", "Tel: 0800479886 | IG: @Rujinat_Fah"),
+                ("67200014", "นางสาวกัณฐมณี กอบการ", "Miss Kantamanee Kobkarn", None, 3, "เลขา", "339", "Tel: 0875732080 | IG: @kwin_mhy"),
+                ("67200099", "นายทัชภูมิ ใจดี", "Mr. Thatchaphum Jaidee", None, 3, "", "787", "Tel: 0986782950 | IG: @pipe2bot"),
+                ("67200049", "นายเจษฎา ศรีสง่า", "Mr. Jetsada Srisanga", None, 3, "ประธานชั้นปีที่3", "538", "Tel: 0626253837 | IG: @p_Jetsada_p"),
+                ("67200102", "นายทีปกิติ์ พรหมสัตยพรต", "Mr. Teepakit Phormmasattayaprot", None, 3, "", "444", "Tel: 0973016465 | IG: @lil_weirx"),
+                ("67200350", "นางสาวณัฏฐ์ชยา จำปา", "Miss Natchaya Champa", None, 3, "เหรัญญิก", "123", "Tel: 0985364534 | IG: @Waa_.zz"),
+                ("67200235", "นางสาวรินรดา บุญมี", "Miss Rinrada Boonmee", None, 3, "", "800", "Tel: 0937764085 | IG: @nnoey.rb"),
+                ("67200079", "นางสาวณัฐธิดา เกื้อประจง", "Miss Natthida Kueaprajong", None, 3, "เหรัญญิก", "007", "Tel: 0801585306 | IG: @ntd.axn"),
+                ("67200223", "นายมีสุข เอกพงษ์", "Mr. Misuk Aekkaphong", None, 3, "", "800", "Tel: 0831508487 | IG: @Messily ekkaphong"),
+                ("67200369", "นายธีรศาสนต์ คงเกิด", "Mr. Thirasan Khongkoed", None, 3, "", "800", "Tel: 0656709042 | IG: @Teeuytee"),
+                ("67200030", "นายคณพัฒน์ รุ่งรพีพรพงษ์", "Mr. Kanaphat Rungrapeepornpong", None, 3, "รองประธานสาขา", "224", "Tel: 00810247384 | IG: @pooh_2134"),
+                ("67200093", "นายตระกูลชัย เเซ่ติ้ง", "Mr. trakoonchai saeting", None, 3, "", "006", "Tel: 0980850838 | IG: NULL"),
+                ("67200324", "นายกนกพัฒน์ โพธิ", "Mr. Kanokphat Pothi", None, 3, "", "444", "Tel: 0926577824 | IG: @lxo_xelxeoo"),
+                ("67200348", "นายณรงค์รักษ์ เรืองศักดิ์", "Mr. Narongrak Rueangsak", None, 3, "", "999", "Tel: 0929744516 | IG: @ainxri"),
+                ("67200380", "นายปรินทร คงทอง", "Mr. Parinthon Kongthong", None, 3, "", "339", "Tel: 0631102883 | IG: @bank.parinthon"),
             ]
 
             for std_id, name_th, name_en, photo, year, role, track, contact in students_data:
