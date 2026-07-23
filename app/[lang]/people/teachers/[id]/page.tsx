@@ -1,6 +1,8 @@
 export default async function TeacherDetailPage({
   params,
-}: PageProps<"/[lang]/people/teachers/[id]">) {
+}: {
+  params: Promise<{ lang: string; id: string }>;
+}) {
   const { id } = await params;
   return (
     <section className="mx-auto max-w-5xl px-12 md:px-16 py-12 md:py-16">

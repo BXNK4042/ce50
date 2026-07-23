@@ -4,11 +4,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from db import db_cursor
+from db import db_cursor, init_db
 from auth_utils import hash_password
 
 
 def main() -> None:
+    init_db()
     with db_cursor() as conn:
         # Wipe all existing table data & reset autoincrement sequences
         cursor = conn.cursor()
