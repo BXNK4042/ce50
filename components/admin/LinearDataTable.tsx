@@ -95,7 +95,7 @@ export default function LinearDataTable({
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900/90 rounded-2xl border border-zinc-200/90 dark:border-zinc-800/90 shadow-sm overflow-hidden transition-all">
+    <div className="bg-white dark:bg-zinc-900/90 rounded-2xl border border-zinc-200/90 dark:border-zinc-800/90 shadow-sm overflow-hidden transition-colors">
       {/* Table Header Bar */}
       <div className="p-4 sm:p-5 border-b border-zinc-200/80 dark:border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-50/50 dark:bg-zinc-900/40">
         <div>

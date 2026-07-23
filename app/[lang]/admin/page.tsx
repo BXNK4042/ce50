@@ -473,14 +473,22 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           year={selectedYear}
           term={selectedTerm}
           token={token}
-          onSaveSuccess={fetchData}
+          onSaveSuccess={() => {
+            fetchData();
+            setSuccessMsg("Class timetable saved successfully!");
+            setTimeout(() => setSuccessMsg(""), 4000);
+          }}
         />
       ) : activeTab === "schedules_exam" ? (
         <ExamScheduleTable
           year={selectedYear}
           term={selectedTerm}
           token={token}
-          onSaveSuccess={fetchData}
+          onSaveSuccess={() => {
+            fetchData();
+            setSuccessMsg("Exam schedule saved successfully!");
+            setTimeout(() => setSuccessMsg(""), 4000);
+          }}
         />
       ) : (
         <LinearDataTable

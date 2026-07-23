@@ -114,10 +114,10 @@ export default function AdminShell({
                       <button
                         key={item.key}
                         onClick={() => onTabChange(item.key as TabType)}
-                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium border transition-colors ${
                           isActive
-                            ? "bg-zinc-100 dark:bg-zinc-800/90 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700/80 shadow-xs font-semibold"
-                            : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60"
+                            ? "bg-zinc-100 dark:bg-zinc-800/90 text-zinc-900 dark:text-white border-zinc-200 dark:border-zinc-700/80 shadow-xs font-semibold"
+                            : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60"
                         }`}
                       >
                         <Icon size={16} weight={isActive ? "fill" : "regular"} className={isActive ? "text-blue-600 dark:text-blue-400" : "text-zinc-400"} />
@@ -142,10 +142,10 @@ export default function AdminShell({
                       <button
                         key={item.key}
                         onClick={() => onTabChange(item.key as TabType)}
-                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                        className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium border transition-colors ${
                           isActive
-                            ? "bg-zinc-100 dark:bg-zinc-800/90 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700/80 shadow-xs font-semibold"
-                            : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60"
+                            ? "bg-zinc-100 dark:bg-zinc-800/90 text-zinc-900 dark:text-white border-zinc-200 dark:border-zinc-700/80 shadow-xs font-semibold"
+                            : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60"
                         }`}
                       >
                         <Icon size={16} weight={isActive ? "fill" : "regular"} className={isActive ? "text-emerald-600 dark:text-emerald-400" : "text-zinc-400"} />
@@ -171,10 +171,10 @@ export default function AdminShell({
                         <button
                           key={item.key}
                           onClick={() => onTabChange(item.key as TabType)}
-                          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                          className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium border transition-colors ${
                             isActive
-                              ? "bg-zinc-100 dark:bg-zinc-800/90 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700/80 shadow-xs font-semibold"
-                              : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60"
+                              ? "bg-zinc-100 dark:bg-zinc-800/90 text-zinc-900 dark:text-white border-zinc-200 dark:border-zinc-700/80 shadow-xs font-semibold"
+                              : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/80 dark:hover:bg-zinc-900/60"
                           }`}
                         >
                           <Icon size={16} weight={isActive ? "fill" : "regular"} className={isActive ? "text-rose-600 dark:text-rose-400" : "text-zinc-400"} />
@@ -235,12 +235,12 @@ export default function AdminShell({
                   key={yr}
                   onClick={() => onYearChange(yr)}
                   disabled={role !== "superadmin" && yr !== adminYear}
-                  className={`px-2.5 py-1 text-xs font-mono font-medium rounded-md transition-all ${
+                  className={`px-2.5 py-1 text-xs font-mono font-medium rounded-md border transition-colors ${
                     selectedYear === yr
-                      ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs border border-zinc-200 dark:border-zinc-700"
+                      ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs border-zinc-200 dark:border-zinc-700"
                       : role !== "superadmin" && yr !== adminYear
-                      ? "text-zinc-400 dark:text-zinc-600 opacity-40 cursor-not-allowed"
-                      : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
+                      ? "border-transparent text-zinc-400 dark:text-zinc-600 opacity-40 cursor-not-allowed"
+                      : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
                   }`}
                 >
                   Y{yr}
@@ -255,10 +255,10 @@ export default function AdminShell({
                   <button
                     key={t}
                     onClick={() => onTermChange(t)}
-                    className={`px-2.5 py-1 text-xs font-mono font-medium rounded-md transition-all ${
+                    className={`px-2.5 py-1 text-xs font-mono font-medium rounded-md border transition-colors ${
                       selectedTerm === t
-                        ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs border border-zinc-200 dark:border-zinc-700"
-                        : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
+                        ? "bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs border-zinc-200 dark:border-zinc-700"
+                        : "border-transparent text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200"
                     }`}
                   >
                     Term {t}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Save } from "lucide-react";
 
 interface ExamItem {
   code: string;
@@ -129,9 +130,10 @@ export default function ExamScheduleTable({
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs rounded-xl shadow-md transition-all disabled:opacity-50 cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-semibold text-xs rounded-xl shadow-xs active:scale-[0.98] transition-all disabled:opacity-50 cursor-pointer"
           >
-            {saving ? "Saving..." : "💾 Save Exam Schedule"}
+            <Save className="w-4 h-4" />
+            <span>{saving ? "Saving..." : "Save Exam Schedule"}</span>
           </button>
         </div>
       </div>
