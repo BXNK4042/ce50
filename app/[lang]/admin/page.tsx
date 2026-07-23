@@ -481,7 +481,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
             )}
           </nav>
         </div>
-
+        {/*
         <div className="pt-6 border-t border-zinc-200 dark:border-zinc-800">
           <Link
             href={`/${lang}/api/admin/logout`}
@@ -489,7 +489,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           >
             {isTh ? "ออกจากระบบ" : "Logout"}
           </Link>
-        </div>
+        </div>*/}
       </aside>
 
       {/* Main Content Area */}
