@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 interface NewsItem {
   id?: number;
@@ -21,18 +20,8 @@ interface NewsFeedProps {
 }
 
 export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchive }: NewsFeedProps) {
-  const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [news, setNews] = useState<NewsItem[]>([]);
   const isTh = lang === "th";
-
-  useEffect(() => {
-    const role = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("admin_role="))
-      ?.split("=")[1];
-    setIsLoggedIn(!!role);
-  }, []);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -142,13 +131,7 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
               <div
                 key={idx}
                 className="relative w-full h-[220px] overflow-hidden border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 hover:border-zinc-400 dark:hover:border-zinc-700 cursor-pointer select-none group flex flex-col justify-end"
-                onClick={(e) => {
-                  const isEditClick = (e.target as HTMLElement).closest(".edit-btn");
-                  if (isEditClick) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return;
-                  }
+                onClick={() => {
                   if (item.link) window.open(item.link, "_blank");
                 }}
               >
@@ -159,27 +142,6 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                     alt={item.title}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
                   />
-                )}
-
-                {/* Edit News button (Admins/Writers only) */}
-                {isLoggedIn && item.id && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      router.push(`/${lang}/news/edit/${item.id}`);
-                    }}
-                    className="edit-btn absolute top-3 right-3 z-30 p-2 bg-black/60 hover:bg-[#e55300] text-white rounded-full border border-white/20 transition-all duration-200 cursor-pointer shadow-md hover:scale-110"
-                    title={isTh ? "แก้ไขข่าวสาร" : "Edit News"}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      className="w-4 h-4"
-                    >
-                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                    </svg>
-                  </button>
                 )}
 
                 {/* Dark Gradient Overlay */}
@@ -263,27 +225,6 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
               />
             )}
             
-            {/* Edit News button (Admins/Writers only) */}
-            {isLoggedIn && featuredNews.id && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push(`/${lang}/news/edit/${featuredNews.id}`);
-                }}
-                className="edit-btn absolute top-3 right-3 z-30 p-2 bg-black/60 hover:bg-[#e55300] text-white rounded-full border border-white/20 transition-all duration-200 cursor-pointer shadow-md hover:scale-110"
-                title={isTh ? "แก้ไขข่าวสาร" : "Edit News"}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className="w-4 h-4"
-                >
-                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                </svg>
-              </button>
-            )}
-            
             <div className="absolute inset-0 bg-black/10 dark:bg-black/20 group-hover:bg-transparent transition-all duration-300" />
           </div>
 
@@ -319,13 +260,7 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                 <div
                   key={idx}
                   className="relative w-full h-[320px] overflow-hidden border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 hover:border-zinc-400 dark:hover:border-zinc-700 cursor-pointer select-none group flex flex-col justify-end"
-                  onClick={(e) => {
-                    const isEditClick = (e.target as HTMLElement).closest(".edit-btn");
-                    if (isEditClick) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      return;
-                    }
+                  onClick={() => {
                     if (item.link) window.open(item.link, "_blank");
                   }}
                 >
@@ -336,27 +271,6 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                       alt={item.title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
                     />
-                  )}
-
-                  {/* Edit News button (Admins/Writers only) */}
-                  {isLoggedIn && item.id && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        router.push(`/${lang}/news/edit/${item.id}`);
-                      }}
-                      className="edit-btn absolute top-3 right-3 z-30 p-2 bg-black/60 hover:bg-[#e55300] text-white rounded-full border border-white/20 transition-all duration-200 cursor-pointer shadow-md hover:scale-110"
-                      title={isTh ? "แก้ไขข่าวสาร" : "Edit News"}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="w-4 h-4"
-                      >
-                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                      </svg>
-                    </button>
                   )}
 
                   {/* Dark Gradient Overlay for readability */}
@@ -408,13 +322,7 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                 <div
                   key={idx}
                   className="relative w-full h-[220px] overflow-hidden border border-zinc-200 dark:border-zinc-800/80 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 hover:border-zinc-400 dark:hover:border-zinc-700 cursor-pointer select-none group flex flex-col justify-end"
-                  onClick={(e) => {
-                    const isEditClick = (e.target as HTMLElement).closest(".edit-btn");
-                    if (isEditClick) {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      return;
-                    }
+                  onClick={() => {
                     if (item.link) window.open(item.link, "_blank");
                   }}
                 >
@@ -425,27 +333,6 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                       alt={item.title}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
                     />
-                  )}
-
-                  {/* Edit News button (Admins/Writers only) */}
-                  {isLoggedIn && item.id && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        router.push(`/${lang}/news/edit/${item.id}`);
-                      }}
-                      className="edit-btn absolute top-3 right-3 z-30 p-2 bg-black/60 hover:bg-[#e55300] text-white rounded-full border border-white/20 transition-all duration-200 cursor-pointer shadow-md hover:scale-110"
-                      title={isTh ? "แก้ไขข่าวสาร" : "Edit News"}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="w-4 h-4"
-                      >
-                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                      </svg>
-                    </button>
                   )}
 
                   {/* Dark Gradient Overlay */}

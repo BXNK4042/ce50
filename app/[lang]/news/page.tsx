@@ -1,5 +1,4 @@
 import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
-import Link from "next/link";
 import NewsSlider from "@/components/layout/news-slider";
 import NewsFeed from "@/components/layout/news-feed";
 
@@ -10,7 +9,6 @@ export default async function NewsPage({
 }) {
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
-  const isTh = lang === "th";
 
   return (
     <section className="w-full px-12 md:px-16 py-12 md:py-16">
@@ -24,23 +22,6 @@ export default async function NewsPage({
                 {dict.news.internal}
               </h2>
             </div>
-            {/* Add News Button in the top right */}
-            <Link
-              href={`/${lang}/news/writer`}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#e55300] hover:bg-[#c94800] text-white text-sm font-semibold transition-all duration-300 rounded-none shadow-md cursor-pointer"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              {isTh ? "เพิ่มข่าวสาร" : "Add News"}
-            </Link>
           </div>
           <NewsFeed lang={lang} archiveTitle={dict.news.archive} excludeArchive={true} />
         </div>
