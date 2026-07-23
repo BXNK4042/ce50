@@ -64,6 +64,6 @@ Used in `app/[lang]/page.tsx` via `<PeopleSlider people={teachers} />`.
 Used in `app/[lang]/people/teachers/page.tsx`. Maps `teacher.id` to custom interactive behaviors:
 
 - **ID 1 (Athasart)**: Click triggers 3D spinning modal overlay with glowing red eye effect.
-- **ID 2 (Rattikorn)**: Click triggers interactive card flip modal between Rattikorn & "ป้าจุ๋ม" (`/professors/rattikorn-alt.webp`).
+- **ID 2 (Rattikorn)**: Click triggers interactive card flip modal between Rattikorn & "ป้าจุ๋ม" (`/image/professors/rattikorn-alt.webp`).
 - **IDs 3, 4, 5 (Pisakorn, Silar, Sakawkarn)**: Hover cross-fades default portrait with alternative image (`*-alt.webp`).
 - **ID 6 (Jaturong)**: Hover changes badge from "Computer Technical Officer" to 'ผู้บริหารร้าน "นิยมชา"' with background `/backgrounds/niyomcha.webp`.

@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         source: "/image/:path*",
         destination: `${backendUrl}/image/:path*`,
       },
+      {
+        source: "/professors/:path*",
+        destination: `${backendUrl}/image/professors/:path*`,
+      },
     ];
   },
 };
