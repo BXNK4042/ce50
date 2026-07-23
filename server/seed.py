@@ -99,7 +99,7 @@ def main() -> None:
                 ("67200079", "นางสาวณัฐธิดา เกื้อประจง", "Miss Natthida Kueaprajong", None, 3, "เหรัญญิก", "007", "Tel: 0801585306 | IG: @ntd.axn"),
                 ("67200223", "นายมีสุข เอกพงษ์", "Mr. Misuk Aekkaphong", None, 3, "", "800", "Tel: 0831508487 | IG: @Messily ekkaphong"),
                 ("67200369", "นายธีรศาสนต์ คงเกิด", "Mr. Thirasan Khongkoed", None, 3, "", "800", "Tel: 0656709042 | IG: @Teeuytee"),
-                ("67200030", "นายคณพัฒน์ รุ่งรพีพรพงษ์", "Mr. Kanaphat Rungrapeepornpong", None, 3, "รองประธานสาขา", "224", "Tel: 00810247384 | IG: @pooh_2134"),
+                ("67200030", "นายคณพัฒน์ รุ่งรพีพรพงษ์", "Mr. Kanaphat Rungrapeepornpong", None, 3, "รองประธานสาขา", "224", "Tel: 0810247384 | IG: @pooh_2134"),
                 ("67200093", "นายตระกูลชัย เเซ่ติ้ง", "Mr. trakoonchai saeting", None, 3, "", "006", "Tel: 0980850838 | IG: NULL"),
                 ("67200324", "นายกนกพัฒน์ โพธิ", "Mr. Kanokphat Pothi", None, 3, "", "444", "Tel: 0926577824 | IG: @lxo_xelxeoo"),
                 ("67200348", "นายณรงค์รักษ์ เรืองศักดิ์", "Mr. Narongrak Rueangsak", None, 3, "", "999", "Tel: 0929744516 | IG: @ainxri"),

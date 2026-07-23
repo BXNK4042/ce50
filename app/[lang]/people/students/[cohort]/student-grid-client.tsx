@@ -175,19 +175,132 @@ export function StudentGridClient({ students, lang, dict }: StudentGridClientPro
                   </div>
                 )}
 
-                {activeStudent.contact && (
-                  <div className="flex flex-col gap-1.5 bg-zinc-50 dark:bg-zinc-900/50 p-3.5 rounded-xl border border-zinc-100 dark:border-zinc-800/40">
-                    <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                      {lang === "th" ? "ช่องทางติดต่อ (Contact)" : "Contact"}
-                    </span>
-                    <a
-                      href={`mailto:${activeStudent.contact}`}
-                      className="text-sm font-bold text-blue-600 dark:text-sky-400 hover:underline truncate"
-                    >
-                      {activeStudent.contact}
-                    </a>
-                  </div>
-                )}
+                {activeStudent.contact && (() => {
+                  const parts = activeStudent.contact.split(/[\n,/|]+/).map((p) => p.trim()).filter(Boolean);
+                  const items: { type: "phone" | "ig" | "email" | "other"; label: string; href: string }[] = [];
+
+                  for (const part of parts) {
+                    const lower = part.toLowerCase();
+
+                    // 1. Explicit Telephone / Phone check
+                    if (lower.startsWith("tel:") || lower.startsWith("phone:") || lower.startsWith("tel ") || lower.startsWith("phone ")) {
+                      const rawVal = part.replace(/^(tel|phone):\s*/i, "");
+                      const cleanDigits = rawVal.replace(/[^\d+]/g, "");
+                      items.push({
+                        type: "phone",
+                        label: rawVal,
+                        href: `tel:${cleanDigits}`,
+                      });
+                      continue;
+                    }
+
+                    // 2. Explicit Instagram check
+                    if (lower.startsWith("ig:") || lower.startsWith("instagram:") || lower.startsWith("@") || lower.includes("instagram.com")) {
+                      const handle = part.replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/^(ig|instagram):\s*/i, "").replace(/^@/, "").replace(/\/$/, "");
+                      items.push({
+                        type: "ig",
+                        label: `@${handle}`,
+                        href: `https://instagram.com/${handle}`,
+                      });
+                      continue;
+                    }
+
+                    // 3. Email check
+                    const isEmail = part.includes("@") && (part.includes(".com") || part.includes(".th") || part.includes(".net") || part.includes(".org") || part.includes(".ac.th"));
+                    if (isEmail) {
+                      items.push({
+                        type: "email",
+                        label: part,
+                        href: `mailto:${part}`,
+                      });
+                      continue;
+                    }
+
+                    // 4. Implicit Phone Number (starts with 0 or +66 with 9-10 digits)
+                    const cleanDigits = part.replace(/[^\d]/g, "");
+                    if (cleanDigits.length >= 9 && cleanDigits.length <= 10 && (part.startsWith("0") || part.startsWith("+66"))) {
+                      items.push({
+                        type: "phone",
+                        label: part,
+                        href: `tel:${cleanDigits}`,
+                      });
+                      continue;
+                    }
+
+                    // 5. Default Other Contact
+                    items.push({
+                      type: "other",
+                      label: part,
+                      href: part,
+                    });
+                  }
+
+                  return (
+                    <div className="space-y-2.5">
+                      {items.map((item, idx) => {
+                        if (item.type === "phone") {
+                          return (
+                            <div key={idx} className="flex flex-col gap-1 bg-zinc-50 dark:bg-zinc-900/50 p-3.5 rounded-xl border border-zinc-100 dark:border-zinc-800/40">
+                              <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                                {lang === "th" ? "เบอร์โทรศัพท์ (Tel)" : "Telephone"}
+                              </span>
+                              <a
+                                href={item.href}
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-sm font-bold text-blue-600 dark:text-sky-400 hover:underline truncate cursor-pointer"
+                              >
+                                {item.label}
+                              </a>
+                            </div>
+                          );
+                        }
+
+                        if (item.type === "ig") {
+                          return (
+                            <div key={idx} className="flex flex-col gap-1 bg-zinc-50 dark:bg-zinc-900/50 p-3.5 rounded-xl border border-zinc-100 dark:border-zinc-800/40">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                                  Instagram
+                                </span>
+                                <span className="text-[10px] text-pink-500 font-semibold tracking-wide uppercase">
+                                  Open Profile ↗
+                                </span>
+                              </div>
+                              <a
+                                href={item.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  e.preventDefault();
+                                  window.open(item.href, "_blank", "noopener,noreferrer");
+                                }}
+                                className="text-sm font-bold text-pink-600 dark:text-pink-400 hover:text-pink-500 hover:underline truncate cursor-pointer"
+                              >
+                                {item.label}
+                              </a>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <div key={idx} className="flex flex-col gap-1 bg-zinc-50 dark:bg-zinc-900/50 p-3.5 rounded-xl border border-zinc-100 dark:border-zinc-800/40">
+                            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                              {lang === "th" ? "ช่องทางติดต่อ (Contact)" : "Contact"}
+                            </span>
+                            <a
+                              href={item.href}
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-sm font-bold text-blue-600 dark:text-sky-400 hover:underline truncate cursor-pointer"
+                            >
+                              {item.label}
+                            </a>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
               </div>
             </div>
           </div>

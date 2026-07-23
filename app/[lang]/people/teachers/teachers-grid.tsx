@@ -75,8 +75,12 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
               .toUpperCase()
           : name.slice(0, 2);
 
-        const isAthasart = teacher.id === 1;
-        const isRattikorn = teacher.id === 2;
+        const isAthasart = teacher.id === 1 || teacher.name_th?.includes("อรรถศาสตร์") || teacher.photo?.includes("athasart");
+        const isRattikorn = teacher.id === 2 || teacher.name_th?.includes("รัตติกร") || teacher.photo?.includes("rattikorn");
+        const isPisakorn = teacher.id === 3 || teacher.name_th?.includes("นภัสรพี") || teacher.name_th?.includes("พิศกร") || teacher.photo?.includes("pisakorn");
+        const isSilar = teacher.id === 4 || teacher.name_th?.includes("ศิลา") || teacher.photo?.includes("silar");
+        const isSakawkarn = teacher.id === 5 || teacher.name_th?.includes("สกาวกาญจน์") || teacher.photo?.includes("sakawkarn");
+        const isJaturong = teacher.id === 6 || teacher.name_th?.includes("จตุรงค์") || teacher.photo?.includes("jaturong");
         const isOverlayActive = activeOverlayId === teacher.id;
 
         return (
@@ -117,7 +121,7 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                 src="/ce_logo.webp?v=8"
                 alt="CE Logo"
                 className={`absolute top-4 left-4 w-[35%] max-w-[180px] min-w-[80px] h-auto z-20 object-contain pointer-events-none filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] contrast-[1.15] brightness-[1.05] opacity-25 transition-opacity duration-500 ${
-                  teacher.id === 6 ? "group-hover:opacity-0" : ""
+                  isJaturong ? "group-hover:opacity-0" : ""
                 }`}
               />
 
@@ -128,31 +132,31 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                     src={`${teacher.photo}?v=8`}
                     alt={name}
                     className={`absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 transition-opacity duration-500 ease-in-out ${
-                      [3, 4, 5].includes(teacher.id) ? "group-hover:opacity-0" : ""
+                      isPisakorn || isSilar || isSakawkarn ? "group-hover:opacity-0" : ""
                     }`}
                   />
-                  {teacher.id === 3 && (
+                  {isPisakorn && (
                     <img
                       src="/image/professors/pisakorn-alt.webp?v=8"
                       alt={`${name} alternative`}
                       className="absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
-                  {teacher.id === 4 && (
+                  {isSilar && (
                     <img
                       src="/image/professors/silar-alt.webp?v=8"
                       alt={`${name} alternative`}
                       className="absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
                     />
                   )}
-                  {teacher.id === 5 && (
+                  {isSakawkarn && (
                     <img
                       src="/image/professors/sakawkarn-alt.webp?v=8"
                       alt={`${name} alternative`}
-                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[15%] z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"
+                      className="absolute right-0 bottom-0 h-full w-auto object-contain object-right-bottom translate-x-[-8%] scale-[1.07] origin-bottom-right z-10 opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out"
                     />
                   )}
-                  {teacher.id === 6 && (
+                  {isJaturong && (
                     <img
                       src="/image/backgrounds/niyomcha.webp?v=8"
                       alt="Niyomcha background"
