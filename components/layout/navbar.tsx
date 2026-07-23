@@ -392,14 +392,16 @@ export default function Navbar({
 
         {/* Right Section: Admin Dashboard & Login/Logout Buttons */}
         <div className="ml-auto flex items-center gap-2 shrink-0 z-10 relative">
-          <Link
-            href={`/${lang}/admin`}
-            className="text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-3 h-9 flex items-center gap-1.5 rounded-md transition-all duration-300 shadow-sm shrink-0"
-            title={lang === "th" ? "ไปยังหน้าแผงควบคุมกลาง" : "Go to Central Admin Dashboard"}
-          >
-            <span>⚙️</span>
-            <span>{lang === "th" ? "จัดการระบบ" : "Admin Dashboard"}</span>
-          </Link>
+          {isLoggedIn && (
+            <Link
+              href={`/${lang}/admin`}
+              className="text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white px-3 h-9 flex items-center gap-1.5 rounded-md transition-all duration-300 shadow-sm shrink-0"
+              title={lang === "th" ? "ไปยังหน้าแผงควบคุมกลาง" : "Go to Central Admin Dashboard"}
+            >
+              <span>⚙️</span>
+              <span>{lang === "th" ? "จัดการระบบ" : "Admin Dashboard"}</span>
+            </Link>
+          )}
 
           {isLoggedIn ? (
             <button

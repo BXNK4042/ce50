@@ -4,7 +4,8 @@ import { api } from "@/lib/api";
 import Link from "next/link";
 import { Student } from "@/lib/types";
 import { StudentGridClient } from "./student-grid-client";
-import { formatCohortLabel, getCohortHeroData } from "@/lib/cohort";
+import { CohortHeroImage } from "./cohort-hero-image";
+import { formatCohortLabel, getCohortHeroData, getCohortNumber } from "@/lib/cohort";
 
 export default async function CohortPage({
   params,
@@ -12,8 +13,17 @@ export default async function CohortPage({
   params: Promise<{ lang: string; cohort: string }>;
 }) {
   const { lang, cohort } = await params;
-  const cohortUpper = cohort.toUpperCase();
-  if (!/^CE\d{2}$/.test(cohortUpper)) notFound();
+
+  const gen = getCohortNumber(cohort);
+  let cohortUpper = "";
+  if (gen !== null && gen > 0) {
+    cohortUpper = `CE${String(gen).padStart(2, "0")}`;
+  } else if (/^CE\d{1,2}$/i.test(cohort)) {
+    const num = parseInt(cohort.replace(/CE/i, ""), 10);
+    cohortUpper = `CE${String(num).padStart(2, "0")}`;
+  } else {
+    notFound();
+  }
 
   const dict = await getDictionary(lang as Locale);
   const isTh = lang === "th";
@@ -31,16 +41,7 @@ export default async function CohortPage({
       {/* Dynamic Hero section */}
       <div className="relative h-[65vh] md:h-[85vh] w-full pb-12 md:pb-16 flex flex-col justify-between items-center transition-all duration-300 overflow-hidden bg-gradient-to-b from-blue-900 to-slate-950">
         {/* Background Image with bottom 35% fade-out mask */}
-        <img
-          src={heroData.bgImage}
-          alt={`${cohortUpper} Background`}
-          className="absolute inset-0 w-full h-full object-cover z-0"
-          style={{
-            objectPosition: "50% 55%",
-            maskImage: "linear-gradient(to bottom, black 35%, transparent 100%)",
-            WebkitMaskImage: "linear-gradient(to bottom, black 35%, transparent 100%)",
-          }}
-        />
+        <CohortHeroImage src={heroData.bgImage} alt={`${cohortUpper} Background`} />
         {/* Contrast overlay with bottom 35% fade-out mask */}
         <div
           className="absolute inset-0 bg-black/35 dark:bg-black/55 z-10 transition-colors duration-300"
