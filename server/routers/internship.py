@@ -3,50 +3,45 @@ from pydantic import BaseModel
 from db import db_cursor, get_db
 from dependencies import check_admin_auth, get_current_admin
 
-router = APIRouter(prefix="/videos", tags=["videos"])
+router = APIRouter(prefix="/internship", tags=["internship"])
 
 
-class VideoCreate(BaseModel):
+class InternshipCreate(BaseModel):
+    host_branch: str
     title: str
     description: str | None = None
-    file_path: str
-    thumbnail: str | None = None
-    category: str | None = None
-    year: int = 1
+    year: int = 3
 
 
-class VideoUpdate(BaseModel):
+class InternshipUpdate(BaseModel):
+    host_branch: str | None = None
     title: str | None = None
     description: str | None = None
-    file_path: str | None = None
-    thumbnail: str | None = None
-    category: str | None = None
     year: int | None = None
 
 
 @router.get("/")
-def list_videos(year: int = Query(None)):
+def list_internships(year: int = Query(None)):
     conn = get_db()
     cursor = conn.cursor()
     if year is not None:
-        cursor.execute("SELECT * FROM videos WHERE year = ? ORDER BY id DESC", (year,))
+        cursor.execute("SELECT * FROM internship_topics WHERE year = ? ORDER BY id DESC", (year,))
     else:
-        cursor.execute("SELECT * FROM videos ORDER BY id DESC")
-    vids = [dict(row) for row in cursor.fetchall()]
+        cursor.execute("SELECT * FROM internship_topics ORDER BY id DESC")
+    topics = [dict(row) for row in cursor.fetchall()]
     conn.close()
-    return vids
+    return topics
 
 
 @router.post("/")
-def create_video(payload: VideoCreate, admin: dict = Depends(get_current_admin)):
+def create_internship(payload: InternshipCreate, admin: dict = Depends(get_current_admin)):
     check_admin_auth(admin, required_year=payload.year, min_role="admin")
     try:
         with db_cursor() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO videos (title, description, file_path, thumbnail, category, year) "
-                "VALUES (?, ?, ?, ?, ?, ?)",
-                (payload.title, payload.description, payload.file_path, payload.thumbnail, payload.category, payload.year),
+                "INSERT INTO internship_topics (host_branch, title, description, year) VALUES (?, ?, ?, ?)",
+                (payload.host_branch, payload.title, payload.description, payload.year),
             )
             return {"status": "success", "id": cursor.lastrowid}
     except Exception as e:
@@ -54,13 +49,13 @@ def create_video(payload: VideoCreate, admin: dict = Depends(get_current_admin))
 
 
 @router.put("/{id}")
-def update_video(id: int, payload: VideoUpdate, admin: dict = Depends(get_current_admin)):
+def update_internship(id: int, payload: InternshipUpdate, admin: dict = Depends(get_current_admin)):
     with db_cursor() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM videos WHERE id = ?", (id,))
+        cursor.execute("SELECT * FROM internship_topics WHERE id = ?", (id,))
         existing = cursor.fetchone()
         if not existing:
-            raise HTTPException(status_code=404, detail="Video not found")
+            raise HTTPException(status_code=404, detail="Topic not found")
         existing_dict = dict(existing)
 
     check_admin_auth(admin, required_year=existing_dict["year"], min_role="admin")
@@ -75,26 +70,26 @@ def update_video(id: int, payload: VideoUpdate, admin: dict = Depends(get_curren
     try:
         with db_cursor() as conn:
             cursor = conn.cursor()
-            cursor.execute(f"UPDATE videos SET {', '.join(update_fields)} WHERE id = ?", params)
-            return {"status": "success", "message": "Video updated successfully"}
+            cursor.execute(f"UPDATE internship_topics SET {', '.join(update_fields)} WHERE id = ?", params)
+            return {"status": "success", "message": "Topic updated successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete("/{id}")
-def delete_video(id: int, admin: dict = Depends(get_current_admin)):
+def delete_internship(id: int, admin: dict = Depends(get_current_admin)):
     with db_cursor() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT year FROM videos WHERE id = ?", (id,))
+        cursor.execute("SELECT year FROM internship_topics WHERE id = ?", (id,))
         existing = cursor.fetchone()
         if not existing:
-            raise HTTPException(status_code=404, detail="Video not found")
+            raise HTTPException(status_code=404, detail="Topic not found")
 
     check_admin_auth(admin, required_year=existing["year"], min_role="admin")
     try:
         with db_cursor() as conn:
             cursor = conn.cursor()
-            cursor.execute("DELETE FROM videos WHERE id = ?", (id,))
-            return {"status": "success", "message": "Video deleted successfully"}
+            cursor.execute("DELETE FROM internship_topics WHERE id = ?", (id,))
+            return {"status": "success", "message": "Topic deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
