@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, Check, FloppyDisk, Image as ImageIcon } from "@phosphor-icons/react";
 import ImageUploader from "@/components/admin/ImageUploader";
 
@@ -43,7 +45,13 @@ export default function LinearCrudDrawer({
   isTh,
   token = "",
 }: LinearCrudDrawerProps) {
-  if (!isOpen) return null;
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   const handleChange = (name: string, value: any) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -51,16 +59,16 @@ export default function LinearCrudDrawer({
 
   const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
-  return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
-      {/* Backdrop */}
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] overflow-hidden">
+      {/* Backdrop with background blur */}
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-zinc-950/60 backdrop-blur-xs transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-zinc-950/70 backdrop-blur-md transition-opacity animate-fade-in z-[9999]"
       />
 
       {/* Slide-over Container */}
-      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div className="fixed inset-y-0 right-0 max-w-full flex pl-10 z-[10000]">
         <div className="w-screen max-w-md bg-white dark:bg-zinc-900 border-l border-zinc-200 dark:border-zinc-800 shadow-2xl flex flex-col justify-between overflow-hidden">
           {/* Drawer Header */}
           <div className="p-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50/50 dark:bg-zinc-950/40">
@@ -220,6 +228,7 @@ export default function LinearCrudDrawer({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

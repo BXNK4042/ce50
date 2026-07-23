@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { api } from "@/lib/api";
 import { Teacher } from "@/lib/types";
@@ -21,6 +22,12 @@ export default function AdminTeachersClient({ lang }: AdminTeachersClientProps) 
   // Search & Filter
   const [search, setSearch] = useState("");
   const [selectedYear, setSelectedYear] = useState<string>("all");
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -409,9 +416,9 @@ export default function AdminTeachersClient({ lang }: AdminTeachersClientProps) 
       </div>
 
       {/* Create / Edit Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 max-w-lg w-full p-6 shadow-2xl flex flex-col gap-6 max-h-[90vh] overflow-y-auto">
+      {mounted && isModalOpen && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-zinc-950/70 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 max-w-lg w-full p-6 shadow-2xl flex flex-col gap-6 max-h-[90vh] overflow-y-auto z-[10000]">
             <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-4">
               <h2 className="text-xl font-bold uppercase text-zinc-900 dark:text-white">
                 {editingTeacher
@@ -552,7 +559,7 @@ export default function AdminTeachersClient({ lang }: AdminTeachersClientProps) 
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white"
+                  className="px-4 py-2 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:white"
                 >
                   {isTh ? "ยกเลิก" : "Cancel"}
                 </button>
@@ -566,13 +573,14 @@ export default function AdminTeachersClient({ lang }: AdminTeachersClientProps) 
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {/* Delete Confirmation Modal */}
-      {deletingTeacher && (
-        <div className="fixed inset-0 z-[90] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 max-w-sm w-full p-6 shadow-2xl flex flex-col gap-4 text-center">
+      {mounted && deletingTeacher && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-zinc-950/70 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 max-w-sm w-full p-6 shadow-2xl flex flex-col gap-4 text-center z-[10000]">
             <div className="w-12 h-12 mx-auto text-red-500 rounded-full bg-red-500/10 flex items-center justify-center text-xl font-bold">
               ⚠️
             </div>
@@ -600,7 +608,8 @@ export default function AdminTeachersClient({ lang }: AdminTeachersClientProps) 
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </main>
   );

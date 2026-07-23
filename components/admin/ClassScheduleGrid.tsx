@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { DotsSixVertical, ArrowsDownUp } from "@phosphor-icons/react";
 
 interface ClassCell {
@@ -58,8 +59,13 @@ export default function ClassScheduleGrid({
   const [error, setError] = useState("");
   const [draggedBlockKeys, setDraggedBlockKeys] = useState<string[] | null>(null);
   const [dragOverKey, setDragOverKey] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     fetchSchedule();
@@ -402,9 +408,9 @@ export default function ClassScheduleGrid({
       )}
 
       {/* Inline Cell Edit Modal */}
-      {activeBlockKeys && activeBlockKeys.length > 0 && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-950/60 backdrop-blur-xs animate-fade-in">
-          <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl w-full max-w-md space-y-4 shadow-2xl">
+      {mounted && activeBlockKeys && activeBlockKeys.length > 0 && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-zinc-950/70 backdrop-blur-md animate-fade-in">
+          <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl w-full max-w-md space-y-4 shadow-2xl z-[10000]">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <h4 className="text-base font-bold text-zinc-100">Edit Class Block</h4>
               <span className="text-xs font-mono text-zinc-400">
@@ -475,7 +481,8 @@ export default function ClassScheduleGrid({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
