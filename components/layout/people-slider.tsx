@@ -164,11 +164,13 @@ export default function PeopleSlider({ lang, title, people, cohorts = [] }: Peop
               className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-gradient-to-b from-[#a7c7f2] to-[#2b5c9e] dark:from-[#ff7b30] dark:to-[#9c3100] border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group"
             >
               {/* Full Background Portrait Image */}
-              <img
-                src={person.photo ?? ""}
-                alt={lang === "th" ? person.name_th : (person.name_en ?? person.name_th)}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
-              />
+              {person.photo && (
+                <img
+                  src={person.photo}
+                  alt={lang === "th" ? person.name_th : (person.name_en ?? person.name_th)}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                />
+              )}
               {/* Premium Dark Gradient Overlay at the bottom for readability */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent z-10" />
 
