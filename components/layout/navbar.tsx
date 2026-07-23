@@ -362,17 +362,17 @@ export default function Navbar({
                       >
                         <div className="bg-white dark:bg-zinc-950 border border-zinc-300 dark:border-zinc-700 rounded-md shadow-xl py-1">
                           <Link
-                            href={`/${lang}/schedule?type=class`}
-                            className="block px-4 py-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
-                          >
-                            {lang === "th" ? "ตารางเรียน" : "Class"}
-                          </Link>
-                          <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-1" />
-                          <Link
                             href={`/${lang}/schedule?type=exam`}
                             className="block px-4 py-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
                           >
                             {lang === "th" ? "ตารางสอบ" : "Exam"}
+                          </Link>
+                          <div className="h-px bg-zinc-200 dark:bg-zinc-800 my-1" />
+                          <Link
+                            href={`/${lang}/schedule?type=class`}
+                            className="block px-4 py-2 text-xs font-semibold text-zinc-900 dark:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors"
+                          >
+                            {lang === "th" ? "ตารางเรียน" : "Class"}
                           </Link>
                         </div>
                       </div>

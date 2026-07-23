@@ -22,8 +22,16 @@
     "subtitle": "Teachers & students of Computer Engineering"
   },
   "works": {
-    "title": "Works",
-    "subtitle": "Browse student works by academic year"
+    "title": "Projects/Awards",
+    "subtitle": "",
+    "tagCompetition": "Competition",
+    "tagProject": "Project",
+    "viewDetails": "View Details",
+    "close": "Close",
+    "yearLabel": "Academic Year",
+    "teamLabel": "Team Members",
+    "techLabel": "Technologies Used",
+    "achievementLabel": "Achievement"
   },
   "news": {
     "title": "Latest News",
@@ -46,8 +54,8 @@
     "subtitle": ""
   },
   "internship": {
-    "title": "Internship",
-    "subtitle": "Internship topics and details grouped by host branch"
+    "title": "CE INTERNSHIP",
+    "subtitle": "This website gathers internship placement and career path data\nof Computer Engineering (CE) students to give juniors\nand interested individuals an overview of working in the field."
   },
   "footer": {
     "rights": "All rights reserved"
