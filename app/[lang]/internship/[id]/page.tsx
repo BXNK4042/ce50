@@ -1,8 +1,19 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { INTERN_STUDENTS, fetchInternshipStudentById } from "@/lib/internship-data";
+import { fetchInternshipStudentById, fetchInternshipStudents } from "@/lib/internship-data";
 import { ArrowLeft, Building2, Briefcase, GraduationCap, Calendar, Cpu, MessageSquareQuote, CheckCircle2, User, Coins, Gift, Star } from "lucide-react";
+
+export async function generateStaticParams() {
+  // ponytail: pre-render static paths for th and en locales
+  const students = await fetchInternshipStudents();
+  return ["th", "en"].flatMap((lang) =>
+    students.map((student) => ({
+      lang,
+      id: student.id,
+    }))
+  );
+}
 
 export default async function InternshipDetailPage({
   params,
@@ -12,7 +23,7 @@ export default async function InternshipDetailPage({
   const { lang, id } = await params;
   const isTh = lang === "th";
 
-  const student = (await fetchInternshipStudentById(id)) || INTERN_STUDENTS[0];
+  const student = await fetchInternshipStudentById(id);
   if (!student) {
     notFound();
   }

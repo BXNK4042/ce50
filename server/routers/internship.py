@@ -84,6 +84,8 @@ def list_student_internships():
 def get_student_internship(id: str):
     conn = get_db()
     cursor = conn.cursor()
+    # ponytail: flexible id lookup by raw id, intern- prefix, or student_id
+    alt_id = id.replace("intern-", "") if id.startswith("intern-") else f"intern-{id}"
     query = """
         SELECT 
             i.id,
@@ -112,9 +114,9 @@ def get_student_internship(id: str):
             i.created_at
         FROM internship_students i
         LEFT JOIN students s ON i.student_id = s.student_id
-        WHERE i.id = ?
+        WHERE i.id = ? OR i.id = ? OR i.student_id = ?
     """
-    cursor.execute(query, (id,))
+    cursor.execute(query, (id, alt_id, id))
     row = cursor.fetchone()
     conn.close()
     if not row:

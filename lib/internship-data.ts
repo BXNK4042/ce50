@@ -153,5 +153,15 @@ export async function fetchInternshipStudentById(id: string): Promise<InternStud
   } catch (err) {
     // Fallback to local dataset search
   }
-  return INTERN_STUDENTS.find((s) => s.id === id);
+  // ponytail: flexible matching by id, decoded id, alt prefix, or student_id
+  const cleanId = decodeURIComponent(id);
+  const altId = cleanId.startsWith("intern-") ? cleanId.replace("intern-", "") : `intern-${cleanId}`;
+  return INTERN_STUDENTS.find(
+    (s) =>
+      s.id === cleanId ||
+      s.id === id ||
+      s.id === altId ||
+      (s as any).student_id === cleanId ||
+      (s as any).student_id === id
+  );
 }
