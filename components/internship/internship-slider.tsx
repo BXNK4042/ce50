@@ -32,7 +32,7 @@ export default function InternshipSlider({ lang }: InternshipSliderProps) {
             <Link
               key={person.id}
               href={`/${lang}/internship/${person.id}`}
-              className="w-full h-[420px] bg-gradient-to-b from-[#a7c7f2] to-[#2b5c9e] dark:from-[#ff7b30] dark:to-[#9c3100] border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group block"
+              className="w-full h-[420px] bg-zinc-800 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/40 cursor-pointer select-none flex flex-col justify-end relative group block"
             >
               {/* Full Background Portrait Image */}
               {person.photo && (
