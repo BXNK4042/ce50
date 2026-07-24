@@ -7,20 +7,6 @@ from dependencies import check_admin_auth, get_current_admin
 router = APIRouter(prefix="/internship", tags=["internship"])
 
 
-class InternshipCreate(BaseModel):
-    host_branch: str
-    title: str
-    description: str | None = None
-    year: int = 3
-
-
-class InternshipUpdate(BaseModel):
-    host_branch: str | None = None
-    title: str | None = None
-    description: str | None = None
-    year: int | None = None
-
-
 class StudentInternshipCreate(BaseModel):
     id: str
     student_id: str | None = None
@@ -45,19 +31,6 @@ class StudentInternshipCreate(BaseModel):
     welfare_th: list[str] = []
     welfare_en: list[str] = []
     rating: float = 5.0
-
-
-@router.get("/")
-def list_internships(year: int = Query(None)):
-    conn = get_db()
-    cursor = conn.cursor()
-    if year is not None:
-        cursor.execute("SELECT * FROM internship_topics WHERE year = ? ORDER BY id DESC", (year,))
-    else:
-        cursor.execute("SELECT * FROM internship_topics ORDER BY id DESC")
-    topics = [dict(row) for row in cursor.fetchall()]
-    conn.close()
-    return topics
 
 
 @router.get("/students")

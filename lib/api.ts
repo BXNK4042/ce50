@@ -13,7 +13,6 @@ import type {
 export type {
   ClassCell,
   ExamSlot,
-  InternshipTopic,
   NewsCategory,
   Room,
   Student,
@@ -257,8 +256,6 @@ export const api = {
   saveExamSchedule: (year: number, exams: ExamSlot[], term: number = 1) =>
     postAuth<{ status: string }>("/schedule/exam", { year, term, exams }),
   rooms: () => get<Room[]>("/rooms"),
-  internship: (host_branch?: string) =>
-    get<InternshipTopic[]>("/internship", host_branch ? { host_branch } : undefined),
   internshipStudents: () => get<any[]>("/internship/students"),
   getInternshipStudent: (id: string) => get<any>("/internship/students/" + id),
   videos: () => get<Video[]>("/videos"),

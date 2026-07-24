@@ -17,7 +17,7 @@ def main() -> None:
         tables = [
             "users", "teachers", "students", "works", "news_items",
             "class_schedules", "exam_schedules", "rooms",
-            "internship_topics", "internship_students", "videos"
+            "internship_students", "videos"
         ]
         for tbl in tables:
             cursor.execute(f"DELETE FROM {tbl}")

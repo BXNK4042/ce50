@@ -106,15 +106,7 @@ CREATE TABLE IF NOT EXISTS rooms (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
--- 7. ฝึกงาน — Internship topics & Student internship records
-CREATE TABLE IF NOT EXISTS internship_topics (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  host_branch TEXT NOT NULL,     -- สาขาที่ไปฝึก
-  title TEXT NOT NULL,
-  description TEXT,
-  year INTEGER,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
+-- 7. ฝึกงาน — Student internship records
 
 CREATE TABLE IF NOT EXISTS internship_students (
   id TEXT PRIMARY KEY,

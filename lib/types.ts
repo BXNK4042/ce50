@@ -102,13 +102,6 @@ export interface Room {
   image?: string | null;
 }
 
-export interface InternshipTopic {
-  id: number;
-  host_branch: string;
-  title: string;
-  description?: string | null;
-  year?: number | null;
-}
 
 export interface Video {
   id: number;

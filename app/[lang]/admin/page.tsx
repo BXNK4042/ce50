@@ -96,7 +96,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           endpoint = `/works?year=${selectedYear}`;
           break;
         case "internship":
-          endpoint = `/internship?year=${selectedYear}`;
+          endpoint = `/internship/students`;
           break;
         case "videos":
           endpoint = `/videos?year=${selectedYear}`;
@@ -170,7 +170,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           endpoint = `/works/${id}`;
           break;
         case "internship":
-          endpoint = `/internship/${id}`;
+          endpoint = `/internship/students/${id}`;
           break;
         case "videos":
           endpoint = `/videos/${id}`;
@@ -215,7 +215,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
       let method = editingItem ? "PUT" : "POST";
       const payload = { ...formData };
 
-      if (["students", "works", "internship", "videos"].includes(activeTab)) {
+      if (["students", "works", "videos"].includes(activeTab)) {
         payload.year = Number(payload.year || selectedYear);
       }
 
@@ -227,7 +227,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           endpoint = editingItem ? `/works/${editingItem.id}` : `/works`;
           break;
         case "internship":
-          endpoint = editingItem ? `/internship/${editingItem.id}` : `/internship`;
+          endpoint = editingItem ? `/internship/students/${editingItem.id}` : `/internship/students`;
           break;
         case "videos":
           endpoint = editingItem ? `/videos/${editingItem.id}` : `/videos`;
