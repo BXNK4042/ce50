@@ -100,22 +100,34 @@ export default async function HomePage({
               {big && (
                 <a
                   href={big.link || "#"}
-                  className="md:col-span-2 bg-white dark:bg-black border border-blue-100 dark:border-zinc-800/50 p-8 shadow-md shadow-black/10 dark:shadow-black/20 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-4 cursor-pointer select-none group"
+                  className="relative overflow-hidden md:col-span-2 bg-white dark:bg-black border border-blue-100 dark:border-zinc-800/50 p-8 shadow-md shadow-black/10 dark:shadow-black/20 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-4 cursor-pointer select-none group"
                 >
-                  <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full border uppercase tracking-wider ${CATEGORY_STYLE[big.category as NewsCategory]?.badge ?? CATEGORY_STYLE.other.badge}`}>
-                    {isTh ? (CATEGORY_STYLE[big.category as NewsCategory]?.labelTh ?? "ข่าวสาร") : (CATEGORY_STYLE[big.category as NewsCategory]?.labelEn ?? "News")}
-                  </span>
-                  <h3 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors">
-                    {big.title}
-                  </h3>
-                  {big.body && (
-                    <p className="text-zinc-500 dark:text-zinc-400 text-sm md:text-base line-clamp-3">
-                      {big.body}
-                    </p>
+                  {big.image && (
+                    <img
+                      src={big.image}
+                      alt={big.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                    />
                   )}
-                  <div className="w-full flex items-center justify-between text-xs text-zinc-400 dark:text-blue-200/50 mt-2 border-t border-zinc-100 dark:border-zinc-800/30 pt-4">
-                    <span>{formatDate(big.published_at, isTh)}</span>
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  {big.image && (
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent z-10" />
+                  )}
+                  <div className="relative z-20 w-full flex flex-col justify-end items-start gap-4">
+                    <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full border uppercase tracking-wider ${CATEGORY_STYLE[big.category as NewsCategory]?.badge ?? CATEGORY_STYLE.other.badge}`}>
+                      {isTh ? (CATEGORY_STYLE[big.category as NewsCategory]?.labelTh ?? "ข่าวสาร") : (CATEGORY_STYLE[big.category as NewsCategory]?.labelEn ?? "News")}
+                    </span>
+                    <h3 className={`text-2xl md:text-3xl font-bold leading-tight transition-colors ${big.image ? "text-white group-hover:text-sky-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" : "text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-300"}`}>
+                      {big.title}
+                    </h3>
+                    {big.body && (
+                      <p className={`text-sm md:text-base line-clamp-3 ${big.image ? "text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]" : "text-zinc-500 dark:text-zinc-400"}`}>
+                        {big.body}
+                      </p>
+                    )}
+                    <div className={`w-full flex items-center justify-between text-xs mt-2 border-t pt-4 ${big.image ? "text-white/70 border-white/20" : "text-zinc-400 dark:text-blue-200/50 border-zinc-100 dark:border-zinc-800/30"}`}>
+                      <span>{formatDate(big.published_at, isTh)}</span>
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </div>
                   </div>
                 </a>
               )}
@@ -125,17 +137,29 @@ export default async function HomePage({
                 {small1 && (
                   <a
                     href={small1.link || "#"} 
-                    className="flex-1 bg-white dark:bg-black border border-blue-100 dark:border-zinc-800/50 p-6 shadow-md shadow-black/10 dark:shadow-black/20 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-3 cursor-pointer select-none group"
+                    className="relative overflow-hidden flex-1 bg-white dark:bg-black border border-blue-100 dark:border-zinc-800/50 p-6 shadow-md shadow-black/10 dark:shadow-black/20 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-3 cursor-pointer select-none group"
                   >
-                    <span className={`inline-block px-2.5 py-0.5 text-[11px] font-semibold rounded-full border uppercase tracking-wider ${CATEGORY_STYLE[small1.category as NewsCategory]?.badge ?? CATEGORY_STYLE.other.badge}`}>
-                      {isTh ? (CATEGORY_STYLE[small1.category as NewsCategory]?.labelTh ?? "ข่าวสาร") : (CATEGORY_STYLE[small1.category as NewsCategory]?.labelEn ?? "News")}
-                    </span>
-                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white leading-snug group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors line-clamp-2">
-                      {small1.title}
-                    </h3>
-                    <div className="w-full flex items-center justify-between text-xs text-zinc-400 dark:text-blue-200/50 mt-1 border-t border-zinc-100 dark:border-zinc-800/30 pt-3">
-                      <span>{formatDate(small1.published_at, isTh)}</span>
-                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    {small1.image && (
+                      <img
+                        src={small1.image}
+                        alt={small1.title}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                      />
+                    )}
+                    {small1.image && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent z-10" />
+                    )}
+                    <div className="relative z-20 w-full flex flex-col justify-end items-start gap-3">
+                      <span className={`inline-block px-2.5 py-0.5 text-[11px] font-semibold rounded-full border uppercase tracking-wider ${CATEGORY_STYLE[small1.category as NewsCategory]?.badge ?? CATEGORY_STYLE.other.badge}`}>
+                        {isTh ? (CATEGORY_STYLE[small1.category as NewsCategory]?.labelTh ?? "ข่าวสาร") : (CATEGORY_STYLE[small1.category as NewsCategory]?.labelEn ?? "News")}
+                      </span>
+                      <h3 className={`text-lg font-bold leading-snug transition-colors line-clamp-2 ${small1.image ? "text-white group-hover:text-sky-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" : "text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-300"}`}>
+                        {small1.title}
+                      </h3>
+                      <div className={`w-full flex items-center justify-between text-xs mt-1 border-t pt-3 ${small1.image ? "text-white/70 border-white/20" : "text-zinc-400 dark:text-blue-200/50 border-zinc-100 dark:border-zinc-800/30"}`}>
+                        <span>{formatDate(small1.published_at, isTh)}</span>
+                        <span className="group-hover:translate-x-1 transition-transform">→</span>
+                      </div>
                     </div>
                   </a>
                 )}
@@ -143,17 +167,29 @@ export default async function HomePage({
                 {small2 && (
                   <a
                     href={small2.link || "#"}
-                    className="flex-1 bg-white dark:bg-black border border-blue-100 dark:border-zinc-800/50 p-6 shadow-md shadow-black/10 dark:shadow-black/20 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-3 cursor-pointer select-none group"
+                    className="relative overflow-hidden flex-1 bg-white dark:bg-black border border-blue-100 dark:border-zinc-800/50 p-6 shadow-md shadow-black/10 dark:shadow-black/20 hover:shadow-lg hover:shadow-black/20 dark:hover:shadow-black/30 hover:scale-[1.015] transition-all duration-300 flex flex-col justify-end items-start text-left gap-3 cursor-pointer select-none group"
                   >
-                    <span className={`inline-block px-2.5 py-0.5 text-[11px] font-semibold rounded-full border uppercase tracking-wider ${CATEGORY_STYLE[small2.category as NewsCategory]?.badge ?? CATEGORY_STYLE.other.badge}`}>
-                      {isTh ? (CATEGORY_STYLE[small2.category as NewsCategory]?.labelTh ?? "ข่าวสาร") : (CATEGORY_STYLE[small2.category as NewsCategory]?.labelEn ?? "News")}
-                    </span>
-                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white leading-snug group-hover:text-blue-600 dark:group-hover:text-sky-300 transition-colors line-clamp-2">
-                      {small2.title}
-                    </h3>
-                    <div className="w-full flex items-center justify-between text-xs text-zinc-400 dark:text-blue-200/50 mt-1 border-t border-zinc-100 dark:border-zinc-800/30 pt-3">
-                      <span>{formatDate(small2.published_at, isTh)}</span>
-                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    {small2.image && (
+                      <img
+                        src={small2.image}
+                        alt={small2.title}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0"
+                      />
+                    )}
+                    {small2.image && (
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent z-10" />
+                    )}
+                    <div className="relative z-20 w-full flex flex-col justify-end items-start gap-3">
+                      <span className={`inline-block px-2.5 py-0.5 text-[11px] font-semibold rounded-full border uppercase tracking-wider ${CATEGORY_STYLE[small2.category as NewsCategory]?.badge ?? CATEGORY_STYLE.other.badge}`}>
+                        {isTh ? (CATEGORY_STYLE[small2.category as NewsCategory]?.labelTh ?? "ข่าวสาร") : (CATEGORY_STYLE[small2.category as NewsCategory]?.labelEn ?? "News")}
+                      </span>
+                      <h3 className={`text-lg font-bold leading-snug transition-colors line-clamp-2 ${small2.image ? "text-white group-hover:text-sky-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" : "text-zinc-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-sky-300"}`}>
+                        {small2.title}
+                      </h3>
+                      <div className={`w-full flex items-center justify-between text-xs mt-1 border-t pt-3 ${small2.image ? "text-white/70 border-white/20" : "text-zinc-400 dark:text-blue-200/50 border-zinc-100 dark:border-zinc-800/30"}`}>
+                        <span>{formatDate(small2.published_at, isTh)}</span>
+                        <span className="group-hover:translate-x-1 transition-transform">→</span>
+                      </div>
                     </div>
                   </a>
                 )}
