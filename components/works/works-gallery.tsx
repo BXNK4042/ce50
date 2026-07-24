@@ -21,57 +21,6 @@ export interface WorkItem {
   tech: string[];
 }
 
-const WORKS_DATA: WorkItem[] = [
-  {
-    id: "work-1",
-    type: "competition",
-    title_en: "Smart Agriculture Drone AI",
-    title_th: "โดรนเกษตรอัจฉริยะวิเคราะห์พืชด้วย AI",
-    image: "/works/drone.jpg",
-    year: "2025",
-    badge_en: "Gold Medal - Thailand ICT Awards 2025",
-    badge_th: "เหรียญทอง - Thailand ICT Awards 2025",
-    summary_en: "AI-powered autonomous drone system for crop health monitoring and precision spraying using edge vision.",
-    summary_th: "ระบบโดรนอัตโนมัติประมวลผล AI บน Edge สำหรับตรวจจับโรคพืชและฉีดพ่นสารเคมีอย่างแม่นยำ",
-    description_en: "An end-to-end intelligent agricultural drone platform. Utilizes custom YOLOv8 object detection on NVIDIA Jetson Orin Nano for real-time crop disease classification and dynamic flight path adjustment. Reduces chemical usage by up to 40%.",
-    description_th: "แพลตฟอร์มโดรนเพื่อการเกษตรอัจฉริยะแบบครบวงจร ใช้แบบจำลอง YOLOv8 บนบอร์ด NVIDIA Jetson Orin Nano ในการตรวจจับและวิเคราะห์โรคพืชแบบ Real-time พร้อมปรับเส้นทางการบินอัตโนมัติ ช่วยลดการใช้สารเคมีได้สูงสุดถึง 40%",
-    team: ["นายสมชาย เข็มกลัด (CE#50)", "นางสาวมณีรัตน์ วงศ์สว่าง (CE#50)", "ดร.วิศวกร ใจดี (อาจารย์ที่ปรึกษา)"],
-    tech: ["Python", "YOLOv8", "NVIDIA Jetson", "ROS2", "OpenCV", "IoT Sensors"],
-  },
-  {
-    id: "work-2",
-    type: "project",
-    title_en: "Autonomous Campus Shuttle",
-    title_th: "รถรับส่งอัตโนมัติภายในวิทยาเขต",
-    image: "/works/shuttle.jpg",
-    year: "2025",
-    badge_en: "Senior Capstone Excellence Project",
-    badge_th: "โครงงานปริญญานิพนธ์ระดับดีเยี่ยม",
-    summary_en: "Self-driving mini shuttle using 3D LiDAR, ROS2, and deep learning for obstacle avoidance and navigation.",
-    summary_th: "รถไฟฟ้าไร้คนขับขนาดเล็ก ทำงานด้วย 3D LiDAR, ROS2 และ Deep Learning สำหรับนำทางใน มข.",
-    description_en: "Designed and built a full-scale electric autonomous campus shuttle. Features multi-sensor fusion combining 3D LiDAR, RTK-GPS, and stereo cameras. Implemented A* global path planning, TEB local planner, and emergency safety controls.",
-    description_th: "การประดิษฐ์และพัฒนารถไฟฟ้าไร้คนขับขนาดเล็กสำหรับสัญจรภายในวิทยาเขต ใช้เทคโนโลยี Multi-sensor fusion ร่วมกับ 3D LiDAR, RTK-GPS และกล้อง Stereo ในการระบุตำแหน่ง วางแผนเส้นทางขับเคลื่อน และระบบเบรกฉุกเฉินอัตโนมัติเพื่อความปลอดภัยสูงสุด",
-    team: ["นายกิตติพงษ์ สุขใจ (CE#50)", "นายธนกฤต มั่นคง (CE#50)", "ผศ.ดร.คอมพิวเตอร์ ยอดเยี่ยม (อาจารย์ที่ปรึกษา)"],
-    tech: ["ROS2", "C++", "Python", "3D LiDAR", "TensorRT", "CAN Bus"],
-  },
-  {
-    id: "work-3",
-    type: "competition",
-    title_en: "HealthPredict IoT & Medical AI",
-    title_th: "ระบบเฝ้าระวังสุขภาพและตรวจจับความเสี่ยงด้วย IoT และ AI",
-    image: "/works/health.jpg",
-    year: "2025",
-    badge_en: "1st Place - HealthTech Hackathon 2025",
-    badge_th: "รางวัลชนะเลิศอันดับ 1 - HealthTech Hackathon 2025",
-    summary_en: "Non-invasive bio-sensor wearable integrated with cloud AI for stroke prediction and emergency alerts.",
-    summary_th: "อุปกรณ์สวมใส่เซนเซอร์ชีวภาพ เชื่อมต่อ Cloud AI เพื่อประเมินความเสี่ยงและแจ้งเตือนภาวะหลอดเลือดสมองเฉียบพลัน",
-    description_en: "A continuous health monitoring platform using custom low-power PPG and ECG wearable sensors. Data is streamed via BLE/MQTT to a cloud Transformer AI model that analyzes heart rate variability and arrhythmia, instantly alerting family members and emergency services.",
-    description_th: "ระบบตรวจวัดสุขภาพทางไกลแบบเรียลไทม์ผ่านอุปกรณ์สวมใส่ ECG และ PPG ประหยัดพลังงาน ส่งข้อมูลผ่าน MQTT ไปยัง Cloud AI เพื่อประมวลผลสัญญาณชีพและตรวจจับภาวะหัวใจเต้นผิดจังหวะ พร้อมระบบแจ้งเตือนสายด่วนฉุกเฉินและญาติผู้ป่วยเมื่อพบความผิดปกติ",
-    team: ["นางสาวปรียาพร ดีเลิศ (CE#50)", "นายชยพล กล้าหาญ (CE#50)", "รศ.ดร.เอไอ พัฒนา (อาจารย์ที่ปรึกษา)"],
-    tech: ["ESP32", "MQTT", "Next.js", "PyTorch", "Tailwind CSS", "FastAPI"],
-  },
-];
-
 interface WorksGalleryProps {
   lang: string;
   dict: {
@@ -103,8 +52,15 @@ export default function WorksGallery({ lang, dict, dbItems }: WorksGalleryProps)
     };
   }, [selectedWork]);
 
-  // Combine or prioritize database items while retaining sample items if db is empty
-  const works = dbItems && dbItems.length > 0 ? [...dbItems, ...WORKS_DATA] : WORKS_DATA;
+  const works = dbItems ?? [];
+
+  if (works.length === 0) {
+    return (
+      <div className="w-full mt-10 flex items-center justify-center bg-white/50 dark:bg-black/30 border border-dashed border-blue-200 dark:border-zinc-800 rounded-xl p-12 text-zinc-500 dark:text-zinc-400">
+        {isTh ? "ยังไม่มีผลงานในขณะนี้" : "No projects found."}
+      </div>
+    );
+  }
 
   return (
     <div className="w-full mt-10">
