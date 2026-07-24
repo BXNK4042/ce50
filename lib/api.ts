@@ -1,7 +1,6 @@
 import type {
   ClassCell,
   ExamSlot,
-  InternshipTopic,
   NewsCategory,
   Room,
   Student,

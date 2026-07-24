@@ -27,7 +27,8 @@ export type TabType =
   | "teachers"
   | "rooms"
   | "users"
-  | "internship";
+  | "internship"
+  | "videos"; // ponytail: include videos in TabType
 
 interface AdminShellProps {
   children: React.ReactNode;

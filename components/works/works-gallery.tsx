@@ -79,7 +79,7 @@ export default function WorksGallery({ lang, dict, dbItems }: WorksGalleryProps)
             <div
               key={item.id}
               onClick={() => setSelectedWork(item)}
-              className="group relative h-72 lg:h-[22rem] w-full overflow-hidden rounded-none border border-zinc-200/60 dark:border-zinc-800/80 bg-zinc-900 shadow-[0_6px_25px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-2 cursor-pointer select-none"
+              className="group relative h-72 lg:h-[22rem] w-full overflow-hidden rounded-xl border border-zinc-200/60 dark:border-zinc-800/80 bg-zinc-900 shadow-[0_6px_25px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-2 cursor-pointer select-none"
             >
               {/* Full Background Cover Image */}
               <Image
@@ -153,7 +153,7 @@ export default function WorksGallery({ lang, dict, dbItems }: WorksGalleryProps)
           onClick={() => setSelectedWork(null)}
         >
           <div
-            className="relative w-full max-w-3xl max-h-[85vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden rounded-none bg-white dark:bg-zinc-900 border-none shadow-2xl animate-in zoom-in-95 duration-200 my-auto"
+            className="relative w-full max-w-3xl max-h-[85vh] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden rounded-2xl bg-white dark:bg-zinc-900 border-none shadow-2xl animate-in zoom-in-95 duration-200 my-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}

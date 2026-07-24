@@ -20,8 +20,8 @@ export default async function AdminLoginPage({
           LOGIN
         </h1>
 
-        {/* Tall Rectangular Form Card Container with sharp cut corners */}
-        <div className="w-full bg-white dark:bg-black/50 border border-zinc-200 dark:border-zinc-800/80 rounded-none p-8 md:p-10 shadow-2xl backdrop-blur-md">
+        {/* Form Card Container */}
+        <div className="w-full bg-white dark:bg-black/50 border border-zinc-200 dark:border-zinc-800/80 rounded-2xl p-8 md:p-10 shadow-2xl backdrop-blur-md">
           <LoginForm lang={lang} />
         </div>
       </div>

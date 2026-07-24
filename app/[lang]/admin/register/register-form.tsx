@@ -58,13 +58,13 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {error && (
-        <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-none text-sm text-center">
+        <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-lg text-sm text-center">
           {error}
         </div>
       )}
 
       {success && (
-        <div className="p-3 bg-green-500/10 border border-green-500/30 text-green-500 rounded-none text-sm text-center">
+        <div className="p-3 bg-green-500/10 border border-green-500/30 text-green-500 rounded-lg text-sm text-center">
           {success}
         </div>
       )}
@@ -80,7 +80,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
           onChange={(e) => setFullName(e.target.value)}
           placeholder={isTh ? "ระบุชื่อจริงและนามสกุลของคุณ" : "Enter your full name"}
           required
-          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
+          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
         />
       </div>
 
@@ -95,7 +95,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="example@gmail.com"
           required
-          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
+          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
         />
       </div>
 
@@ -110,7 +110,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
           onChange={(e) => setUsername(e.target.value)}
           placeholder={isTh ? "ระบุชื่อผู้ใช้" : "Enter username"}
           required
-          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
+          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
         />
       </div>
 
@@ -122,7 +122,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
         <select
           value={role}
           onChange={(e) => setRole(e.target.value)}
-          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all cursor-pointer text-sm font-medium"
+          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all cursor-pointer text-sm font-medium"
         >
           <option value="superadmin">{isTh ? "Super Admin (ผู้ดูแลระบบสูงสุด)" : "Super Admin"}</option>
           <option value="admin">{isTh ? "Admin (ผู้ดูแลระบบ)" : "Admin"}</option>
@@ -144,7 +144,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full pl-4 pr-12 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
+              className="w-full pl-4 pr-12 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
             />
             <button
               type="button"
@@ -177,7 +177,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="••••••••"
               required
-              className="w-full pl-4 pr-12 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
+              className="w-full pl-4 pr-12 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
             />
             <button
               type="button"
@@ -203,7 +203,7 @@ export default function RegisterForm({ lang }: RegisterFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3.5 bg-[#e55300] hover:bg-[#c94800] text-white font-bold rounded-none transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed uppercase tracking-wider"
+        className="w-full py-3.5 bg-[#e55300] hover:bg-[#c94800] text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed uppercase tracking-wider"
       >
         {loading ? (
           <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

@@ -73,7 +73,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {/* Quick Test Sign-In Buttons */}
-      <div className="flex flex-col gap-2.5 p-4 bg-zinc-100/70 dark:bg-zinc-900/70 border border-dashed border-zinc-300 dark:border-zinc-800 rounded-none">
+      <div className="flex flex-col gap-2.5 p-4 bg-zinc-100/70 dark:bg-zinc-900/70 border border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
             ⚡ {isTh ? "ทดสอบเข้าสู่ระบบด่วน" : "Quick Test Sign-In"}
@@ -85,7 +85,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
             type="button"
             disabled={loading}
             onClick={() => handleQuickSignIn("superadmin", "super1234")}
-            className="px-2 py-2 text-xs font-semibold bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30 transition-all text-center rounded-none cursor-pointer disabled:opacity-50"
+            className="px-2 py-2 text-xs font-semibold bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 border border-purple-500/30 transition-all text-center rounded-lg cursor-pointer disabled:opacity-50"
             title="superadmin / super1234"
           >
             Super Admin
@@ -94,7 +94,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
             type="button"
             disabled={loading}
             onClick={() => handleQuickSignIn("admin_y1", "admin1234")}
-            className="px-2 py-2 text-xs font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-sky-300 border border-blue-500/30 transition-all text-center rounded-none cursor-pointer disabled:opacity-50"
+            className="px-2 py-2 text-xs font-semibold bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-sky-300 border border-blue-500/30 transition-all text-center rounded-lg cursor-pointer disabled:opacity-50"
             title="admin_y1 / admin1234"
           >
             Admin (Y1)
@@ -103,7 +103,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
             type="button"
             disabled={loading}
             onClick={() => handleQuickSignIn("writer_y1", "writer1234")}
-            className="px-2 py-2 text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 transition-all text-center rounded-none cursor-pointer disabled:opacity-50"
+            className="px-2 py-2 text-xs font-semibold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 transition-all text-center rounded-lg cursor-pointer disabled:opacity-50"
             title="writer_y1 / writer1234"
           >
             Writer (Y1)
@@ -113,7 +113,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
 
       {showSuccess && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center">
-          <div className="bg-emerald-100 dark:bg-emerald-950/90 border border-emerald-500 text-emerald-700 dark:text-emerald-300 font-semibold px-6 py-3 rounded-none shadow-2xl flex items-center gap-3 backdrop-blur-md">
+          <div className="bg-emerald-100 dark:bg-emerald-950/90 border border-emerald-500 text-emerald-700 dark:text-emerald-300 font-semibold px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 backdrop-blur-md">
             <svg
               className="w-5 h-5 text-emerald-600 dark:text-emerald-400"
               fill="none"
@@ -134,7 +134,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
       )}
 
       {error && (
-        <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-none text-sm text-center">
+        <div className="p-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-lg text-sm text-center">
           {error}
         </div>
       )}
@@ -150,7 +150,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
           onChange={(e) => setUsername(e.target.value)}
           placeholder={isTh ? "ระบุชื่อผู้ใช้หรืออีเมล" : "Enter username or email"}
           required
-          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
+          className="w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
         />
       </div>
 
@@ -166,7 +166,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
             required
-            className="w-full pl-4 pr-12 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-none text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
+            className="w-full pl-4 pr-12 py-3 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-[#e55300] focus:border-[#e55300] transition-all"
           />
           <button
             type="button"
@@ -192,7 +192,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
         <label className="flex items-center gap-2 text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer select-none uppercase tracking-wider">
           <input
             type="checkbox"
-            className="rounded-none border-zinc-300 dark:border-zinc-800 text-[#e55300] focus:ring-[#e55300] dark:bg-zinc-900"
+            className="rounded border-zinc-300 dark:border-zinc-800 text-[#e55300] focus:ring-[#e55300] dark:bg-zinc-900"
           />
           {isTh ? "จดจำฉัน" : "Remember me"}
         </label>
@@ -202,7 +202,7 @@ export default function LoginForm({ lang }: LoginFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3.5 bg-[#e55300] hover:bg-[#c94800] text-white font-bold rounded-none transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed uppercase tracking-wider"
+        className="w-full py-3.5 bg-[#e55300] hover:bg-[#c94800] text-white font-bold rounded-lg transition-all duration-300 transform hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed uppercase tracking-wider"
       >
         {loading ? (
           <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
