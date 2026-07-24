@@ -123,17 +123,66 @@ def main() -> None:
                         (std_id, name_th, name_en, photo_path, year, role, track, contact)
                     )
 
-        # Seed works from Work.csv
-        works_csv_file = Path(__file__).resolve().parent / "Work.csv"
-        if works_csv_file.exists():
-            from import_works import import_works_csv
-            import_works_csv(works_csv_file, conn=conn)
+        # Seed works
+        works_data = [
+            (
+                3,
+                "group",
+                "ระบบ POS สำหรับร้านขายของชำ แบบครบวงจร",
+                "เครื่อง point-of-sale ต้นทุนเหมาะสม ช่วยคิดเงิน บันทึกยอดขาย และจัดการ\nสินค้าลงคลังได้อย่างแม่นยำ และรวดเร็ว\n\nสไลด์นำเสนอ: file:///C:/Users/Asus/Downloads/pos_presentation_final.pdf",
+                None,
+                json.dumps(["67200380", "67200324", "67200258", "67200030"], ensure_ascii=False)
+            ),
+            (
+                3,
+                "group",
+                "Security Door Lock  ระบบควบคุมการเข้า  -ออก",
+                "พัฒนาระบบควบคุมการเข้า-ออกประตูด้วยบัตร RFID ร่วมกับกล้องตรวจจับและระบบแจ้งเตือนแบบเรียลไทม์ จะสามารถเพิ่มความปลอดภัยในการเข้า-ออกสถานที่ ลดปัญหาการเข้าใช้งานโดยไม่ได้รับอนุญาต และมีหลักฐานภาพประกอบการตรวจสอบย้อนหลังได้ดีกว่าระบบกุญแจแบบเดิม\n\nสไลด์นำเสนอ: file:///C:/Users/Asus/Downloads/Security_Door_Lock.pdf",
+                None,
+                json.dumps(["67200030", "67200305", "67200368", "67200369"], ensure_ascii=False)
+            ),
+            (
+                3,
+                "group",
+                "H.I.V.E. ( Hardware Integrated Vulnerable Environment )",
+                "พื่อออกแบบและพัฒนาระบบ Honeypot \nที่สามารถจำลองและดักจับการโจมตีทางไซเบอร์ผ่านช่องโหว่ระดับวิกฤตในโลกจริงได้ และ เพื่อพัฒนาระบบศูนย์ปฏิบัติการ \n(SOC Dashboard) บน Cloud ที่สามารถแสดงผลและแจ้งเตือนสถานะความปลอดภัยได้แบบ Real Time\n\nสไลด์นำเสนอ: https://www.canva.com/design/DAHOlyFhW8I/L9Z5JAUNvcGckgCQILpidA/edit",
+                None,
+                json.dumps(["67200032", "67200099", "67200102", "67200412"], ensure_ascii=False)
+            )
+        ]
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM works")
+        for yr, scope, title, desc, img, authors in works_data:
+            cursor.execute(
+                "INSERT INTO works (year, scope, title, description, image, author_ids) VALUES (?, ?, ?, ?, ?, ?)",
+                (yr, scope, title, desc, img, authors)
+            )
 
-        # Seed news from News-CE.csv
-        news_csv_file = Path(__file__).resolve().parent / "News-CE.csv"
-        if news_csv_file.exists():
-            from import_news import import_news_csv
-            import_news_csv(news_csv_file, conn=conn)
+        # Seed initial news items
+        news_data = [
+            (
+                "Cabling Contest ปีที่ 14",
+                "competition",
+                "อินเตอร์ลิ้งค์ฯ แถลงข่าวเปิดศึกการแข่งขัน “Cabling Contest ปีที่ 14” เวทีชิงแชมป์ถ้วยพระราชทานฯ เฟ้นหาทีมทักษะสายสัญญาณชั้นเลิศ “The Masterpiece Behind The Network” ก้าวเป็นมืออาชีพของวงการโครงสร้างพื้นฐานดิจิทัล",
+                "https://interlink.co.th/news/detail/KdUtKTGb7C",
+                "/image/news/Cabling-Contest.jpg",
+                "7/18/2026 22:26:21"
+            ),
+            (
+                "TGR2026 News Update: 27/5/69",
+                "competition",
+                "คณะทำงานของทุกฝ่าย เข้าร่วมประชุม TGR2026 Meeting 3/2569 ระหว่างวันที่ 25-27 พฤษภาคม 2569 ที่ผ่านมา ณ สถาบันเทคโนโลยีพระจอมเกล้าฯ ลาดกระบัง วิทยาเขตชุมพร  เพื่อกำหนดโจทย์การประชันทักษะทางด้าน Embedded System  และเตรียมความพร้อมเรื่องสถานที่การจัดกิจกรรมดังกล่าว ที่จะมีขึ้นในระหว่างวันที่ 15-21 พฤศจิกายน ศกนี้\nขอขอบคุณทีมงาน สจล.วิทยาเขตชุมพรทุกท่าน ที่ช่วยเตรียมการประสานงาน และทำให้การประชุมบรรลุตามเป้าประสงค์อย่างรวดเร็วอีกด้วย ขอชื่นชม ทีมงานทำงานแบบมืออาชีพมากๆ ด้วยค่ะ",
+                "https://web.facebook.com/TESA.TGR/?_rdc=1&_rdr#",
+                "/image/news/TopGun-Rally.jpg",
+                "7/18/2026 22:36:39"
+            )
+        ]
+        cursor.execute("DELETE FROM news_items")
+        for title, category, body, link, image, pub_at in news_data:
+            cursor.execute(
+                "INSERT INTO news_items (title, category, body, link, image, published_at) VALUES (?, ?, ?, ?, ?, ?)",
+                (title, category, body, link, image, pub_at)
+            )
 
         # Seed GNews global news if API Key is set
         from config import GNEWS_API_KEY, GNEWS_QUERY
