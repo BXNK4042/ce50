@@ -47,17 +47,15 @@ export default function InternshipSlider({ lang }: InternshipSliderProps) {
 
               {/* Profile Info - Floated at the bottom-left */}
               <div className="p-6 flex flex-col gap-2 z-20 text-left w-full">
-                {/* Single Line Right-to-Left Scrolling Ticker for Company & Position */}
-                <div className="w-full overflow-hidden whitespace-nowrap py-0.5">
-                  <div className="animate-ticker inline-block">
-                    <span className="text-[11px] font-extrabold text-sky-400 dark:text-sky-300 uppercase tracking-wide">
-                      {person.company}
-                    </span>
-                    <span className="mx-2 text-sky-400 font-bold">•</span>
-                    <span className="text-[11px] font-bold text-sky-300 dark:text-sky-300 uppercase tracking-wide">
-                      {position}
-                    </span>
-                  </div>
+                {/* Company & Position */}
+                <div className="w-full truncate py-0.5">
+                  <span className="text-[11px] font-extrabold text-sky-400 dark:text-sky-300 uppercase tracking-wide">
+                    {person.company}
+                  </span>
+                  <span className="mx-2 text-sky-400 font-bold">•</span>
+                  <span className="text-[11px] font-bold text-sky-300 dark:text-sky-300 uppercase tracking-wide">
+                    {position}
+                  </span>
                 </div>
 
                 {/* Student Name */}
