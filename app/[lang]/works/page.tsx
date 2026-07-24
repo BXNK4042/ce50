@@ -28,7 +28,7 @@ export default async function WorksPage({
       imageUrl = `/image/works/${imageUrl}`;
     }
     if (!imageUrl) {
-      imageUrl = isComp ? "/works/drone.jpg" : "/works/shuttle.jpg";
+      imageUrl = isComp ? "/image/works/drone.jpg" : "/image/works/shuttle.jpg";
     }
 
     return {
