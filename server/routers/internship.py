@@ -23,7 +23,8 @@ class InternshipUpdate(BaseModel):
 
 class StudentInternshipCreate(BaseModel):
     id: str
-    name_th: str
+    student_id: str | None = None
+    name_th: str | None = None
     name_en: str | None = None
     company: str
     position_th: str
@@ -63,7 +64,37 @@ def list_internships(year: int = Query(None)):
 def list_student_internships():
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM internship_students ORDER BY created_at ASC")
+    query = """
+        SELECT 
+            i.id,
+            i.student_id,
+            COALESCE(s.name_th, '') AS name_th,
+            COALESCE(s.name_en, '') AS name_en,
+            COALESCE(s.photo, '') AS photo,
+            COALESCE(s.track, '') AS track,
+            i.company,
+            i.position_th,
+            i.position_en,
+            i.period_th,
+            i.period_en,
+            i.summary_th,
+            i.summary_en,
+            i.description_th,
+            i.description_en,
+            i.tech,
+            i.advice_th,
+            i.advice_en,
+            i.stipend_th,
+            i.stipend_en,
+            i.welfare_th,
+            i.welfare_en,
+            i.rating,
+            i.created_at
+        FROM internship_students i
+        LEFT JOIN students s ON i.student_id = s.student_id
+        ORDER BY i.created_at ASC
+    """
+    cursor.execute(query)
     rows = cursor.fetchall()
     students = []
     for row in rows:
@@ -80,7 +111,37 @@ def list_student_internships():
 def get_student_internship(id: str):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM internship_students WHERE id = ?", (id,))
+    query = """
+        SELECT 
+            i.id,
+            i.student_id,
+            COALESCE(s.name_th, '') AS name_th,
+            COALESCE(s.name_en, '') AS name_en,
+            COALESCE(s.photo, '') AS photo,
+            COALESCE(s.track, '') AS track,
+            i.company,
+            i.position_th,
+            i.position_en,
+            i.period_th,
+            i.period_en,
+            i.summary_th,
+            i.summary_en,
+            i.description_th,
+            i.description_en,
+            i.tech,
+            i.advice_th,
+            i.advice_en,
+            i.stipend_th,
+            i.stipend_en,
+            i.welfare_th,
+            i.welfare_en,
+            i.rating,
+            i.created_at
+        FROM internship_students i
+        LEFT JOIN students s ON i.student_id = s.student_id
+        WHERE i.id = ?
+    """
+    cursor.execute(query, (id,))
     row = cursor.fetchone()
     conn.close()
     if not row:
@@ -99,19 +160,16 @@ def create_student_internship(payload: StudentInternshipCreate, admin: dict = De
             cursor = conn.cursor()
             cursor.execute(
                 """INSERT INTO internship_students 
-                (id, name_th, name_en, company, position_th, position_en, track, photo, period_th, period_en,
+                (id, student_id, company, position_th, position_en, period_th, period_en,
                  summary_th, summary_en, description_th, description_en, tech, advice_th, advice_en,
                  stipend_th, stipend_en, welfare_th, welfare_en, rating) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     payload.id,
-                    payload.name_th,
-                    payload.name_en,
+                    payload.student_id,
                     payload.company,
                     payload.position_th,
                     payload.position_en,
-                    payload.track,
-                    payload.photo,
                     payload.period_th,
                     payload.period_en,
                     payload.summary_th,

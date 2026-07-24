@@ -273,13 +273,10 @@ def main() -> None:
         internship_students_data = [
             (
                 "intern-1",
-                "นายภาณุวัฒน์ เด่นชัย (CE#49)",
-                "Panuwat Denchai (CE#49)",
+                "67200049",
                 "Agoda Services Co., Ltd.",
                 "Software Engineer Intern",
                 "Software Engineer Intern",
-                "Software & Distributed Systems",
-                "/image/students/ce04/67200049.png",
                 "มิ.ย. - ส.ค. 2025",
                 "June - Aug 2025",
                 "ร่วมพัฒนา Microservices สำหรับระบบจองโรงแรมสเกลใหญ่ รองรับการประมวลผลข้อมูลนับล้านคำขอต่อวัน",
@@ -309,13 +306,10 @@ def main() -> None:
             ),
             (
                 "intern-2",
-                "นางสาวศิริพร บุญเหลือ (CE#49)",
-                "Siriporn Boonlue (CE#49)",
+                "67200235",
                 "KBTG",
                 "AI & Data Science Intern",
                 "AI & Data Science Intern",
-                "Artificial Intelligence & Data",
-                "/image/students/ce04/67200235.png",
                 "มิ.ย. - ส.ค. 2025",
                 "June - Aug 2025",
                 "พัฒนาแบบจำลอง NLP ตรวจจับข้อความหลอกหลวงและฟิชชิงบนแอปพลิเคชันโมบายแบงก์กิ้ง",
@@ -343,13 +337,10 @@ def main() -> None:
             ),
             (
                 "intern-3",
-                "นายธีรภัทร ชัยมงคล (CE#50)",
-                "Theeraphat Chaimongkol (CE#50)",
+                "67200380",
                 "LINE MAN Wongnai",
                 "Backend & Cloud Engineer Intern",
                 "Backend & Cloud Engineer Intern",
-                "Cloud & Infrastructure",
-                "/image/students/ce04/67200380.png",
                 "มิ.ย. - ส.ค. 2025",
                 "June - Aug 2025",
                 "ออกแบบและสร้างระบบสตรีมมีข้อมูลคำสั่งซื้ออาหารด้วย Kafka และ Golang สำหรับระบบ Dispatching",
@@ -380,10 +371,10 @@ def main() -> None:
         for s in internship_students_data:
             cursor.execute(
                 """INSERT INTO internship_students 
-                (id, name_th, name_en, company, position_th, position_en, track, photo, period_th, period_en,
+                (id, student_id, company, position_th, position_en, period_th, period_en,
                  summary_th, summary_en, description_th, description_en, tech, advice_th, advice_en,
                  stipend_th, stipend_en, welfare_th, welfare_en, rating) 
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                 s
             )
 

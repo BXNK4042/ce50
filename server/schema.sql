@@ -118,13 +118,10 @@ CREATE TABLE IF NOT EXISTS internship_topics (
 
 CREATE TABLE IF NOT EXISTS internship_students (
   id TEXT PRIMARY KEY,
-  name_th TEXT NOT NULL,
-  name_en TEXT,
+  student_id TEXT REFERENCES students(student_id) ON DELETE CASCADE,
   company TEXT NOT NULL,
   position_th TEXT NOT NULL,
   position_en TEXT,
-  track TEXT,
-  photo TEXT,
   period_th TEXT,
   period_en TEXT,
   summary_th TEXT,
