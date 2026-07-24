@@ -27,8 +27,7 @@ export type TabType =
   | "teachers"
   | "rooms"
   | "users"
-  | "internship"
-  | "videos";
+  | "internship";
 
 interface AdminShellProps {
   children: React.ReactNode;
@@ -74,7 +73,6 @@ export default function AdminShell({
     { key: "teachers", labelEn: "Teachers", labelTh: "คณาจารย์", icon: ChalkboardTeacher, group: "entities" },
     { key: "rooms", labelEn: "Rooms", labelTh: "ห้องเรียน", icon: Door, group: "entities" },
     { key: "internship", labelEn: "Internships", labelTh: "ฝึกงาน", icon: BuildingOffice, group: "entities" },
-    { key: "videos", labelEn: "Media / Videos", labelTh: "วิดีโอ/สื่อ", icon: Video, group: "entities" },
     { key: "users", labelEn: "Admin Accounts", labelTh: "ผู้ดูแลระบบ", icon: Users, group: "system" },
   ];
 

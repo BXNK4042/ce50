@@ -140,9 +140,6 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
       initialForm.role = "admin";
       initialForm.year = 1;
     }
-    if (activeTab === "videos") {
-      initialForm.category = "General";
-    }
     setFormData(initialForm);
     setIsDrawerOpen(true);
   };
@@ -318,17 +315,10 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
         ];
       case "internship":
         return [
-          { key: "host_branch", labelEn: "Host Branch / Company", labelTh: "สาขา/บริษัทที่ฝึก" },
-          { key: "title", labelEn: "Topic / Title", labelTh: "หัวข้อ" },
-          { key: "description", labelEn: "Description", labelTh: "รายละเอียด" },
-          { key: "year", labelEn: "Year", labelTh: "ปี" },
-        ];
-      case "videos":
-        return [
-          { key: "title", labelEn: "Title", labelTh: "หัวข้อ" },
-          { key: "category", labelEn: "Category", labelTh: "หมวดหมู่" },
-          { key: "file_path", labelEn: "File / Video URL", labelTh: "ลิงก์วิดีโอ" },
-          { key: "year", labelEn: "Year", labelTh: "ปี" },
+          { key: "company", labelEn: "Company", labelTh: "บริษัทที่ฝึกงาน" },
+          { key: "position_th", labelEn: "Position", labelTh: "ตำแหน่ง" },
+          { key: "name_th", labelEn: "Student Name", labelTh: "ชื่อนิสิต" },
+          { key: "period_th", labelEn: "Period", labelTh: "ระยะเวลา" },
         ];
       default:
         return [];
@@ -397,17 +387,11 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
         ];
       case "internship":
         return [
-          { name: "host_branch", labelEn: "Host Branch / Company", labelTh: "สาขา/บริษัทที่ฝึก", required: true },
-          { name: "title", labelEn: "Topic / Title", labelTh: "หัวข้อ", required: true },
-          { name: "description", labelEn: "Description", labelTh: "รายละเอียด", type: "textarea" as const },
-        ];
-      case "videos":
-        return [
-          { name: "title", labelEn: "Title", labelTh: "หัวข้อ", required: true },
-          { name: "file_path", labelEn: "File / Video URL", labelTh: "ลิงก์วิดีโอ", required: true },
-          { name: "category", labelEn: "Category", labelTh: "หมวดหมู่" },
-          { name: "description", labelEn: "Description", labelTh: "รายละเอียด", type: "textarea" as const },
-          { name: "thumbnail", labelEn: "Thumbnail", labelTh: "รูปตัวอย่าง", type: "image" as const },
+          { name: "company", labelEn: "Company", labelTh: "บริษัทที่ฝึกงาน", required: true },
+          { name: "position_th", labelEn: "Position (TH)", labelTh: "ตำแหน่ง (ไทย)", required: true },
+          { name: "position_en", labelEn: "Position (EN)", labelTh: "ตำแหน่ง (อังกฤษ)" },
+          { name: "period_th", labelEn: "Period (TH)", labelTh: "ระยะเวลา (ไทย)" },
+          { name: "advice_th", labelEn: "Advice", labelTh: "คำแนะนำ", type: "textarea" as const },
         ];
       default:
         return [];
@@ -432,8 +416,6 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
         return isTh ? "จัดการผู้ใช้งานระบบ" : "Admin Accounts";
       case "internship":
         return isTh ? "จัดการข้อมูลฝึกงาน" : "Internship Records";
-      case "videos":
-        return isTh ? "จัดการสื่อวิดีโอ" : "Media Library";
       default:
         return "Admin View";
     }

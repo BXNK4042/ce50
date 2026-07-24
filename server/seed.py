@@ -17,7 +17,7 @@ def main() -> None:
         tables = [
             "users", "teachers", "students", "works", "news_items",
             "class_schedules", "exam_schedules", "rooms",
-            "internship_students", "videos"
+            "internship_students"
         ]
         for tbl in tables:
             cursor.execute(f"DELETE FROM {tbl}")
@@ -49,12 +49,6 @@ def main() -> None:
         conn.executemany(
             "INSERT OR IGNORE INTO rooms(name, description) VALUES (?,?)",
             [("113", "ห้องเรียน CE"), ("Server Room", "ห้องเซิร์ฟเวอร์สาขา")],
-        )
-
-        # Seed videos
-        conn.executemany(
-            "INSERT OR IGNORE INTO videos(title, description, file_path, year) VALUES (?,?,?,?)",
-            [("Footage_CE04", "Footage ห้อง CE04", "/Video/ce_hero_footage.mp4", 2025)],
         )
 
         # Seed teachers

@@ -131,14 +131,3 @@ CREATE TABLE IF NOT EXISTS internship_students (
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
--- 8. วิดีโอ — Videos
-CREATE TABLE IF NOT EXISTS videos (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  title TEXT NOT NULL,
-  description TEXT,
-  file_path TEXT NOT NULL,
-  thumbnail TEXT,
-  category TEXT,
-  year INTEGER,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP
-);
