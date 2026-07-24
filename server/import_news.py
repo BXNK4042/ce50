@@ -17,8 +17,8 @@ def process_image(title: str, url: str) -> str:
     # Check local image files in server/image/news
     if "cabling" in title_lower and (NEWS_IMG_DIR / "Cabling-Contest.jpg").exists():
         return "/image/news/Cabling-Contest.jpg"
-    if ("tgr" in title_lower or "topgun" in title_lower) and (NEWS_IMG_DIR / "TopGun-Rally.png").exists():
-        return "/image/news/TopGun-Rally.png"
+    if ("tgr" in title_lower or "topgun" in title_lower) and (NEWS_IMG_DIR / "TopGun-Rally.jpg").exists():
+        return "/image/news/TopGun-Rally.jpg"
 
     if not url:
         return ""
@@ -55,7 +55,8 @@ def import_news_csv(csv_path: Path = CSV_PATH, db_path: Path = DB_PATH, conn=Non
 
     should_close = False
     if conn is None:
-        conn = sqlite3.connect(db_path)
+        from db import get_db
+        conn = get_db()
         should_close = True
 
     cursor = conn.cursor()
