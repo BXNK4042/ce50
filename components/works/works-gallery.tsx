@@ -82,12 +82,14 @@ export default function WorksGallery({ lang, dict, dbItems }: WorksGalleryProps)
               className="group relative h-72 lg:h-[22rem] w-full overflow-hidden rounded-xl border border-zinc-200/60 dark:border-zinc-800/80 bg-zinc-900 shadow-[0_6px_25px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_40px_rgba(0,0,0,0.25)] transition-all duration-300 hover:-translate-y-2 cursor-pointer select-none"
             >
               {/* Full Background Cover Image */}
-              <Image
-                src={item.image}
-                alt={title}
-                fill
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-              />
+              {item.image && (
+                <Image
+                  src={item.image}
+                  alt={title}
+                  fill
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
+              )}
 
               {/* Gradient Overlay for Readable Floating Text */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-black/20 group-hover:from-black/95 group-hover:via-black/60 group-hover:to-black/30 transition-colors duration-300" />
@@ -167,12 +169,14 @@ export default function WorksGallery({ lang, dict, dbItems }: WorksGalleryProps)
 
             {/* Modal Header Image */}
             <div className="relative aspect-[21/9] w-full bg-zinc-800 overflow-hidden">
-              <Image
-                src={selectedWork.image}
-                alt={isTh ? selectedWork.title_th : selectedWork.title_en}
-                fill
-                className="object-cover"
-              />
+              {selectedWork.image && (
+                <Image
+                  src={selectedWork.image}
+                  alt={isTh ? selectedWork.title_th : selectedWork.title_en}
+                  fill
+                  className="object-cover"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent" />
 
               <div className="absolute bottom-4 left-6 right-6 flex items-center justify-between gap-4">

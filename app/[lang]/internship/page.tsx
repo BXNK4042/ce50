@@ -1,5 +1,6 @@
 import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
 import InternshipSlider from "@/components/internship/internship-slider";
+import { fetchInternshipStudents } from "@/lib/internship-data";
 
 export default async function InternshipPage({
   params,
@@ -9,6 +10,8 @@ export default async function InternshipPage({
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
   const titleText = dict.internship.title;
+  // ponytail: pre-fetch students on server side to avoid client rendering flash
+  const students = await fetchInternshipStudents();
 
   const renderTitle = (title: string) => {
     if (title.includes("CE")) {
@@ -33,7 +36,7 @@ export default async function InternshipPage({
       <p className="mt-4 text-zinc-600 dark:text-zinc-400 whitespace-pre-line leading-relaxed">{dict.internship.subtitle}</p>
       
       {/* Student Internship Slider Carousel */}
-      <InternshipSlider lang={lang} />
+      <InternshipSlider lang={lang} initialStudents={students} />
     </section>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   api,
   cellsToGrid,
@@ -11,38 +12,48 @@ import {
   type ClassItem,
 } from "@/lib/api";
 
-// ponytail: year/term hardcoded — add cohort selector when multiple years exist
-const SCHEDULE_YEAR = 3;
 const SCHEDULE_TERM = 1;
-
 
 export default function ScheduleClient({
   lang,
   dict,
   type,
   term,
+  initialYear = 3,
 }: {
   lang: string;
   dict: any;
   type?: string;
   term?: string;
+  initialYear?: number;
 }) {
+  const router = useRouter();
+  const isTh = lang === "th";
+  const [selectedYear, setSelectedYear] = useState<number>(initialYear);
   const [exams, setExams] = useState<ExamItem[]>([]);
   const [weeklyClasses, setWeeklyClasses] = useState<WeeklyClassRow[]>([]);
   const [selectedClass, setSelectedClass] = useState<ClassItem | null>(null);
 
+  const handleYearChange = (newYear: number) => {
+    setSelectedYear(newYear);
+    // ponytail: sync year to query params for shareable link
+    const params = new URLSearchParams(window.location.search);
+    params.set("year", String(newYear));
+    router.push(`/${lang}/schedule?${params.toString()}`, { scroll: false });
+  };
+
   useEffect(() => {
     let cancelled = false;
     Promise.all([
-      api.examSchedule(SCHEDULE_YEAR, SCHEDULE_TERM).catch(() => []),
-      api.classSchedule(SCHEDULE_YEAR, SCHEDULE_TERM).catch(() => []),
+      api.examSchedule(selectedYear, SCHEDULE_TERM).catch(() => []),
+      api.classSchedule(selectedYear, SCHEDULE_TERM).catch(() => []),
     ]).then(([slots, cells]) => {
       if (cancelled) return;
       setExams(slots.map(slotToExamItem));
       setWeeklyClasses(cellsToGrid(cells));
     });
     return () => { cancelled = true; };
-  }, []);
+  }, [selectedYear]);
 
   // --- PRE-COMPUTE ROW SPANS FOR CONTIGUOUS IDENTICAL SUBJECTS ---
   const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"] as const;
@@ -132,7 +143,24 @@ export default function ScheduleClient({
     return () => clearInterval(interval);
   }, [exams, lang]);
 
-  const displayTitle = dict.schedule.title;
+  const yearTitlesTh: Record<number, string> = {
+    1: "นักศึกษาชั้นปีที่ 1",
+    2: "นักศึกษาชั้นปีที่ 2",
+    3: "นักศึกษาชั้นปีที่ 3",
+    4: "นักศึกษาชั้นปีที่ 4",
+  };
+  const yearTitlesEn: Record<number, string> = {
+    1: "Year 1 Student",
+    2: "Year 2 Student",
+    3: "Year 3 Student",
+    4: "Year 4 Student",
+  };
+  const yearSubtitlesTh: Record<number, string> = { 1: "ปี 1", 2: "ปี 2", 3: "ปี 3", 4: "ปี 4" };
+  const yearSubtitlesEn: Record<number, string> = { 1: "Freshman", 2: "Sophomore", 3: "Junior", 4: "Senior" };
+
+  const displayTitle = isTh ? yearTitlesTh[selectedYear] || dict.schedule.title : yearTitlesEn[selectedYear] || dict.schedule.title;
+  const displaySubtitle = isTh ? yearSubtitlesTh[selectedYear] || dict.schedule.subtitle : yearSubtitlesEn[selectedYear] || dict.schedule.subtitle;
+
   const activeTab = type === "exam" ? "exam" : "class";
   const currentTerm = term || "all";
   const activeIndex = currentTerm === "finals" ? 2 : currentTerm === "midterm" ? 1 : 0;
@@ -142,12 +170,29 @@ export default function ScheduleClient({
       {/* Left Sidebar */}
       <div className="flex flex-col w-56 shrink-0">
         <h1 className="text-2xl font-semibold">{displayTitle}</h1>
-        <p className="mt-2 text-zinc-500">{dict.schedule.subtitle}</p>
+        <p className="mt-2 text-zinc-500">{displaySubtitle}</p>
         <p className="mt-1 text-yellow-600 dark:text-yellow-400">COMPUTER ENGINEER</p>
+
+        {/* Year Dropdown Selector */}
+        <div className="mt-4">
+          <label className="block text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1.5">
+            {isTh ? "เลือกชั้นปี" : "Select Academic Year"}
+          </label>
+          <select
+            value={selectedYear}
+            onChange={(e) => handleYearChange(Number(e.target.value))}
+            className="w-full px-3 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-sm font-semibold text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+          >
+            <option value={1}>{isTh ? "ชั้นปีที่ 1 (Year 1)" : "Year 1 (Freshman)"}</option>
+            <option value={2}>{isTh ? "ชั้นปีที่ 2 (Year 2)" : "Year 2 (Sophomore)"}</option>
+            <option value={3}>{isTh ? "ชั้นปีที่ 3 (Year 3)" : "Year 3 (Junior)"}</option>
+            <option value={4}>{isTh ? "ชั้นปีที่ 4 (Year 4)" : "Year 4 (Senior)"}</option>
+          </select>
+        </div>
 
         <div className="mt-6 flex flex-col gap-3">
           <Link
-            href={`/${lang}/schedule?type=exam`}
+            href={`/${lang}/schedule?type=exam&year=${selectedYear}`}
             className={`relative px-4 py-3 text-sm font-semibold transition-all border rounded-md overflow-hidden ${
               activeTab === "exam"
                 ? "bg-blue-50/50 dark:bg-sky-950/10 text-blue-600 dark:text-sky-400 border-blue-200 dark:border-sky-900/50"
@@ -162,7 +207,7 @@ export default function ScheduleClient({
             </span>
           </Link>
           <Link
-            href={`/${lang}/schedule?type=class`}
+            href={`/${lang}/schedule?type=class&year=${selectedYear}`}
             className={`relative px-4 py-3 text-sm font-semibold transition-all border rounded-md overflow-hidden ${
               activeTab === "class"
                 ? "bg-blue-50/50 dark:bg-sky-950/10 text-blue-600 dark:text-sky-400 border-blue-200 dark:border-sky-900/50"

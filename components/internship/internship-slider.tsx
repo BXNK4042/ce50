@@ -2,23 +2,26 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { INTERN_STUDENTS, fetchInternshipStudents, InternStudent } from "@/lib/internship-data";
+import { fetchInternshipStudents, InternStudent } from "@/lib/internship-data";
 
 interface InternshipSliderProps {
   lang: string;
+  initialStudents?: InternStudent[];
 }
 
-export default function InternshipSlider({ lang }: InternshipSliderProps) {
+export default function InternshipSlider({ lang, initialStudents }: InternshipSliderProps) {
   const isTh = lang === "th";
-  const [students, setStudents] = useState<InternStudent[]>(INTERN_STUDENTS);
+  const [students, setStudents] = useState<InternStudent[]>(initialStudents || []);
 
   useEffect(() => {
-    fetchInternshipStudents().then((data) => {
-      if (data && data.length > 0) {
-        setStudents(data);
-      }
-    });
-  }, []);
+    if (!initialStudents || initialStudents.length === 0) {
+      fetchInternshipStudents().then((data) => {
+        if (data && data.length > 0) {
+          setStudents(data);
+        }
+      });
+    }
+  }, [initialStudents]);
 
   return (
     <div className="w-full mt-8">
