@@ -73,7 +73,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
   // Fetch Data on Tab / Year / Auth change
   useEffect(() => {
     if (!isLoggedIn) return;
-    if (role !== "superadmin" && (activeTab === "teachers" || activeTab === "rooms" || activeTab === "users")) {
+    if (role !== "superadmin" && (activeTab === "teachers" || activeTab === "rooms" || activeTab === "users" || activeTab === "news")) {
       setActiveTab("schedules_class");
       return;
     }
@@ -104,6 +104,9 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           break;
         case "videos":
           endpoint = `/videos?year=${selectedYear}`;
+          break;
+        case "news":
+          endpoint = `/news`;
           break;
         case "teachers":
           endpoint = `/people/teachers`;
@@ -183,6 +186,9 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
         case "videos":
           endpoint = `/videos/${id}`;
           break;
+        case "news":
+          endpoint = `/news/${id}`;
+          break;
         case "teachers":
           endpoint = `/people/teachers/${id}`;
           break;
@@ -255,6 +261,9 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           break;
         case "videos":
           endpoint = editingItem ? `/videos/${editingItem.id}` : `/videos`;
+          break;
+        case "news":
+          endpoint = editingItem ? `/news/${editingItem.id}` : `/news`;
           break;
         case "teachers":
           endpoint = editingItem ? `/people/teachers/${editingItem.id}` : `/people/teachers`;
@@ -346,6 +355,13 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           { key: "position_th", labelEn: "Position", labelTh: "ตำแหน่ง" },
           { key: "name_th", labelEn: "Student Name", labelTh: "ชื่อนิสิต" },
           { key: "period_th", labelEn: "Period", labelTh: "ระยะเวลา" },
+        ];
+      case "news":
+        return [
+          { key: "id", labelEn: "ID", labelTh: "รหัส" },
+          { key: "title", labelEn: "Title", labelTh: "หัวข้อข่าว" },
+          { key: "category", labelEn: "Category", labelTh: "หมวดหมู่" },
+          { key: "published_at", labelEn: "Published Date", labelTh: "วันที่เผยแพร่" },
         ];
       default:
         return [];
@@ -439,6 +455,25 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           { name: "bg_image", labelEn: "Background Image", labelTh: "รูปพื้นหลัง", type: "image" as const, uploadEndpoint: "/internship/upload-image" },
           { name: "logo", labelEn: "Company Logo", labelTh: "โลโก้บริษัท", type: "image" as const, uploadEndpoint: "/internship/upload-image" },
         ];
+      case "news":
+        return [
+          { name: "title", labelEn: "Title", labelTh: "หัวข้อข่าว", required: true },
+          {
+            name: "category",
+            labelEn: "Category",
+            labelTh: "หมวดหมู่",
+            type: "select" as const,
+            options: [
+              { value: "competition", label: "Competition (การแข่งขัน)" },
+              { value: "scholarship", label: "Scholarship (ทุนการศึกษา)" },
+              { value: "other", label: "Other (อื่นๆ)" },
+            ],
+          },
+          { name: "published_at", labelEn: "Published Date", labelTh: "วันที่เผยแพร่ (YYYY-MM-DD)", type: "date" as const },
+          { name: "link", labelEn: "External Link", labelTh: "ลิงก์ภายนอก" },
+          { name: "image", labelEn: "Cover Image", labelTh: "รูปปกข่าว", type: "image" as const, uploadEndpoint: "/news/upload-image" },
+          { name: "body", labelEn: "Body Content", labelTh: "เนื้อหาข่าว", type: "textarea" as const },
+        ];
       default:
         return [];
     }
@@ -462,6 +497,8 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
         return isTh ? "จัดการผู้ใช้งานระบบ" : "Admin Accounts";
       case "internship":
         return isTh ? "จัดการข้อมูลฝึกงาน" : "Internship Records";
+      case "news":
+        return isTh ? "จัดการข่าวสารและประกาศ" : "News & Announcements";
       default:
         return "Admin View";
     }

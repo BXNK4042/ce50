@@ -17,6 +17,7 @@ import {
   House,
   ShieldCheck,
   BuildingOffice,
+  Newspaper,
 } from "@phosphor-icons/react";
 
 export type TabType =
@@ -28,6 +29,7 @@ export type TabType =
   | "rooms"
   | "users"
   | "internship"
+  | "news"
   | "videos"; // ponytail: include videos in TabType
 
 interface AdminShellProps {
@@ -74,6 +76,7 @@ export default function AdminShell({
     { key: "internship", labelEn: "Internships", labelTh: "ฝึกงาน", icon: BuildingOffice, group: "entities" },
     ...(role === "superadmin"
       ? [
+          { key: "news", labelEn: "News & Articles", labelTh: "ข่าวสาร", icon: Newspaper, group: "entities" },
           { key: "teachers", labelEn: "Teachers", labelTh: "คณาจารย์", icon: ChalkboardTeacher, group: "entities" },
           { key: "rooms", labelEn: "Rooms", labelTh: "ห้องเรียน", icon: Door, group: "entities" },
           { key: "users", labelEn: "Admin Accounts", labelTh: "ผู้ดูแลระบบ", icon: Users, group: "system" },

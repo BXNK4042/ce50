@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS news_items (
   link TEXT,
   image TEXT,
   published_at TEXT,
+  author_username TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -11,6 +11,7 @@ from auth_utils import hash_password
 def main() -> None:
     with db_cursor() as conn:
         conn.execute("DROP TABLE IF EXISTS class_schedules")
+        conn.execute("DROP TABLE IF EXISTS news_items")
     init_db()
     with db_cursor() as conn:
         # Wipe all existing table data & reset autoincrement sequences
@@ -176,8 +177,8 @@ def main() -> None:
         cursor.execute("DELETE FROM news_items")
         for title, category, body, link, image, pub_at in news_data:
             cursor.execute(
-                "INSERT INTO news_items (title, category, body, link, image, published_at) VALUES (?, ?, ?, ?, ?, ?)",
-                (title, category, body, link, image, pub_at)
+                "INSERT INTO news_items (title, category, body, link, image, published_at, author_username) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (title, category, body, link, image, pub_at, "superadmin")
             )
 
         # Seed GNews global news if API Key is set

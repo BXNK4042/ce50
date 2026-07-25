@@ -9,7 +9,7 @@ interface FieldConfig {
   name: string;
   labelEn: string;
   labelTh: string;
-  type?: "text" | "number" | "select" | "textarea" | "image" | "boolean";
+  type?: "text" | "number" | "select" | "textarea" | "image" | "boolean" | "date";
   uploadEndpoint?: string;
   multiple?: boolean;
   options?: { value: string | number; label: string }[] | any[];

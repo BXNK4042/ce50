@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Plus, Pencil } from "@phosphor-icons/react";
+import NewsModal, { NewsArticle } from "@/components/news/NewsModal";
 
 interface NewsItem {
   id?: number;
@@ -10,6 +12,7 @@ interface NewsItem {
   link?: string;
   image?: string;
   published_at?: string;
+  author_username?: string;
 }
 
 interface NewsFeedProps {
@@ -21,26 +24,51 @@ interface NewsFeedProps {
 
 export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchive }: NewsFeedProps) {
   const [news, setNews] = useState<NewsItem[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [articleToEdit, setArticleToEdit] = useState<NewsItem | null>(null);
+  const [token, setToken] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [username, setUsername] = useState("");
   const isTh = lang === "th";
 
+  const fetchNews = async () => {
+    try {
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+      const res = await fetch(`${backendUrl}/news`);
+      if (res.ok) {
+        const data: NewsItem[] = await res.json();
+        const filtered = (data ?? []).filter(item => item.category === "scholarship" || item.category === "competition");
+        setNews(filtered);
+        return;
+      }
+    } catch (err) {
+      console.error("Failed to fetch news:", err);
+    }
+    setNews([]);
+  };
+
   useEffect(() => {
-    const fetchNews = async () => {
+    fetchNews();
+
+    // Check user auth token from cookie
+    const cookies = document.cookie.split("; ");
+    const userToken = cookies.find((r) => r.startsWith("admin_token="))?.split("=")[1] || "";
+    const role = cookies.find((r) => r.startsWith("admin_role="))?.split("=")[1] || "";
+    setToken(userToken);
+    setUserRole(role);
+
+    // Decode JWT username if token exists
+    if (userToken) {
       try {
-        const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-        const res = await fetch(`${backendUrl}/news`);
-        if (res.ok) {
-          const data: NewsItem[] = await res.json();
-          const filtered = (data ?? []).filter(item => item.category === "scholarship" || item.category === "competition");
-          setNews(filtered);
-          return;
+        const payloadBase64 = userToken.split(".")[1];
+        if (payloadBase64) {
+          const decoded = JSON.parse(atob(payloadBase64));
+          setUsername(decoded.sub || "");
         }
       } catch (err) {
-        console.error("Failed to fetch news:", err);
+        console.error("Error decoding token:", err);
       }
-      setNews([]);
-    };
-
-    fetchNews();
+    }
   }, []);
 
   const formatDate = (dateStr?: string) => {
@@ -183,19 +211,53 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
 
   return (
     <div className="w-full flex flex-col gap-6">
+      {token && !onlyArchive && (
+        <div className="flex items-center justify-between p-3 bg-zinc-100 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 rounded-2xl">
+          <div className="text-xs text-zinc-600 dark:text-zinc-400 font-medium">
+            {isTh ? `เข้าสู่ระบบในชื่อ: ${username}` : `Logged in as: ${username}`}
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setArticleToEdit(null);
+              setIsModalOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl shadow-xs transition-all cursor-pointer"
+          >
+            <Plus size={14} />
+            <span>{isTh ? "เขียนข่าวสาร" : "Write News"}</span>
+          </button>
+        </div>
+      )}
+
       {/* 1 & 2: Featured Left + 2x2 Grid Right Section */}
       <div className="w-full flex flex-col lg:flex-row gap-8 py-6">
         {/* 1. Left Column: Featured News (Large) */}
         <div className="w-full lg:w-7/12 flex flex-col gap-4">
           {/* Title & Category & Date */}
           <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-3">
-              <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold rounded-full uppercase tracking-wider ${featuredCat.classes}`}>
-                {featuredCat.label}
-              </span>
-              <span className="text-xs text-zinc-400 dark:text-zinc-500">
-                {formatDate(featuredNews.published_at)}
-              </span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold rounded-full uppercase tracking-wider ${featuredCat.classes}`}>
+                  {featuredCat.label}
+                </span>
+                <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                  {formatDate(featuredNews.published_at)}
+                </span>
+              </div>
+              {(userRole === "superadmin" || (username && featuredNews.author_username === username)) && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setArticleToEdit(featuredNews);
+                    setIsModalOpen(true);
+                  }}
+                  className="px-2.5 py-1 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 text-xs font-semibold rounded-lg border border-zinc-200 dark:border-zinc-700 flex items-center gap-1.5 transition-all cursor-pointer"
+                >
+                  <Pencil size={13} />
+                  <span>{isTh ? "แก้ไขข่าว" : "Edit"}</span>
+                </button>
+              )}
             </div>
             {featuredNews.link ? (
               <a
@@ -283,7 +345,23 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
                       <span className={`px-2 py-0.5 font-semibold rounded-full uppercase tracking-wider ${cat.classes}`}>
                         {cat.label}
                       </span>
-                      <span className="text-[10px]">{formatDate(item.published_at)}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px]">{formatDate(item.published_at)}</span>
+                        {(userRole === "superadmin" || (username && item.author_username === username)) && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setArticleToEdit(item);
+                              setIsModalOpen(true);
+                            }}
+                            className="px-1.5 py-0.5 bg-black/60 hover:bg-black/90 text-white text-[9px] font-semibold rounded border border-white/30 flex items-center gap-1 transition-all cursor-pointer z-30"
+                          >
+                            <Pencil size={10} />
+                            <span>{isTh ? "แก้ไข" : "Edit"}</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     {/* Title */}
@@ -366,6 +444,15 @@ export default function NewsFeed({ lang, archiveTitle, excludeArchive, onlyArchi
           </div>
         </div>
       )}
+
+      <NewsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={() => fetchNews()}
+        articleToEdit={articleToEdit}
+        lang={lang}
+        token={token}
+      />
     </div>
   );
 }
