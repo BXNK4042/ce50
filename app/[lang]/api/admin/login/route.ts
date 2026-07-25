@@ -33,9 +33,9 @@ export async function POST(
 
     const res = NextResponse.json({ success: true, role, year });
 
-    // Set HTTP-only Cookie for JWT token (changed to false so frontend can read it and send to backend)
+    // Set HTTP-only Cookie for JWT token to secure against XSS token theft
     res.cookies.set("admin_token", access_token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 24, // 24 hours

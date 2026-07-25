@@ -9,6 +9,9 @@ BASE_DIR = Path(__file__).resolve().parent
 load_dotenv(BASE_DIR.parent / ".env.local")
 load_dotenv(BASE_DIR.parent / ".env")
 
+APP_ENV = os.getenv("APP_ENV", os.getenv("NODE_ENV", "development")).lower()
+IS_PRODUCTION = APP_ENV == "production"
+
 DB_PATH = Path(os.getenv("DB_PATH", BASE_DIR / "ce50.db"))
 UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", BASE_DIR / "image"))
 CORS_ORIGINS = [

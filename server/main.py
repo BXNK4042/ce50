@@ -1,7 +1,10 @@
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+import time
+from collections import defaultdict
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -16,6 +19,33 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="CE50 API", version="0.1.0", lifespan=lifespan)
+
+# ponytail: simple memory sliding window rate limiter for auth endpoints
+RATE_LIMIT_STORE = defaultdict(list)
+MAX_AUTH_REQUESTS = 10
+WINDOW_SECONDS = 60
+
+@app.middleware("http")
+async def security_and_rate_limit_middleware(request: Request, call_next):
+    # 1. Rate limiting on POST /admin/login and /admin/register
+    if request.method == "POST" and request.url.path in ["/admin/login", "/admin/register"]:
+        client_ip = request.client.host if request.client else "unknown"
+        now = time.time()
+        timestamps = [t for t in RATE_LIMIT_STORE[client_ip] if now - t < WINDOW_SECONDS]
+        if len(timestamps) >= MAX_AUTH_REQUESTS:
+            return JSONResponse(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                content={"detail": "Too many requests. Please try again later."}
+            )
+        timestamps.append(now)
+        RATE_LIMIT_STORE[client_ip] = timestamps
+
+    response = await call_next(request)
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    return response
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,3 +1,4 @@
+import os
 import json
 import sys
 from pathlib import Path
@@ -6,9 +7,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from db import db_cursor, init_db
 from auth_utils import hash_password
+from config import IS_PRODUCTION
 
 
 def main() -> None:
+    if IS_PRODUCTION:
+        raise RuntimeError("Seed script is disabled in production environment to prevent data loss.")
+
     with db_cursor() as conn:
         conn.execute("DROP TABLE IF EXISTS class_schedules")
         conn.execute("DROP TABLE IF EXISTS news_items")
@@ -27,11 +32,15 @@ def main() -> None:
             cursor.execute("DELETE FROM sqlite_sequence WHERE name = ?", (tbl,))
         cursor.execute("PRAGMA foreign_keys = ON")
 
-        # Seed users
+        # Seed users with configurable initial credentials via environment variables
+        super_pw = os.getenv("INITIAL_SUPERADMIN_PASSWORD", "super1234")
+        admin_pw = os.getenv("INITIAL_ADMIN_PASSWORD", "admin1234")
+        writer_pw = os.getenv("INITIAL_WRITER_PASSWORD", "writer1234")
+
         users_data = [
-            ("superadmin", hash_password("super1234"), "superadmin@ce.ac.th", "Super Admin", "superadmin", 0),
-            ("admin_y1", hash_password("admin1234"), "admin_y1@ce.ac.th", "Admin Year 1", "admin", 1),
-            ("writer_y1", hash_password("writer1234"), "writer_y1@ce.ac.th", "Writer Year 1", "writer", 1),
+            ("superadmin", hash_password(super_pw), "superadmin@ce.ac.th", "Super Admin", "superadmin", 0),
+            ("admin_y1", hash_password(admin_pw), "admin_y1@ce.ac.th", "Admin Year 1", "admin", 1),
+            ("writer_y1", hash_password(writer_pw), "writer_y1@ce.ac.th", "Writer Year 1", "writer", 1),
         ]
         for username, password_hash, email, full_name, role, year in users_data:
             cursor = conn.cursor()

@@ -52,12 +52,9 @@ def login(payload: LoginRequest):
 
 @router.post("/register")
 def register(payload: RegisterRequest):
-    # Validate role
-    if payload.role not in ["superadmin", "admin", "writer"]:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Invalid role"
-        )
+    # Public self-registration is restricted to 'writer' role.
+    # Elevated roles (admin/superadmin) must be created by a superadmin via /users.
+    user_role = "writer"
         
     conn = get_db()
     cursor = conn.cursor()
@@ -75,7 +72,7 @@ def register(payload: RegisterRequest):
     hashed = hash_password(payload.password)
     cursor.execute(
         "INSERT INTO users (username, password_hash, email, full_name, role, year) VALUES (?, ?, ?, ?, ?, ?)",
-        (payload.username, hashed, payload.email, payload.fullName, payload.role, payload.year)
+        (payload.username, hashed, payload.email, payload.fullName, user_role, payload.year)
     )
     conn.commit()
     conn.close()
