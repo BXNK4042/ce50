@@ -111,8 +111,19 @@ export const CLASS_DAYS = [
 export interface Room {
   id: number;
   name: string;
+  slug?: string | null;
+  title_th?: string | null;
+  title_en?: string | null;
+  location_th?: string | null;
+  location_en?: string | null;
+  tag_th?: string | null;
+  tag_en?: string | null;
+  desc_th?: string | null;
+  desc_en?: string | null;
   description?: string | null;
   image?: string | null;
+  features_th?: string | null;
+  features_en?: string | null;
 }
 
 

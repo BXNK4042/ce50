@@ -3,6 +3,7 @@
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Globe } from "@phosphor-icons/react";
 import AdminShell, { TabType } from "@/components/admin/AdminShell";
 import LinearDataTable from "@/components/admin/LinearDataTable";
 import LinearCrudDrawer from "@/components/admin/LinearCrudDrawer";
@@ -41,6 +42,30 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [syncingGnews, setSyncingGnews] = useState(false);
+
+  const handleSyncGNews = async () => {
+    setSyncingGnews(true);
+    setError("");
+    try {
+      const res = await fetch(`${backendUrl}/news/sync-gnews`, {
+        method: "POST",
+        headers: { Authorization: token ? `Bearer ${token}` : "" },
+      });
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || "Failed to sync GNews");
+      }
+      const data = await res.json();
+      setSuccessMsg(isTh ? `ดึงข่าว GNews สำเร็จ (${data.inserted || 0} ข่าวใหม่)` : `GNews synced successfully (${data.inserted || 0} new items)`);
+      setTimeout(() => setSuccessMsg(""), 4000);
+      fetchData();
+    } catch (err: any) {
+      setError(err.message || "GNews sync failed");
+    } finally {
+      setSyncingGnews(false);
+    }
+  };
 
   // Drawer / Form States
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -339,8 +364,11 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
         ];
       case "rooms":
         return [
-          { key: "name", labelEn: "Room Name", labelTh: "ชื่อห้อง" },
-          { key: "description", labelEn: "Description", labelTh: "รายละเอียด" },
+          { key: "slug", labelEn: "Slug / ID", labelTh: "รหัส/Slug" },
+          { key: "title_th", labelEn: "Title (TH)", labelTh: "ชื่อภาษาไทย" },
+          { key: "title_en", labelEn: "Title (EN)", labelTh: "ชื่อภาษาอังกฤษ" },
+          { key: "location_th", labelEn: "Location", labelTh: "สถานที่" },
+          { key: "tag_th", labelEn: "Tag", labelTh: "หมวดหมู่ห้อง" },
         ];
       case "users":
         return [
@@ -410,9 +438,19 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
         ];
       case "rooms":
         return [
-          { name: "name", labelEn: "Room Name", labelTh: "ชื่อห้อง", required: true },
-          { name: "description", labelEn: "Description", labelTh: "รายละเอียด", type: "textarea" as const },
-          { name: "image", labelEn: "Room Images", labelTh: "รูปห้อง", type: "image" as const, uploadEndpoint: "/rooms/upload-image", multiple: true },
+          { name: "slug", labelEn: "Room Slug / ID", labelTh: "รหัสห้อง / Slug (เช่น 113, server-room)", required: true },
+          { name: "name", labelEn: "Display Name", labelTh: "ชื่อระบุ", required: true },
+          { name: "title_th", labelEn: "Title (TH)", labelTh: "ชื่อภาษาไทย (เช่น ห้องเรียน 113)", required: true },
+          { name: "title_en", labelEn: "Title (EN)", labelTh: "ชื่อภาษาอังกฤษ (เช่น Classroom 113)", required: true },
+          { name: "location_th", labelEn: "Location (TH)", labelTh: "สถานที่ (ไทย)" },
+          { name: "location_en", labelEn: "Location (EN)", labelTh: "สถานที่ (อังกฤษ)" },
+          { name: "tag_th", labelEn: "Tag (TH)", labelTh: "แท็กประเภท (ไทย)" },
+          { name: "tag_en", labelEn: "Tag (EN)", labelTh: "แท็กประเภท (อังกฤษ)" },
+          { name: "desc_th", labelEn: "Description (TH)", labelTh: "รายละเอียด (ไทย)", type: "textarea" as const },
+          { name: "desc_en", labelEn: "Description (EN)", labelTh: "รายละเอียด (อังกฤษ)", type: "textarea" as const },
+          { name: "features_th", labelEn: "Features TH (JSON/Comma)", labelTh: "สิ่งอำนวยความสะดวก (ไทย)", type: "textarea" as const },
+          { name: "features_en", labelEn: "Features EN (JSON/Comma)", labelTh: "สิ่งอำนวยความสะดวก (อังกฤษ)", type: "textarea" as const },
+          { name: "image", labelEn: "Room Images", labelTh: "รูปภาพห้อง", type: "image" as const, uploadEndpoint: "/rooms/upload-image", multiple: true },
         ];
       case "users":
         return [
@@ -606,6 +644,19 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           onDelete={handleDelete}
           onCreate={handleCreate}
           onRefresh={fetchData}
+          customAction={
+            activeTab === "news" ? (
+              <button
+                type="button"
+                onClick={handleSyncGNews}
+                disabled={syncingGnews}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/20 rounded-lg text-xs font-semibold transition-all cursor-pointer disabled:opacity-50"
+              >
+                <Globe size={14} className={syncingGnews ? "animate-spin" : ""} />
+                <span>{syncingGnews ? (isTh ? "กำลังดึงข่าว..." : "Syncing...") : (isTh ? "Sync GNews" : "Sync GNews")}</span>
+              </button>
+            ) : undefined
+          }
           isTh={isTh}
           title={getTabTitle()}
           subtitle={`Year ${selectedYear} Cohort Management`}

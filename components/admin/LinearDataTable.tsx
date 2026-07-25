@@ -32,6 +32,7 @@ interface LinearDataTableProps {
   onDelete: (id: any) => void;
   onCreate: () => void;
   onRefresh?: () => void;
+  customAction?: React.ReactNode;
   isTh: boolean;
   title: string;
   subtitle?: string;
@@ -47,6 +48,7 @@ export default function LinearDataTable({
   onDelete,
   onCreate,
   onRefresh,
+  customAction,
   isTh,
   title,
   subtitle,
@@ -139,6 +141,8 @@ export default function LinearDataTable({
               <ArrowClockwise size={16} className={loading ? "animate-spin" : ""} />
             </button>
           )}
+
+          {customAction}
 
           {/* Create Button */}
           <button

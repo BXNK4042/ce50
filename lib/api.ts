@@ -358,6 +358,7 @@ export const api = {
   saveExamSchedule: (year: number, exams: ExamSlot[], term: number = 1) =>
     postAuth<{ status: string }>("/schedule/exam", { year, term, exams }),
   rooms: () => get<Room[]>("/rooms"),
+  roomByIdentifier: (id: string) => get<Room>("/rooms/" + id),
   internshipStudents: (year?: number) =>
     get<any[]>("/internship/students" + (year ? `?year=${year}` : "")),
   getInternshipStudent: (id: string) => get<any>("/internship/students/" + id),
@@ -398,5 +399,17 @@ export async function fetchRooms(): Promise<Room[]> {
     // ponytail: return empty array on API failure
   }
   return [];
+}
+
+export async function fetchRoomByIdentifier(id: string): Promise<Room | undefined> {
+  try {
+    const item = await api.roomByIdentifier(id);
+    if (item && item.name || item?.slug || item?.id) {
+      return item as Room;
+    }
+  } catch (err) {
+    // ponytail: return undefined on API failure
+  }
+  return undefined;
 }
 

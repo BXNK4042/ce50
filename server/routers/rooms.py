@@ -11,14 +11,36 @@ router = APIRouter(prefix="/rooms", tags=["rooms"])
 
 class RoomCreate(BaseModel):
     name: str
+    slug: str | None = None
+    title_th: str | None = None
+    title_en: str | None = None
+    location_th: str | None = None
+    location_en: str | None = None
+    tag_th: str | None = None
+    tag_en: str | None = None
+    desc_th: str | None = None
+    desc_en: str | None = None
     description: str | None = None
     image: str | None = None
+    features_th: str | None = None
+    features_en: str | None = None
 
 
 class RoomUpdate(BaseModel):
     name: str | None = None
+    slug: str | None = None
+    title_th: str | None = None
+    title_en: str | None = None
+    location_th: str | None = None
+    location_en: str | None = None
+    tag_th: str | None = None
+    tag_en: str | None = None
+    desc_th: str | None = None
+    desc_en: str | None = None
     description: str | None = None
     image: str | None = None
+    features_th: str | None = None
+    features_en: str | None = None
 
 
 @router.get("/")
@@ -31,12 +53,18 @@ def list_rooms():
     return rooms
 
 
-@router.get("/{id}")
-def get_room(id: int):
+@router.get("/{identifier}")
+def get_room(identifier: str):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM rooms WHERE id = ?", (id,))
+    cursor.execute(
+        "SELECT * FROM rooms WHERE LOWER(slug) = LOWER(?) OR LOWER(name) = LOWER(?)",
+        (identifier, identifier),
+    )
     row = cursor.fetchone()
+    if not row and identifier.isdigit():
+        cursor.execute("SELECT * FROM rooms WHERE id = ?", (int(identifier),))
+        row = cursor.fetchone()
     conn.close()
     if not row:
         raise HTTPException(status_code=404, detail="Room not found")

@@ -115,9 +115,19 @@ CREATE TABLE IF NOT EXISTS users (
 -- 6. ห้อง CE — Rooms (113, server room)
 CREATE TABLE IF NOT EXISTS rooms (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,            -- e.g. "113", "Server Room"
-  description TEXT,
+  name TEXT NOT NULL,                  -- Legacy name field / slug e.g. "113", "server-room"
+  slug TEXT UNIQUE,                    -- Room URL slug e.g. "113", "server-room"
+  title_th TEXT NOT NULL,
+  title_en TEXT NOT NULL,
+  location_th TEXT,
+  location_en TEXT,
+  tag_th TEXT,
+  tag_en TEXT,
+  desc_th TEXT,
+  desc_en TEXT,
   image TEXT,
+  features_th TEXT,                    -- JSON array string
+  features_en TEXT,                    -- JSON array string
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -309,6 +309,70 @@ def main() -> None:
                 s
             )
 
+        # Seed Rooms
+        rooms_data = [
+            (
+                "113",
+                "113",
+                "ห้องเรียน 113",
+                "Classroom 113",
+                "ตึก E ห้อง 113",
+                "Building E, Room 113",
+                "ห้องเรียน / ปฏิบัติการ",
+                "Lecture & Lab",
+                "ห้องปฏิบัติการคอมพิวเตอร์และห้องเรียนสำหรับการเรียนการสอนของภาควิชาวิศวกรรมคอมพิวเตอร์ ตึก E ชั้น 1 พร้อมด้วยคอมพิวเตอร์ประมวลผลประสิทธิภาพสูง จอภาพคู่ อุปกรณ์เชื่อมต่อเครือข่ายความเร็วสูง จอโปรเจกเตอร์อินเทอร์แอคทีฟ และระบบปรับอากาศ เหมาะสำหรับการเรียนวิชาโปรแกรมมิ่ง ระบบโครงสร้างข้อมูล ปัญญาประดิษฐ์ และการสอบปฏิบัติการ",
+                "Advanced computer engineering laboratory and lecture hall located at Building E, Floor 1. Equipped with high-performance workstation PCs, dual monitors, high-speed networking, interactive presentation displays, and climate control system. Specially designed for computer programming, data structures, AI labs, and practical examinations.",
+                json.dumps(["/image/rooms/room_113_bg.webp"], ensure_ascii=False),
+                json.dumps([
+                    "คอมพิวเตอร์ประมวลผลสูง จอคู่",
+                    "โปรเจกเตอร์ & เครื่องเสียงระดับพรีเมียม",
+                    "ระบบเครือข่าย High-Speed Gigabit LAN",
+                    "ความจุรองรับนักศึกษา 60 คน"
+                ], ensure_ascii=False),
+                json.dumps([
+                    "High-Performance PCs with Dual Monitors",
+                    "Interactive Projector & Premium Sound System",
+                    "High-Speed Gigabit LAN Network",
+                    "Capacity for 60 Students"
+                ], ensure_ascii=False),
+            ),
+            (
+                "server-room",
+                "server-room",
+                "ห้องเซิร์ฟเวอร์",
+                "Server Room",
+                "ตึก B ห้อง 317",
+                "Building B, Room 317",
+                "ศูนย์ข้อมูลภาควิชา",
+                "Data Center",
+                "ศูนย์ข้อมูลและระบบเซิร์ฟเวอร์หลักของภาควิชาวิศวกรรมคอมพิวเตอร์ ตึก B ชั้น 3 (ห้อง 317) รวบรวมเครื่องเซิร์ฟเวอร์ประมวลผลสมรรถนะสูง (High-Performance Computing Cluster), ระบบจัดเก็บข้อมูลความเร็วสูง SAN/NAS, อุปกรณ์ Core Network Switches และ Firewall ระบบสแกนลายนิ้วมือเพื่อความปลอดภัย พร้อมระบบควบคุมอุณหภูมิและความชื้นแม่นยำระดับอุตสาหกรรมตลอด 24 ชั่วโมง",
+                "Primary data center and High-Performance Computing (HPC) server room located at Building B, Floor 3 (Room 317). Houses enterprise server rack cabinets, SAN/NAS high-speed storage clusters, core layer-3 network switches, enterprise firewalls, biometric access control, and 24/7 industrial precision environmental cooling systems.",
+                json.dumps(["/image/rooms/server_room_bg.webp"], ensure_ascii=False),
+                json.dumps([
+                    "HPC Compute Server Cluster",
+                    "ระบบ SAN/NAS High-Speed Storage",
+                    "Core Switch 10Gbps & Security Firewall",
+                    "ระบบปรับอากาศควบคุมอุณหภูมิ 24/7"
+                ], ensure_ascii=False),
+                json.dumps([
+                    "HPC Compute Server Cluster",
+                    "SAN/NAS High-Speed Storage System",
+                    "Core Switch 10Gbps & Security Firewall",
+                    "24/7 Precision Air Conditioning System"
+                ], ensure_ascii=False),
+            ),
+        ]
+
+        cursor.execute("DELETE FROM rooms")
+        for r in rooms_data:
+            cursor.execute(
+                """INSERT INTO rooms 
+                (name, slug, title_th, title_en, location_th, location_en, tag_th, tag_en,
+                 desc_th, desc_en, image, features_th, features_en)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                r
+            )
+
     print("seeded")
 
 

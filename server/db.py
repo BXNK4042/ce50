@@ -29,6 +29,25 @@ def init_db() -> None:
     schema = (Path(__file__).parent / "schema.sql").read_text(encoding="utf-8")
     with db_cursor() as conn:
         conn.executescript(schema)
+        cursor = conn.cursor()
+        cursor.execute("PRAGMA table_info(rooms)")
+        cols = {row["name"] for row in cursor.fetchall()}
+        new_cols = [
+            ("slug", "TEXT"),
+            ("title_th", "TEXT NOT NULL DEFAULT ''"),
+            ("title_en", "TEXT NOT NULL DEFAULT ''"),
+            ("location_th", "TEXT"),
+            ("location_en", "TEXT"),
+            ("tag_th", "TEXT"),
+            ("tag_en", "TEXT"),
+            ("desc_th", "TEXT"),
+            ("desc_en", "TEXT"),
+            ("features_th", "TEXT"),
+            ("features_en", "TEXT"),
+        ]
+        for col_name, col_type in new_cols:
+            if col_name not in cols:
+                cursor.execute(f"ALTER TABLE rooms ADD COLUMN {col_name} {col_type}")
 
 
 if __name__ == "__main__":
