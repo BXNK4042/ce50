@@ -84,6 +84,7 @@ export interface ExamSlot {
 
 // Fixed weekly time slots used to rebuild the class grid from flat cells.
 export const CLASS_TIME_SLOTS = [
+  "08:00 - 09:00",
   "09:00 - 10:00",
   "10:00 - 11:00",
   "11:00 - 12:00",

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { DotsSixVertical, ArrowsDownUp } from "@phosphor-icons/react";
-import { Save } from "lucide-react";
+import { Save, Trash } from "lucide-react";
 
 interface ClassCell {
   day: string;
@@ -34,17 +34,7 @@ const DAYS = [
   { key: "saturday", label: "Sat (เสาร์)", color: "bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400" },
 ];
 
-const TIME_SLOTS = [
-  "08:00 - 09:00",
-  "09:00 - 10:00",
-  "10:00 - 11:00",
-  "11:00 - 12:00",
-  "12:00 - 13:00",
-  "13:00 - 14:00",
-  "14:00 - 15:00",
-  "15:00 - 16:00",
-  "16:00 - 17:00",
-];
+import { CLASS_TIME_SLOTS as TIME_SLOTS } from "@/lib/types";
 
 export default function ClassScheduleGrid({
   year,
@@ -120,6 +110,16 @@ export default function ClassScheduleGrid({
       });
     }
 
+    setCells(updatedMap);
+    setActiveBlockKeys(null);
+  };
+
+  const handleDeleteBlock = (keysToDelete?: string[]) => {
+    const targetKeys = keysToDelete || activeBlockKeys;
+    if (!targetKeys || targetKeys.length === 0) return;
+
+    const updatedMap = new Map(cells);
+    targetKeys.forEach((k) => updatedMap.delete(k));
     setCells(updatedMap);
     setActiveBlockKeys(null);
   };
@@ -377,15 +377,26 @@ export default function ClassScheduleGrid({
                           >
                             <div className="space-y-1">
                               {/* Header & Duration */}
-                              <div className="flex items-center justify-between gap-1 text-[10px] text-zinc-500 dark:text-zinc-400 pointer-events-none">
-                                <DotsSixVertical size={14} className="opacity-60 group-hover/card:opacity-100" />
+                              <div className="flex items-center justify-between gap-1 text-[10px] text-zinc-500 dark:text-zinc-400">
+                                <DotsSixVertical size={14} className="opacity-60 group-hover/card:opacity-100 pointer-events-none" />
                                 {timeRangeText ? (
-                                  <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-200/80 dark:bg-zinc-950/40 text-zinc-800 dark:text-zinc-300">
+                                  <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-200/80 dark:bg-zinc-950/40 text-zinc-800 dark:text-zinc-300 pointer-events-none">
                                     {timeRangeText}
                                   </span>
                                 ) : (
-                                  <span className="font-mono text-[9px] opacity-75">Move</span>
+                                  <span className="font-mono text-[9px] opacity-75 pointer-events-none">Move</span>
                                 )}
+                                <button
+                                  type="button"
+                                  title="Delete Class Block"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteBlock(spanInfo.blockKeys);
+                                  }}
+                                  className="opacity-0 group-hover/card:opacity-100 p-0.5 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 rounded transition-all cursor-pointer"
+                                >
+                                  <Trash className="w-3 h-3" />
+                                </button>
                               </div>
                               <div className="font-extrabold text-sm tracking-tight pointer-events-none">{cell.code}</div>
                               <div className="text-[10.5px] font-medium truncate pointer-events-none">{cell.name_th || cell.name_en}</div>
@@ -467,21 +478,31 @@ export default function ClassScheduleGrid({
                 />
               </div>
             </div>
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-zinc-200 dark:border-zinc-800">
+            <div className="flex items-center justify-between pt-2 border-t border-zinc-200 dark:border-zinc-800">
               <button
                 type="button"
-                onClick={() => setActiveBlockKeys(null)}
-                className="px-3 py-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                onClick={() => handleDeleteBlock()}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold rounded-lg transition-colors cursor-pointer"
               >
-                Cancel
+                <Trash className="w-3.5 h-3.5" />
+                <span>Delete Block</span>
               </button>
-              <button
-                type="button"
-                onClick={handleApplyCell}
-                className="px-4 py-1.5 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-semibold rounded-lg shadow-sm active:scale-[0.98] transition-all"
-              >
-                Apply Block
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActiveBlockKeys(null)}
+                  className="px-3 py-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleApplyCell}
+                  className="px-4 py-1.5 bg-zinc-900 dark:bg-zinc-100 hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-semibold rounded-lg shadow-sm active:scale-[0.98] transition-all"
+                >
+                  Apply Block
+                </button>
+              </div>
             </div>
           </div>
         </div>,
