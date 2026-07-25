@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { fetchInternshipStudents, InternStudent } from "@/lib/internship-data";
+import { fetchInternshipStudents, InternStudent } from "@/lib/api";
 
 interface InternshipSliderProps {
   lang: string;

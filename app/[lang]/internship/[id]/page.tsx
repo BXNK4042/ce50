@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { fetchInternshipStudentById, fetchInternshipStudents } from "@/lib/internship-data";
+import { fetchInternshipStudentById, fetchInternshipStudents } from "@/lib/api";
 import { ArrowLeft, Building2, Briefcase, GraduationCap, Calendar, Cpu, MessageSquareQuote, CheckCircle2, User, Coins, Gift, Star } from "lucide-react";
 
 export async function generateStaticParams() {

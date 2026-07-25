@@ -114,3 +114,30 @@ export interface Video {
   category?: string | null;
   year?: number | null;
 }
+
+export interface InternStudent {
+  id: string;
+  name_th: string;
+  name_en: string;
+  company: string;
+  position_th: string;
+  position_en: string;
+  track: string;
+  photo: string;
+  bg_image?: string;
+  logo?: string;
+  period_th: string;
+  period_en: string;
+  summary_th: string;
+  summary_en: string;
+  description_th: string;
+  description_en: string;
+  tech: string[];
+  advice_th: string;
+  advice_en: string;
+  stipend_th: string;
+  stipend_en: string;
+  welfare_th: string[];
+  welfare_en: string[];
+  rating: number;
+}

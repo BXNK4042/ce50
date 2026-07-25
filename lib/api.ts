@@ -1,6 +1,7 @@
 import type {
   ClassCell,
   ExamSlot,
+  InternStudent,
   NewsCategory,
   Room,
   Student,
@@ -12,6 +13,7 @@ import type {
 export type {
   ClassCell,
   ExamSlot,
+  InternStudent,
   NewsCategory,
   Room,
   Student,
@@ -260,3 +262,28 @@ export const api = {
   getInternshipStudent: (id: string) => get<any>("/internship/students/" + id),
   videos: () => get<Video[]>("/videos"),
 };
+
+export async function fetchInternshipStudents(): Promise<InternStudent[]> {
+  try {
+    const data = await api.internshipStudents();
+    if (Array.isArray(data) && data.length > 0) {
+      return data as InternStudent[];
+    }
+  } catch (err) {
+    // ponytail: return empty array on API failure
+  }
+  return [];
+}
+
+export async function fetchInternshipStudentById(id: string): Promise<InternStudent | undefined> {
+  try {
+    const item = await api.getInternshipStudent(id);
+    if (item && item.id) {
+      return item as InternStudent;
+    }
+  } catch (err) {
+    // ponytail: return undefined on API failure
+  }
+  return undefined;
+}
+
