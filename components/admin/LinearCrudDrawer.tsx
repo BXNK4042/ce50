@@ -10,7 +10,9 @@ interface FieldConfig {
   labelEn: string;
   labelTh: string;
   type?: "text" | "number" | "select" | "textarea" | "image" | "boolean";
-  options?: { value: string | number; label: string }[];
+  uploadEndpoint?: string;
+  multiple?: boolean;
+  options?: { value: string | number; label: string }[] | any[];
   placeholderEn?: string;
   placeholderTh?: string;
   required?: boolean;
@@ -100,15 +102,21 @@ export default function LinearCrudDrawer({
               const value = formData[field.name] ?? "";
 
               if (field.type === "image") {
+                const targetEndpoint = field.uploadEndpoint ?? "/works/upload-image";
+                const endpointUrl = targetEndpoint.startsWith("http")
+                  ? targetEndpoint
+                  : `${backendUrl}${targetEndpoint.startsWith("/") ? "" : "/"}${targetEndpoint}`;
+
                 return (
                   <div key={field.name} className="space-y-1.5">
                     <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">
                       {isTh ? field.labelTh : field.labelEn}
                     </label>
                     <ImageUploader
-                      uploadEndpoint={`${backendUrl}/upload`}
+                      uploadEndpoint={endpointUrl}
                       token={token}
                       initialUrl={value}
+                      multiple={field.multiple}
                       onUploadSuccess={(url: string) => handleChange(field.name, url)}
                     />
                   </div>

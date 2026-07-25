@@ -1,6 +1,9 @@
 import json
-from fastapi import APIRouter, Depends, HTTPException, Query
+import shutil
+import uuid
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from pydantic import BaseModel
+from config import UPLOAD_DIR
 from db import db_cursor, get_db
 from dependencies import check_admin_auth, get_current_admin
 
@@ -35,11 +38,45 @@ class StudentInternshipCreate(BaseModel):
     rating: float = 5.0
 
 
+class StudentInternshipUpdate(BaseModel):
+    student_id: str | None = None
+    company: str | None = None
+    position_th: str | None = None
+    position_en: str | None = None
+    period_th: str | None = None
+    period_en: str | None = None
+    summary_th: str | None = None
+    summary_en: str | None = None
+    description_th: str | None = None
+    description_en: str | None = None
+    tech: list[str] | str | None = None
+    advice_th: str | None = None
+    advice_en: str | None = None
+    stipend_th: str | None = None
+    stipend_en: str | None = None
+    welfare_th: list[str] | str | None = None
+    welfare_en: list[str] | str | None = None
+    rating: float | None = None
+    bg_image: str | None = None
+    logo: str | None = None
+
+
 def _clean_image_url(url: str | None) -> str | None:
     if not url:
         return url
     if "/server/image/" in url:
-        return "/image/" + url.split("/server/image/", 1)[1]
+        url = "/image/" + url.split("/server/image/", 1)[1]
+    elif "/image/" in url:
+        url = "/image/" + url.split("/image/", 1)[1]
+
+    # ponytail: handle legacy seed paths pointing to <id>.jpg instead of <id>/bg.jpg
+    if url.endswith(".jpg"):
+        rel_path = url.replace("/image/", "")
+        if not (UPLOAD_DIR / rel_path).exists():
+            alt_path = url.replace(".jpg", "/bg.jpg")
+            if (UPLOAD_DIR / alt_path.replace("/image/", "")).exists():
+                return alt_path
+
     return url
 
 
@@ -192,6 +229,72 @@ def create_student_internship(payload: StudentInternshipCreate, admin: dict = De
         raise HTTPException(status_code=500, detail=str(e))
 
 
+def _format_json_list(val: list[str] | str | None) -> str:
+    if not val:
+        return "[]"
+    if isinstance(val, list):
+        return json.dumps(val, ensure_ascii=False)
+    if isinstance(val, str):
+        val_str = val.strip()
+        if val_str.startswith("["):
+            return val_str
+        if "," in val_str:
+            return json.dumps([x.strip() for x in val_str.split(",") if x.strip()], ensure_ascii=False)
+        return json.dumps([val_str] if val_str else [], ensure_ascii=False)
+    return "[]"
+
+
+@router.put("/students/{id}")
+def update_student_internship(
+    id: str,
+    payload: StudentInternshipUpdate,
+    admin: dict = Depends(get_current_admin)
+):
+    check_admin_auth(admin, min_role="admin")
+    alt_id = id.replace("intern-", "") if id.startswith("intern-") else f"intern-{id}"
+
+    try:
+        with db_cursor() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT * FROM internship_students WHERE id = ? OR id = ? OR student_id = ?",
+                (id, alt_id, id)
+            )
+            row = cursor.fetchone()
+            if not row:
+                raise HTTPException(status_code=404, detail="Student internship record not found")
+
+            real_id = dict(row)["id"]
+            fields = []
+            values = []
+
+            update_dict = payload.model_dump(exclude_unset=True)
+
+            for key, val in update_dict.items():
+                if val is not None:
+                    if key in ("tech", "welfare_th", "welfare_en"):
+                        fields.append(f"{key} = ?")
+                        values.append(_format_json_list(val))
+                    elif key in ("bg_image", "logo"):
+                        fields.append(f"{key} = ?")
+                        values.append(_clean_image_url(val))
+                    else:
+                        fields.append(f"{key} = ?")
+                        values.append(val)
+
+            if not fields:
+                return {"status": "success", "message": "No fields to update"}
+
+            values.append(real_id)
+            sql = f"UPDATE internship_students SET {', '.join(fields)} WHERE id = ?"
+            cursor.execute(sql, values)
+            return {"status": "success", "message": "Student internship updated successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.delete("/students/{id}")
 def delete_student_internship(id: str, admin: dict = Depends(get_current_admin)):
     try:
@@ -201,3 +304,25 @@ def delete_student_internship(id: str, admin: dict = Depends(get_current_admin))
             return {"status": "success", "message": "Student internship deleted"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ponytail: add image upload endpoint for internship
+@router.post("/upload-image")
+def upload_internship_image(file: UploadFile = File(...), admin: dict = Depends(get_current_admin)):
+    check_admin_auth(admin, min_role="admin")
+    ext = file.filename.split(".")[-1].lower() if file.filename else "webp"
+    if ext not in ("jpg", "jpeg", "png", "webp", "gif"):
+        raise HTTPException(status_code=400, detail="Only image files are allowed")
+
+    new_filename = f"intern_{uuid.uuid4()}.{ext}"
+    intern_dir = UPLOAD_DIR / "internship"
+    intern_dir.mkdir(parents=True, exist_ok=True)
+    dest_path = intern_dir / new_filename
+
+    try:
+        with open(dest_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save image: {str(e)}")
+
+    return {"url": f"/image/internship/{new_filename}"}

@@ -358,7 +358,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           { name: "track", labelEn: "Track", labelTh: "สายรหัส" },
           { name: "class_role", labelEn: "Class Role", labelTh: "ตำแหน่งในห้อง" },
           { name: "contact", labelEn: "Contact", labelTh: "การติดต่อ" },
-          { name: "photo", labelEn: "Profile Photo", labelTh: "รูปโปรไฟล์", type: "image" as const },
+          { name: "photo", labelEn: "Profile Photo", labelTh: "รูปโปรไฟล์", type: "image" as const, uploadEndpoint: "/people/students/upload-image" },
         ];
       case "works":
         return [
@@ -376,7 +376,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           },
           { name: "description", labelEn: "Description", labelTh: "รายละเอียด", type: "textarea" as const },
           { name: "author_ids", labelEn: "Author Student IDs", labelTh: "รหัสนิสิตผู้สร้าง (JSON/Comma)", placeholderEn: "e.g. 1, 2, 3" },
-          { name: "image", labelEn: "Cover Image", labelTh: "รูปหน้าปก", type: "image" as const },
+          { name: "image", labelEn: "Cover Image", labelTh: "รูปหน้าปก", type: "image" as const, uploadEndpoint: "/works/upload-image" },
         ];
       case "teachers":
         return [
@@ -386,13 +386,13 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           { name: "role_en", labelEn: "Role (EN)", labelTh: "ตำแหน่ง (อังกฤษ)" },
           { name: "advise_years", labelEn: "Advise Years", labelTh: "ชั้นปีที่ดูแล (Comma/JSON)", placeholderEn: "e.g. 1, 2, 3" },
           { name: "contact", labelEn: "Contact", labelTh: "การติดต่อ" },
-          { name: "photo", labelEn: "Photo", labelTh: "รูปถ่าย", type: "image" as const },
+          { name: "photo", labelEn: "Photo", labelTh: "รูปถ่าย", type: "image" as const, uploadEndpoint: "/people/teachers/upload-image" },
         ];
       case "rooms":
         return [
           { name: "name", labelEn: "Room Name", labelTh: "ชื่อห้อง", required: true },
           { name: "description", labelEn: "Description", labelTh: "รายละเอียด", type: "textarea" as const },
-          { name: "image", labelEn: "Room Image", labelTh: "รูปห้อง", type: "image" as const },
+          { name: "image", labelEn: "Room Images", labelTh: "รูปห้อง", type: "image" as const, uploadEndpoint: "/rooms/upload-image", multiple: true },
         ];
       case "users":
         return [
@@ -432,8 +432,8 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           { name: "welfare_th", labelEn: "Welfare (TH)", labelTh: "สวัสดิการ (ไทย)" },
           { name: "welfare_en", labelEn: "Welfare (EN)", labelTh: "สวัสดิการ (อังกฤษ)" },
           { name: "rating", labelEn: "Rating", labelTh: "คะแนนรีวิว (1-5)", type: "number" as const },
-          { name: "bg_image", labelEn: "Background Image", labelTh: "รูปพื้นหลัง", type: "image" as const },
-          { name: "logo", labelEn: "Company Logo", labelTh: "โลโก้บริษัท", type: "image" as const },
+          { name: "bg_image", labelEn: "Background Image", labelTh: "รูปพื้นหลัง", type: "image" as const, uploadEndpoint: "/internship/upload-image" },
+          { name: "logo", labelEn: "Company Logo", labelTh: "โลโก้บริษัท", type: "image" as const, uploadEndpoint: "/internship/upload-image" },
         ];
       default:
         return [];
