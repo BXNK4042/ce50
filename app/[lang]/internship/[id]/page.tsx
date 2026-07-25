@@ -41,6 +41,9 @@ export default async function InternshipDetailPage({
     if (url.includes("/server/image/")) {
       return "/image/" + url.split("/server/image/")[1];
     }
+    if (url.includes("/image/")) {
+      return "/image/" + url.split("/image/")[1];
+    }
     return url;
   };
 
@@ -56,9 +59,10 @@ export default async function InternshipDetailPage({
             alt={name}
             fill
             priority
+            unoptimized
             className="object-cover object-top opacity-20 dark:opacity-30 blur-xs scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#cad9f0]/60 via-[#cad9f0]/90 to-[#cad9f0] dark:from-black/40 dark:via-black/80 dark:to-black" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#cad9f0]/30 via-[#cad9f0]/45 to-[#cad9f0] dark:from-black/40 dark:via-black/80 dark:to-black" />
         </div>
       )}
 
@@ -119,9 +123,10 @@ export default async function InternshipDetailPage({
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 pt-2">
               <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-2xl overflow-hidden border-2 border-blue-200 dark:border-zinc-700/60 shadow-xl shrink-0">
                 <Image
-                  src={student.photo}
+                  src={formatImageUrl(student.photo)}
                   alt={name}
                   fill
+                  unoptimized
                   className="object-cover"
                 />
               </div>
