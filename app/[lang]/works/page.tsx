@@ -27,9 +27,6 @@ export default async function WorksPage({
     if (imageUrl && !imageUrl.startsWith("http") && !imageUrl.startsWith("/")) {
       imageUrl = `/image/works/${imageUrl}`;
     }
-    if (!imageUrl) {
-      imageUrl = isComp ? "/image/works/drone.jpg" : "/image/works/shuttle.jpg";
-    }
 
     return {
       id: `db-${item.id}`,
