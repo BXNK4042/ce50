@@ -30,15 +30,22 @@ class ClassSaveBody(BaseModel):
 
 class ExamItem(BaseModel):
     code: str
+    name_th: str
     name_en: Optional[str] = None
-    name_th: Optional[str] = None
-    date_raw: Optional[str] = None
-    start_time: Optional[str] = None
-    end_time: Optional[str] = None
-    midterm_en: Optional[str] = None
-    midterm_th: Optional[str] = None
-    finals_en: Optional[str] = None
-    finals_th: Optional[str] = None
+    midterm_type: Optional[str] = "scheduled"
+    midterm_date: Optional[str] = None
+    midterm_start_time: Optional[str] = None
+    midterm_end_time: Optional[str] = None
+    midterm_room: Optional[str] = None
+    midterm_note_th: Optional[str] = None
+    midterm_note_en: Optional[str] = None
+    finals_type: Optional[str] = "scheduled"
+    finals_date: Optional[str] = None
+    finals_start_time: Optional[str] = None
+    finals_end_time: Optional[str] = None
+    finals_room: Optional[str] = None
+    finals_note_th: Optional[str] = None
+    finals_note_en: Optional[str] = None
 
 
 class ExamSaveBody(BaseModel):
@@ -66,8 +73,10 @@ def list_exam(year: int = Query(...), term: int = Query(1)):
     conn = get_db()
     cur = conn.cursor()
     cur.execute(
-        "SELECT code, name_en, name_th, date_raw, start_time, end_time, midterm_en, midterm_th, finals_en, finals_th "
-        "FROM exam_schedules WHERE year=? AND term=? ORDER BY date_raw, start_time",
+        "SELECT code, name_th, name_en, "
+        "midterm_type, midterm_date, midterm_start_time, midterm_end_time, midterm_room, midterm_note_th, midterm_note_en, "
+        "finals_type, finals_date, finals_start_time, finals_end_time, finals_room, finals_note_th, finals_note_en "
+        "FROM exam_schedules WHERE year=? AND term=? ORDER BY COALESCE(midterm_date, finals_date, '9999-12-31') ASC",
         (year, term),
     )
     rows = [dict(r) for r in cur.fetchall()]
@@ -113,10 +122,15 @@ def save_exam(body: ExamSaveBody, admin: dict = Depends(get_current_admin)):
     for e in body.exams:
         cur.execute(
             "INSERT INTO exam_schedules "
-            "(year, term, code, name_en, name_th, date_raw, start_time, end_time, midterm_en, midterm_th, finals_en, finals_th) "
-            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-            (body.year, body.term, e.code, e.name_en, e.name_th, e.date_raw,
-             e.start_time, e.end_time, e.midterm_en, e.midterm_th, e.finals_en, e.finals_th),
+            "(year, term, code, name_th, name_en, "
+            " midterm_type, midterm_date, midterm_start_time, midterm_end_time, midterm_room, midterm_note_th, midterm_note_en, "
+            " finals_type, finals_date, finals_start_time, finals_end_time, finals_room, finals_note_th, finals_note_en) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (
+                body.year, body.term, e.code, e.name_th, e.name_en,
+                e.midterm_type or "scheduled", e.midterm_date, e.midterm_start_time, e.midterm_end_time, e.midterm_room, e.midterm_note_th, e.midterm_note_en,
+                e.finals_type or "scheduled", e.finals_date, e.finals_start_time, e.finals_end_time, e.finals_room, e.finals_note_th, e.finals_note_en
+            ),
         )
     conn.commit()
     conn.close()

@@ -49,14 +49,26 @@ export interface ExamItem {
   code: string;
   nameEn: string;
   nameTh: string;
-  dateRaw: string;
-  timeRaw: string;
-  startTimeRaw: string;
-  endTimeRaw: string;
-  midtermEn: string;
-  midtermTh: string;
-  finalsEn: string;
-  finalsTh: string;
+  midtermType: "scheduled" | "arranged" | "none";
+  midtermDate: string;
+  midtermStartTime: string;
+  midtermEndTime: string;
+  midtermRoom: string;
+  midtermNoteTh: string;
+  midtermNoteEn: string;
+  finalsType: "scheduled" | "arranged" | "none";
+  finalsDate: string;
+  finalsStartTime: string;
+  finalsEndTime: string;
+  finalsRoom: string;
+  finalsNoteTh: string;
+  finalsNoteEn: string;
+
+  // Computed helper fields for display
+  midtermTh?: string;
+  midtermEn?: string;
+  finalsTh?: string;
+  finalsEn?: string;
 }
 
 // flat DB cell → grid row
@@ -107,35 +119,95 @@ export function gridToCells(grid: WeeklyClassRow[]): ClassCell[] {
   return cells;
 }
 
+export function formatExamPeriod(
+  type?: string | null,
+  date?: string | null,
+  startTime?: string | null,
+  endTime?: string | null,
+  noteTh?: string | null,
+  noteEn?: string | null,
+  lang: "th" | "en" = "th"
+): string {
+  if (type === "arranged") {
+    return lang === "th" ? "จัดสอบเอง" : "Arranged by Lecturer";
+  }
+  if (type === "none") {
+    return "-";
+  }
+  if (date) {
+    try {
+      const d = new Date(date + "T00:00:00");
+      const dayNamesTh = ["อาทิตย์", "จันทร์", "อังคาร", "พุธ", "พฤหัสบดี", "ศุกร์", "เสาร์"];
+      const dayNamesEn = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      const monthNamesTh = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+      const monthNamesEn = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+      const dayStr = lang === "th" ? dayNamesTh[d.getDay()] : dayNamesEn[d.getDay()];
+      const dayNum = d.getDate();
+      const monthStr = lang === "th" ? monthNamesTh[d.getMonth()] : monthNamesEn[d.getMonth()];
+      const yearNum = lang === "th" ? d.getFullYear() + 543 : d.getFullYear();
+
+      let dateFormatted = `${dayStr} ${dayNum} ${monthStr} ${yearNum}`;
+      if (startTime && endTime) {
+        dateFormatted += ` (${startTime} - ${endTime})`;
+      } else if (startTime) {
+        dateFormatted += ` (${startTime})`;
+      }
+      return dateFormatted;
+    } catch {
+      return date;
+    }
+  }
+
+  return (lang === "th" ? noteTh : noteEn) || noteTh || noteEn || "-";
+}
+
+// flat DB cell → ExamItem
 export function slotToExamItem(s: ExamSlot): ExamItem {
-  const isOutside = !s.date_raw || s.date_raw === "9999-12-31";
   return {
     code: s.code,
-    nameEn: s.name_en ?? "",
     nameTh: s.name_th ?? "",
-    dateRaw: s.date_raw ?? "",
-    timeRaw: isOutside ? "23:59" : (s.start_time ?? ""),
-    startTimeRaw: isOutside ? "" : (s.start_time ?? ""),
-    endTimeRaw: isOutside ? "" : (s.end_time ?? ""),
-    midtermEn: s.midterm_en ?? "-",
-    midtermTh: s.midterm_th ?? "-",
-    finalsEn: s.finals_en ?? "-",
-    finalsTh: s.finals_th ?? "-",
+    nameEn: s.name_en ?? "",
+    midtermType: s.midterm_type ?? "scheduled",
+    midtermDate: s.midterm_date ?? "",
+    midtermStartTime: s.midterm_start_time ?? "",
+    midtermEndTime: s.midterm_end_time ?? "",
+    midtermRoom: s.midterm_room ?? "",
+    midtermNoteTh: s.midterm_note_th ?? "",
+    midtermNoteEn: s.midterm_note_en ?? "",
+    finalsType: s.finals_type ?? "scheduled",
+    finalsDate: s.finals_date ?? "",
+    finalsStartTime: s.finals_start_time ?? "",
+    finalsEndTime: s.finals_end_time ?? "",
+    finalsRoom: s.finals_room ?? "",
+    finalsNoteTh: s.finals_note_th ?? "",
+    finalsNoteEn: s.finals_note_en ?? "",
+    midtermTh: formatExamPeriod(s.midterm_type, s.midterm_date, s.midterm_start_time, s.midterm_end_time, s.midterm_note_th, s.midterm_note_en, "th"),
+    midtermEn: formatExamPeriod(s.midterm_type, s.midterm_date, s.midterm_start_time, s.midterm_end_time, s.midterm_note_th, s.midterm_note_en, "en"),
+    finalsTh: formatExamPeriod(s.finals_type, s.finals_date, s.finals_start_time, s.finals_end_time, s.finals_note_th, s.finals_note_en, "th"),
+    finalsEn: formatExamPeriod(s.finals_type, s.finals_date, s.finals_start_time, s.finals_end_time, s.finals_note_th, s.finals_note_en, "en"),
   };
 }
 
 export function examItemToSlot(e: ExamItem): ExamSlot {
   return {
     code: e.code,
-    name_en: e.nameEn,
     name_th: e.nameTh,
-    date_raw: e.dateRaw,
-    start_time: e.startTimeRaw,
-    end_time: e.endTimeRaw,
-    midterm_en: e.midtermEn,
-    midterm_th: e.midtermTh,
-    finals_en: e.finalsEn,
-    finals_th: e.finalsTh,
+    name_en: e.nameEn,
+    midterm_type: e.midtermType,
+    midterm_date: e.midtermDate || null,
+    midterm_start_time: e.midtermStartTime || null,
+    midterm_end_time: e.midtermEndTime || null,
+    midterm_room: e.midtermRoom || null,
+    midterm_note_th: e.midtermNoteTh || null,
+    midterm_note_en: e.midtermNoteEn || null,
+    finals_type: e.finalsType,
+    finals_date: e.finalsDate || null,
+    finals_start_time: e.finalsStartTime || null,
+    finals_end_time: e.finalsEndTime || null,
+    finals_room: e.finalsRoom || null,
+    finals_note_th: e.finalsNoteTh || null,
+    finals_note_en: e.finalsNoteEn || null,
   };
 }
 

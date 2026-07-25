@@ -106,12 +106,17 @@ export default function ScheduleClient({
     const updateCountdown = () => {
       const now = new Date();
       const upcoming = exams
-        .filter(exam => exam.dateRaw && exam.dateRaw !== "9999-12-31")
-        .map(exam => {
-          const dateTime = new Date(`${exam.dateRaw}T${exam.startTimeRaw || "00:00"}:00`);
-          return { ...exam, dateTime };
+        .flatMap((exam) => {
+          const dates: { code: string; dateTime: Date }[] = [];
+          if (exam.midtermType === "scheduled" && exam.midtermDate) {
+            dates.push({ code: exam.code, dateTime: new Date(`${exam.midtermDate}T${exam.midtermStartTime || "00:00"}:00`) });
+          }
+          if (exam.finalsType === "scheduled" && exam.finalsDate) {
+            dates.push({ code: exam.code, dateTime: new Date(`${exam.finalsDate}T${exam.finalsStartTime || "00:00"}:00`) });
+          }
+          return dates;
         })
-        .filter(exam => exam.dateTime.getTime() > now.getTime())
+        .filter((item) => item.dateTime.getTime() > now.getTime())
         .sort((a, b) => a.dateTime.getTime() - b.dateTime.getTime());
 
       if (upcoming.length === 0) {

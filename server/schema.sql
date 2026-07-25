@@ -71,18 +71,30 @@ CREATE TABLE IF NOT EXISTS class_schedules (
 
 CREATE TABLE IF NOT EXISTS exam_schedules (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  year INTEGER NOT NULL,
-  term INTEGER NOT NULL DEFAULT 1,
-  code TEXT NOT NULL,
-  name_en TEXT,
-  name_th TEXT,
-  date_raw TEXT,                      -- ISO yyyy-mm-dd or 9999-12-31 = outside schedule
-  start_time TEXT,
-  end_time TEXT,
-  midterm_en TEXT,
-  midterm_th TEXT,
-  finals_en TEXT,
-  finals_th TEXT,
+  year INTEGER NOT NULL,                   -- Cohort year: 1, 2, 3, 4
+  term INTEGER NOT NULL DEFAULT 1,         -- Semester term: 1 or 2
+  code TEXT NOT NULL,                      -- Course Code e.g. "01006001"
+  name_th TEXT NOT NULL,                   -- Thai Course Name
+  name_en TEXT,                            -- English Course Name
+
+  -- Midterm Exam Attributes
+  midterm_type TEXT DEFAULT 'scheduled',   -- 'scheduled' | 'arranged' | 'none'
+  midterm_date TEXT,                       -- ISO Date 'YYYY-MM-DD'
+  midterm_start_time TEXT,                 -- Start Time 'HH:MM'
+  midterm_end_time TEXT,                   -- End Time 'HH:MM'
+  midterm_room TEXT,                       -- Room e.g. "E113"
+  midterm_note_th TEXT,                    -- Optional custom note TH
+  midterm_note_en TEXT,                    -- Optional custom note EN
+
+  -- Finals Exam Attributes
+  finals_type TEXT DEFAULT 'scheduled',    -- 'scheduled' | 'arranged' | 'none'
+  finals_date TEXT,                        -- ISO Date 'YYYY-MM-DD'
+  finals_start_time TEXT,                  -- Start Time 'HH:MM'
+  finals_end_time TEXT,                    -- End Time 'HH:MM'
+  finals_room TEXT,                        -- Room e.g. "E113"
+  finals_note_th TEXT,                     -- Optional custom note TH
+  finals_note_en TEXT,                     -- Optional custom note EN
+
   created_at TEXT DEFAULT CURRENT_TIMESTAMP,
   UNIQUE(year, term, code)
 );

@@ -234,33 +234,35 @@ def main() -> None:
                 )
 
         # Seed exam schedules for Year 1-4
+        # tuple format: (year, term, code, name_th, name_en, m_type, m_date, m_start, m_end, m_room, f_type, f_date, f_start, f_end, f_room)
         exams_all = [
             # Year 1
-            (1, 1, "01006001", "Calculus 1", "แคลคูลัส 1", "2026-08-20", "09:00", "12:00", "Thu 20 Aug 2026", "พฤหัสบดี 20 ส.ค. 2569", "Thu 29 Oct 2026", "พฤหัสบดี 29 ต.ค. 2569"),
-            (1, 1, "01006002", "Computer Programming", "การโปรแกรมคอมพิวเตอร์", "2026-08-22", "09:00", "12:00", "Sat 22 Aug 2026", "เสาร์ 22 ส.ค. 2569", "Sat 31 Oct 2026", "เสาร์ 31 ต.ค. 2569"),
+            (1, 1, "01006001", "แคลคูลัส 1", "Calculus 1", "scheduled", "2026-08-20", "09:00", "12:00", "E113", "scheduled", "2026-10-29", "09:00", "12:00", "E113"),
+            (1, 1, "01006002", "การโปรแกรมคอมพิวเตอร์", "Computer Programming", "scheduled", "2026-08-22", "09:00", "12:00", "E113", "scheduled", "2026-10-31", "09:00", "12:00", "E113"),
 
             # Year 2
-            (2, 1, "02006010", "Data Structures & Algorithms", "โครงสร้างข้อมูลและอัลกอริทึม", "2026-08-20", "13:30", "16:30", "Thu 20 Aug 2026", "พฤหัสบดี 20 ส.ค. 2569", "Thu 29 Oct 2026", "พฤหัสบดี 29 ต.ค. 2569"),
+            (2, 1, "02006010", "โครงสร้างข้อมูลและอัลกอริทึม", "Data Structures & Algorithms", "scheduled", "2026-08-20", "13:30", "16:30", "E113", "scheduled", "2026-10-29", "13:30", "16:30", "E113"),
 
             # Year 3
-            (3, 1, "11256011", "Software Development Processes", "SOFTWARE DEVELOPMENT PROCESSES", "2026-08-23", "13:30", "16:30", "Sun 23 Aug 2026 (13:30 - 16:30)", "อาทิตย์ 23 ส.ค. 2569 (13:30 - 16:30)", "Tue 3 Nov 2026 (13:30 - 16:30)", "อังคาร 3 พ.ย. 2569 (13:30 - 16:30)"),
-            (3, 1, "11256016", "Database Systems", "DATABASE SYSTEMS", "2026-08-21", "13:30", "16:30", "Fri 21 Aug 2026 (13:30 - 16:30)", "ศุกร์ 21 ส.ค. 2569 (13:30 - 16:30)", "Fri 30 Oct 2026 (13:30 - 16:30)", "ศุกร์ 30 ต.ค. 2569 (13:30 - 16:30)"),
-            (3, 1, "11256022", "Information and Computer Security", "INFORMATION AND COMPUTER SECURITY", "2026-10-26", "13:30", "16:30", "Arranged by Lecturer", "จัดสอบเอง", "Mon 26 Oct 2026 (13:30 - 16:30)", "จันทร์ 26 ต.ค. 2569 (13:30 - 16:30)"),
-            (3, 1, "11256025", "Computer Architecture", "COMPUTER ARCHITECTURE", "2026-08-19", "13:30", "16:30", "Wed 19 Aug 2026 (13:30 - 16:30)", "พุธ 19 ส.ค. 2569 (13:30 - 16:30)", "Wed 28 Oct 2026 (13:30 - 16:30)", "พุธ 28 ต.ค. 2569 (13:30 - 16:30)"),
-            (3, 1, "11256027", "Computer Hardware Design", "COMPUTER HARDWARE DESIGN", "2026-11-04", "13:30", "16:30", "Arranged by Lecturer", "จัดสอบเอง", "Wed 4 Nov 2026 (13:30 - 16:30)", "พุธ 4 พ.ย. 2569 (13:30 - 16:30)"),
-            (3, 1, "90642172", "Team-Project 2", "TEAM-PROJECT 2", "9999-12-31", "-", "-", "Arranged by Lecturer", "จัดสอบเอง", "Arranged by Lecturer", "จัดสอบเอง"),
+            (3, 1, "11256011", "SOFTWARE DEVELOPMENT PROCESSES", "Software Development Processes", "scheduled", "2026-08-23", "13:30", "16:30", "E113", "scheduled", "2026-11-03", "13:30", "16:30", "E113"),
+            (3, 1, "11256016", "DATABASE SYSTEMS", "Database Systems", "scheduled", "2026-08-21", "13:30", "16:30", "E113", "scheduled", "2026-10-30", "13:30", "16:30", "E113"),
+            (3, 1, "11256022", "INFORMATION AND COMPUTER SECURITY", "Information and Computer Security", "arranged", None, None, None, None, "scheduled", "2026-10-26", "13:30", "16:30", "E113"),
+            (3, 1, "11256025", "COMPUTER ARCHITECTURE", "Computer Architecture", "scheduled", "2026-08-19", "13:30", "16:30", "E113", "scheduled", "2026-10-28", "13:30", "16:30", "E113"),
+            (3, 1, "11256027", "COMPUTER HARDWARE DESIGN", "Computer Hardware Design", "arranged", None, None, None, None, "scheduled", "2026-11-04", "13:30", "16:30", "E113"),
+            (3, 1, "90642172", "TEAM-PROJECT 2", "Team-Project 2", "arranged", None, None, None, None, "arranged", None, None, None, None),
 
             # Year 4
-            (4, 1, "04006020", "Senior Project I", "โครงงานวิศวกรรมคอมพิวเตอร์ 1", "9999-12-31", "-", "-", "Arranged by Lecturer", "จัดสอบเอง", "Arranged by Lecturer", "จัดสอบเอง"),
+            (4, 1, "04006020", "โครงงานวิศวกรรมคอมพิวเตอร์ 1", "Senior Project I", "arranged", None, None, None, None, "arranged", None, None, None, None),
         ]
         cursor = conn.cursor()
         cursor.execute("DELETE FROM exam_schedules")
-        for yr, trm, code, name_en, name_th, date_raw, start_time, end_time, mid_en, mid_th, fin_en, fin_th in exams_all:
+        for yr, trm, code, name_th, name_en, m_type, m_date, m_start, m_end, m_room, f_type, f_date, f_start, f_end, f_room in exams_all:
             cursor.execute(
                 "INSERT INTO exam_schedules "
-                "(year, term, code, name_en, name_th, date_raw, start_time, end_time, midterm_en, midterm_th, finals_en, finals_th) "
-                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-                (yr, trm, code, name_en, name_th, date_raw, start_time, end_time, mid_en, mid_th, fin_en, fin_th),
+                "(year, term, code, name_th, name_en, midterm_type, midterm_date, midterm_start_time, midterm_end_time, midterm_room, "
+                " finals_type, finals_date, finals_start_time, finals_end_time, finals_room) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                (yr, trm, code, name_th, name_en, m_type, m_date, m_start, m_end, m_room, f_type, f_date, f_start, f_end, f_room),
             )
 
         # Seed student internship records

@@ -62,15 +62,24 @@ export interface ClassCell {
 // Flat exam row stored in DB.
 export interface ExamSlot {
   code: string;
+  name_th: string;
   name_en?: string | null;
-  name_th?: string | null;
-  date_raw?: string | null;
-  start_time?: string | null;
-  end_time?: string | null;
-  midterm_en?: string | null;
-  midterm_th?: string | null;
-  finals_en?: string | null;
-  finals_th?: string | null;
+
+  midterm_type?: "scheduled" | "arranged" | "none" | null;
+  midterm_date?: string | null;
+  midterm_start_time?: string | null;
+  midterm_end_time?: string | null;
+  midterm_room?: string | null;
+  midterm_note_th?: string | null;
+  midterm_note_en?: string | null;
+
+  finals_type?: "scheduled" | "arranged" | "none" | null;
+  finals_date?: string | null;
+  finals_start_time?: string | null;
+  finals_end_time?: string | null;
+  finals_room?: string | null;
+  finals_note_th?: string | null;
+  finals_note_en?: string | null;
 }
 
 // Fixed weekly time slots used to rebuild the class grid from flat cells.

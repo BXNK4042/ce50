@@ -250,7 +250,7 @@ export default function NewsSlider({ lang, title }: NewsSliderProps) {
             return (
               <div
                 key={idx}
-                className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-zinc-950 dark:bg-black border border-zinc-800/80 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/40 hover:border-zinc-700/80 cursor-pointer select-none relative group"
+                className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)] shrink-0 h-[420px] bg-zinc-950 dark:bg-black border border-zinc-800/80 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-black/40 hover:border-zinc-700/80 cursor-pointer select-none relative group"
                 onClick={(e) => {
                   const isEditClick = (e.target as HTMLElement).closest(".edit-btn");
                   if (isEditClick) {
