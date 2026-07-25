@@ -48,7 +48,8 @@ export interface NewsItem {
 // Flat class cell stored in DB; frontend converts to/from WeeklyClassRow grid.
 export interface ClassCell {
   day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday";
-  time_slot: string;
+  start_time: string;
+  end_time: string;
   code: string;
   name_en?: string | null;
   name_th?: string | null;

@@ -56,7 +56,8 @@ CREATE TABLE IF NOT EXISTS class_schedules (
   year INTEGER NOT NULL,
   term INTEGER NOT NULL DEFAULT 1,
   day TEXT NOT NULL CHECK (day IN ('monday','tuesday','wednesday','thursday','friday','saturday')),
-  time_slot TEXT NOT NULL,            -- e.g. "09:00 - 10:00"
+  start_time TEXT NOT NULL,         -- e.g. "09:00"
+  end_time TEXT NOT NULL,           -- e.g. "12:00"
   code TEXT NOT NULL,
   name_en TEXT,
   name_th TEXT,
@@ -65,8 +66,7 @@ CREATE TABLE IF NOT EXISTS class_schedules (
   instructor_th TEXT,
   description_en TEXT,
   description_th TEXT,
-  created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(year, term, day, time_slot)
+  created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS exam_schedules (

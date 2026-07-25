@@ -11,7 +11,8 @@ DAYS = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday")
 
 class ClassCell(BaseModel):
     day: str
-    time_slot: str
+    start_time: str
+    end_time: str
     code: str
     name_en: Optional[str] = None
     name_th: Optional[str] = None
@@ -59,8 +60,8 @@ def list_class(year: int = Query(...), term: int = Query(1)):
     conn = get_db()
     cur = conn.cursor()
     cur.execute(
-        "SELECT day, time_slot, code, name_en, name_th, room, instructor_en, instructor_th, description_en, description_th "
-        "FROM class_schedules WHERE year=? AND term=? ORDER BY id",
+        "SELECT day, start_time, end_time, code, name_en, name_th, room, instructor_en, instructor_th, description_en, description_th "
+        "FROM class_schedules WHERE year=? AND term=? ORDER BY day, start_time",
         (year, term),
     )
     rows = [dict(r) for r in cur.fetchall()]
@@ -99,9 +100,9 @@ def save_class(body: ClassSaveBody, admin: dict = Depends(get_current_admin)):
     for c in body.rows:
         cur.execute(
             "INSERT INTO class_schedules "
-            "(year, term, day, time_slot, code, name_en, name_th, room, instructor_en, instructor_th, description_en, description_th) "
+            "(year, term, day, start_time, end_time, code, name_en, name_th, room, instructor_en, instructor_th, description_en, description_th) "
             "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-            (body.year, body.term, c.day, c.time_slot, c.code, c.name_en, c.name_th,
+            (body.year, body.term, c.day, c.start_time, c.end_time, c.code, c.name_en, c.name_th,
              c.room, c.instructor_en, c.instructor_th, c.description_en, c.description_th),
         )
     conn.commit()

@@ -5,18 +5,8 @@ import { createPortal } from "react-dom";
 import { DotsSixVertical, ArrowsDownUp } from "@phosphor-icons/react";
 import { Save, Trash } from "lucide-react";
 
-interface ClassCell {
-  day: string;
-  time_slot: string;
-  code: string;
-  name_en?: string;
-  name_th?: string;
-  room?: string;
-  instructor_en?: string;
-  instructor_th?: string;
-  description_en?: string;
-  description_th?: string;
-}
+import { CLASS_TIME_SLOTS as TIME_SLOTS, CLASS_DAYS } from "@/lib/types";
+import { cellsToGrid, gridToCells, ClassCell, WeeklyClassRow } from "@/lib/api";
 
 interface ClassScheduleGridProps {
   year: number;
@@ -33,8 +23,6 @@ const DAYS = [
   { key: "friday", label: "Fri (ศุกร์)", color: "bg-sky-500/10 border-sky-500/30 text-sky-600 dark:text-sky-400" },
   { key: "saturday", label: "Sat (เสาร์)", color: "bg-purple-500/10 border-purple-500/30 text-purple-600 dark:text-purple-400" },
 ];
-
-import { CLASS_TIME_SLOTS as TIME_SLOTS } from "@/lib/types";
 
 export default function ClassScheduleGrid({
   year,
@@ -68,9 +56,28 @@ export default function ClassScheduleGrid({
       const res = await fetch(`${backendUrl}/schedule/class?year=${year}&term=${term}`);
       if (res.ok) {
         const data: ClassCell[] = await res.json();
+        const grid = cellsToGrid(data);
         const map = new Map<string, ClassCell>();
-        data.forEach((c) => {
-          map.set(`${c.day}_${c.time_slot}`, c);
+        grid.forEach((row) => {
+          DAYS.forEach((d) => {
+            const item = row[d.key as keyof WeeklyClassRow] as any;
+            if (item) {
+              const [slotStart, slotEnd] = row.time.split(" - ").map((s) => s.trim());
+              map.set(`${d.key}_${row.time}`, {
+                day: d.key as any,
+                start_time: slotStart,
+                end_time: slotEnd,
+                code: item.code,
+                name_en: item.nameEn,
+                name_th: item.nameTh,
+                room: item.room || null,
+                instructor_en: item.instructorEn || null,
+                instructor_th: item.instructorTh || null,
+                description_en: item.descriptionEn || null,
+                description_th: item.descriptionTh || null,
+              });
+            }
+          });
         });
         setCells(map);
       }
@@ -86,27 +93,54 @@ export default function ClassScheduleGrid({
     day: string,
     blockKeys: string[],
     startSlot: string,
+    endSlot: string,
     cell: ClassCell | null
   ) => {
     setActiveBlockKeys(blockKeys);
-    setCellForm(cell ? { ...cell } : { day, time_slot: startSlot, code: "" });
+    const startTime = startSlot.split(" - ")[0].trim();
+    const endTime = endSlot.split(" - ")[1].trim();
+
+    setCellForm(
+      cell
+        ? {
+            ...cell,
+            day: day as any,
+            start_time: startTime,
+            end_time: endTime,
+          }
+        : {
+            day: day as any,
+            start_time: startTime,
+            end_time: endTime,
+            code: "",
+          }
+    );
   };
 
   const handleApplyCell = () => {
     if (!activeBlockKeys || activeBlockKeys.length === 0) return;
 
     const updatedMap = new Map(cells);
-    if (!cellForm.code?.trim()) {
-      activeBlockKeys.forEach((k) => updatedMap.delete(k));
-    } else {
-      activeBlockKeys.forEach((k) => {
-        const slot = k.split("_").slice(1).join("_");
-        const day = k.split("_")[0];
-        updatedMap.set(k, {
-          ...(cellForm as ClassCell),
-          day,
-          time_slot: slot,
-        });
+    // Delete old block keys
+    activeBlockKeys.forEach((k) => updatedMap.delete(k));
+
+    if (cellForm.code?.trim()) {
+      const targetDay = cellForm.day || activeBlockKeys[0].split("_")[0];
+      const startTime = cellForm.start_time || "09:00";
+      const endTime = cellForm.end_time || "12:00";
+
+      // Populate matching time slots in grid
+      TIME_SLOTS.forEach((slot) => {
+        const [slotStart, slotEnd] = slot.split(" - ").map((s) => s.trim());
+        if (startTime <= slotStart && endTime >= slotEnd) {
+          const key = `${targetDay}_${slot}`;
+          updatedMap.set(key, {
+            ...(cellForm as ClassCell),
+            day: targetDay as any,
+            start_time: startTime,
+            end_time: endTime,
+          });
+        }
       });
     }
 
@@ -173,10 +207,12 @@ export default function ClassScheduleGrid({
       if (targetIdx + i < TIME_SLOTS.length) {
         const newSlot = TIME_SLOTS[targetIdx + i];
         const newKey = `${targetDay}_${newSlot}`;
+        const [start_time, end_time] = newSlot.split(" - ").map((s) => s.trim());
         updatedMap.set(newKey, {
           ...originCell,
-          day: targetDay,
-          time_slot: newSlot,
+          day: targetDay as any,
+          start_time,
+          end_time,
         });
       }
     }
@@ -188,7 +224,26 @@ export default function ClassScheduleGrid({
   const handleSaveAll = async () => {
     setSaving(true);
     setError("");
-    const rowsList = Array.from(cells.values());
+
+    const gridRows: WeeklyClassRow[] = TIME_SLOTS.map((slot) => {
+      const row: any = { time: slot };
+      DAYS.forEach((d) => {
+        const cell = cells.get(`${d.key}_${slot}`);
+        row[d.key] = cell ? {
+          code: cell.code,
+          nameEn: cell.name_en || "",
+          nameTh: cell.name_th || "",
+          room: cell.room || undefined,
+          instructorEn: cell.instructor_en || undefined,
+          instructorTh: cell.instructor_th || undefined,
+          descriptionEn: cell.description_en || undefined,
+          descriptionTh: cell.description_th || undefined,
+        } : null;
+      });
+      return row;
+    });
+
+    const rowsList = gridToCells(gridRows);
 
     try {
       const res = await fetch(`${backendUrl}/schedule/class`, {
@@ -362,7 +417,7 @@ export default function ClassScheduleGrid({
                         onDragOver={(e) => handleDragOver(e, key)}
                         onDragLeave={handleDragLeave}
                         onDrop={(e) => handleDrop(e, d.key, slot)}
-                        onClick={() => handleCellClick(d.key, spanInfo.blockKeys, spanInfo.startSlot, cell)}
+                        onClick={() => handleCellClick(d.key, spanInfo.blockKeys, spanInfo.startSlot, spanInfo.endSlot, cell)}
                         className={`p-1 border-r border-zinc-200 dark:border-zinc-800/80 transition-all relative h-full ${
                           isDragOver
                             ? "bg-blue-500/20 ring-2 ring-blue-500/80 ring-inset"
@@ -439,6 +494,40 @@ export default function ClassScheduleGrid({
               </span>
             </div>
             <div className="space-y-3">
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Day</label>
+                  <select
+                    value={cellForm.day || "monday"}
+                    onChange={(e) => setCellForm({ ...cellForm, day: e.target.value as any })}
+                    className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    {DAYS.map((d) => (
+                      <option key={d.key} value={d.key}>
+                        {d.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Start Time</label>
+                  <input
+                    type="time"
+                    value={cellForm.start_time || "09:00"}
+                    onChange={(e) => setCellForm({ ...cellForm, start_time: e.target.value })}
+                    className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs font-mono text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">End Time</label>
+                  <input
+                    type="time"
+                    value={cellForm.end_time || "12:00"}
+                    onChange={(e) => setCellForm({ ...cellForm, end_time: e.target.value })}
+                    className="w-full p-2.5 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs font-mono text-zinc-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              </div>
               <div>
                 <label className="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Course Code *</label>
                 <input

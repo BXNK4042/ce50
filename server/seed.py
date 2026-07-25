@@ -9,6 +9,8 @@ from auth_utils import hash_password
 
 
 def main() -> None:
+    with db_cursor() as conn:
+        conn.execute("DROP TABLE IF EXISTS class_schedules")
     init_db()
     with db_cursor() as conn:
         # Wipe all existing table data & reset autoincrement sequences
@@ -222,16 +224,12 @@ def main() -> None:
         cursor = conn.cursor()
         cursor.execute("DELETE FROM class_schedules")
         for yr, trm, day, raw_time_slot, code, name_en, name_th, room, instr_en, instr_th in schedules_all:
-            start_str, end_str = [s.strip() for s in raw_time_slot.split("-")]
-            start_h = int(start_str.split(":")[0])
-            end_h = int(end_str.split(":")[0])
-            for h in range(start_h, end_h):
-                time_slot = f"{h:02d}:00 - {h+1:02d}:00"
-                cursor.execute(
-                    "INSERT INTO class_schedules (year, term, day, time_slot, code, name_en, name_th, room, instructor_en, instructor_th) "
-                    "VALUES (?,?,?,?,?,?,?,?,?,?)",
-                    (yr, trm, day, time_slot, code, name_en, name_th, room, instr_en, instr_th),
-                )
+            start_time, end_time = [s.strip() for s in raw_time_slot.split("-")]
+            cursor.execute(
+                "INSERT INTO class_schedules (year, term, day, start_time, end_time, code, name_en, name_th, room, instructor_en, instructor_th) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                (yr, trm, day, start_time, end_time, code, name_en, name_th, room, instr_en, instr_th),
+            )
 
         # Seed exam schedules for Year 1-4
         # tuple format: (year, term, code, name_th, name_en, m_type, m_date, m_start, m_end, m_room, f_type, f_date, f_start, f_end, f_room)

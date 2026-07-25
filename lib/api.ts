@@ -78,10 +78,9 @@ export function cellsToGrid(cells: ClassCell[]): WeeklyClassRow[] {
     monday: null, tuesday: null, wednesday: null,
     thursday: null, friday: null, saturday: null,
   }));
+
   for (const c of cells) {
-    const row = grid.find((r) => r.time === c.time_slot);
-    if (!row) continue;
-    const cell: ClassItem = {
+    const item: ClassItem = {
       code: c.code,
       nameEn: c.name_en ?? "",
       nameTh: c.name_th ?? "",
@@ -91,20 +90,47 @@ export function cellsToGrid(cells: ClassCell[]): WeeklyClassRow[] {
       descriptionEn: c.description_en ?? undefined,
       descriptionTh: c.description_th ?? undefined,
     };
-    (row as any)[c.day] = cell;
+
+    for (const row of grid) {
+      const [slotStart, slotEnd] = row.time.split(" - ").map((s) => s.trim());
+      if (c.start_time <= slotStart && c.end_time >= slotEnd) {
+        (row as any)[c.day] = item;
+      }
+    }
   }
   return grid;
 }
 
 export function gridToCells(grid: WeeklyClassRow[]): ClassCell[] {
   const cells: ClassCell[] = [];
-  for (const row of grid) {
-    for (const day of CLASS_DAYS) {
-      const item = row[day];
-      if (!item) continue;
+
+  for (const day of CLASS_DAYS) {
+    let s = 0;
+    while (s < grid.length) {
+      const item = grid[s][day];
+      if (!item) {
+        s++;
+        continue;
+      }
+
+      const startSlot = grid[s].time.split(" - ")[0].trim();
+      let endSlot = grid[s].time.split(" - ")[1].trim();
+      let nextS = s + 1;
+
+      while (nextS < grid.length) {
+        const nextItem = grid[nextS][day];
+        if (nextItem && nextItem.code === item.code) {
+          endSlot = grid[nextS].time.split(" - ")[1].trim();
+          nextS++;
+        } else {
+          break;
+        }
+      }
+
       cells.push({
         day,
-        time_slot: row.time,
+        start_time: startSlot,
+        end_time: endSlot,
         code: item.code,
         name_en: item.nameEn,
         name_th: item.nameTh,
@@ -114,8 +140,11 @@ export function gridToCells(grid: WeeklyClassRow[]): ClassCell[] {
         description_en: item.descriptionEn ?? null,
         description_th: item.descriptionTh ?? null,
       });
+
+      s = nextS;
     }
   }
+
   return cells;
 }
 
