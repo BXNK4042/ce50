@@ -8,6 +8,8 @@ export interface Teacher {
   photo?: string | null;
   advise_years?: string[]; // JSON array from API
   contact?: string | null;
+  role_th?: string | null;
+  role_en?: string | null;
 }
 
 export interface Student {

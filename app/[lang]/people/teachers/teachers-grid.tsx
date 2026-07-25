@@ -180,18 +180,22 @@ export default function TeachersGrid({ teachers, lang }: TeachersGridProps) {
                   <span className={`inline-block px-2.5 py-0.5 text-[10px] font-semibold bg-white/10 backdrop-blur-md text-white rounded-md border border-white/20 uppercase tracking-wider select-none transition-all duration-500 ${
                     teacher.id === 6 ? "group-hover:text-black group-hover:bg-black/10 group-hover:border-black/20" : ""
                   }`}>
-                    {teacher.id === 6 ? (
-                      <>
-                        <span className="group-hover:hidden">
-                          {isTh ? "นักวิชาการคอมพิวเตอร์" : "Computer Technical Officer"}
-                        </span>
-                        <span className="hidden group-hover:inline">
-                          {isTh ? 'ผู้บริหารร้าน "นิยมชา"' : 'Executive of "Niyomcha"'}
-                        </span>
-                      </>
-                    ) : (
-                      isTh ? "อาจารย์ประจำสาขา" : "Faculty Member"
-                    )}
+                    {(() => {
+                      const roleLabel = isTh
+                        ? (teacher.role_th || (teacher.id === 6 ? "นักวิชาการคอมพิวเตอร์" : "อาจารย์ประจำสาขา"))
+                        : (teacher.role_en || (teacher.id === 6 ? "Computer Technical Officer" : "Faculty Member"));
+
+                      return teacher.id === 6 ? (
+                        <>
+                          <span className="group-hover:hidden">{roleLabel}</span>
+                          <span className="hidden group-hover:inline">
+                            {isTh ? 'ผู้บริหารร้าน "นิยมชา"' : 'Executive of "Niyomcha"'}
+                          </span>
+                        </>
+                      ) : (
+                        roleLabel
+                      );
+                    })()}
                   </span>
                   <h3 className={`text-lg font-bold text-white mt-2 transition-colors line-clamp-1 ${
                     teacher.id === 6 ? "group-hover:text-black" : "group-hover:text-sky-300"

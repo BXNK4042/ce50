@@ -17,6 +17,8 @@ class TeacherCreate(BaseModel):
     photo: str | None = None
     advise_years: list[str] | str | None = None
     contact: str | None = None
+    role_th: str | None = None
+    role_en: str | None = None
 
 
 class TeacherUpdate(BaseModel):
@@ -25,6 +27,8 @@ class TeacherUpdate(BaseModel):
     photo: str | None = None
     advise_years: list[str] | str | None = None
     contact: str | None = None
+    role_th: str | None = None
+    role_en: str | None = None
 
 
 class StudentCreate(BaseModel):
@@ -72,9 +76,9 @@ def create_teacher(payload: TeacherCreate, admin: dict = Depends(get_current_adm
         with db_cursor() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO teachers (name_th, name_en, photo, advise_years, contact) "
-                "VALUES (?, ?, ?, ?, ?)",
-                (payload.name_th, payload.name_en, payload.photo, advise_years_str, payload.contact),
+                "INSERT INTO teachers (name_th, name_en, photo, advise_years, contact, role_th, role_en) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (payload.name_th, payload.name_en, payload.photo, advise_years_str, payload.contact, payload.role_th, payload.role_en),
             )
             return {"status": "success", "id": cursor.lastrowid}
     except Exception as e:

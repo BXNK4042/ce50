@@ -53,28 +53,28 @@ def main() -> None:
 
         # Seed teachers
         teachers_data = [
-            ("อาจารย์อรรถศาสตร์ นาคเทวัญ", "Athasart Narkthewan", "athasart.webp", '["1"]', "athasart.na@kmitl.ac.th"),
-            ("ดร.รัตติกร สมบัติแก้ว", "Rattikorn Sombutkaew", "rattikorn.webp", '["2"]', "rattikorn.so@kmitl.ac.th"),
-            ("อาจารย์นภัสรพี สิทธิวัจน์", "Pisakorn Sittiwatjana", "pisakorn.webp", '["3"]', "pisakorn.si@kmitl.ac.th"),
-            ("ว่าที่ร้อยตรี ศิลา ศิริมาสกุล", "Silar Sirimasakul", "silar.webp", '["4"]', "silar.si@kmitl.ac.th"),
-            ("อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช", "Sakawkarn Piyawitwanich", "sakawkarn.webp", '["1", "2"]', "sakawkarn.pi@kmitl.ac.th"),
-            ("นายจตุรงค์ เกตุนิมิต", "Jaturong Katenimit", "jaturong.webp", '[]', "jaturong.k@ce.ac.th")
+            ("อาจารย์อรรถศาสตร์ นาคเทวัญ", "Athasart Narkthewan", "athasart.webp", '["1"]', "athasart.na@kmitl.ac.th", "อาจารย์ประจำสาขา", "Faculty Member"),
+            ("ดร.รัตติกร สมบัติแก้ว", "Rattikorn Sombutkaew", "rattikorn.webp", '["2"]', "rattikorn.so@kmitl.ac.th", "อาจารย์ประจำสาขา", "Faculty Member"),
+            ("อาจารย์นภัสรพี สิทธิวัจน์", "Pisakorn Sittiwatjana", "pisakorn.webp", '["3"]', "pisakorn.si@kmitl.ac.th", "อาจารย์ประจำสาขา", "Faculty Member"),
+            ("ว่าที่ร้อยตรี ศิลา ศิริมาสกุล", "Silar Sirimasakul", "silar.webp", '["4"]', "silar.si@kmitl.ac.th", "อาจารย์ประจำสาขา", "Faculty Member"),
+            ("อาจารย์สกาวกาญจน์ ปิยะวิทย์วนิช", "Sakawkarn Piyawitwanich", "sakawkarn.webp", '["1", "2"]', "sakawkarn.pi@kmitl.ac.th", "อาจารย์ประจำสาขา", "Faculty Member"),
+            ("นายจตุรงค์ เกตุนิมิต", "Jaturong Katenimit", "jaturong.webp", '[]', "jaturong.k@ce.ac.th", "นักวิชาการคอมพิวเตอร์", "Computer Technical Officer")
         ]
 
-        for name_th, name_en, photo_filename, advise_years, contact in teachers_data:
+        for name_th, name_en, photo_filename, advise_years, contact, role_th, role_en in teachers_data:
             photo_path = f"/image/professors/{photo_filename}"
             cursor = conn.cursor()
             cursor.execute("SELECT id FROM teachers WHERE name_th = ?", (name_th,))
             row = cursor.fetchone()
             if row:
                 cursor.execute(
-                    "UPDATE teachers SET name_en = ?, photo = ?, advise_years = ?, contact = ? WHERE id = ?",
-                    (name_en, photo_path, advise_years, contact, row[0])
+                    "UPDATE teachers SET name_en = ?, photo = ?, advise_years = ?, contact = ?, role_th = ?, role_en = ? WHERE id = ?",
+                    (name_en, photo_path, advise_years, contact, role_th, role_en, row[0])
                 )
             else:
                 cursor.execute(
-                    "INSERT INTO teachers (name_th, name_en, photo, advise_years, contact) VALUES (?, ?, ?, ?, ?)",
-                    (name_th, name_en, photo_path, advise_years, contact)
+                    "INSERT INTO teachers (name_th, name_en, photo, advise_years, contact, role_th, role_en) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    (name_th, name_en, photo_path, advise_years, contact, role_th, role_en)
                 )
 
         # Seed students — mirror server/students.csv

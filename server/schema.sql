@@ -8,6 +8,8 @@ CREATE TABLE IF NOT EXISTS teachers (
   photo TEXT,
   advise_years TEXT,            -- JSON array e.g. ["1","2","3"]
   contact TEXT,
+  role_th TEXT,                 -- e.g. "อาจารย์ประจำสาขา", "นักวิชาการคอมพิวเตอร์"
+  role_en TEXT,                 -- e.g. "Faculty Member", "Computer Technical Officer"
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
