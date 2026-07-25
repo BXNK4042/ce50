@@ -98,33 +98,51 @@ export function getCohortHeroData(cohortCode: string): CohortHeroData {
   const gen = getCohortNumber(code);
   const codeLower = code.toLowerCase();
 
-  const heroMap: Record<string, Omit<CohortHeroData, "bgImage">> = {
-    CE04: {
-      titleEn: "THIRD YEAR",
-      titleTh: "นักศึกษาชั้นปีที่ 3",
-      subTitleEn: "JUNIOR",
-      subTitleTh: "รุ่นที่ 4 (CE04)",
-    },
-    CE05: {
-      titleEn: "SECOND YEAR",
-      titleTh: "นักศึกษาชั้นปีที่ 2",
-      subTitleEn: "SOPHOMORE",
-      subTitleTh: "รุ่นที่ 5 (CE05)",
-    },
-    CE06: {
-      titleEn: "FIRST YEAR",
-      titleTh: "นักศึกษาชั้นปีที่ 1",
-      subTitleEn: "FRESHMAN",
-      subTitleTh: "รุ่นที่ 6 (CE06)",
-    },
-  };
+  let info: Omit<CohortHeroData, "bgImage">;
 
-  const info = heroMap[code] || {
-    titleEn: `COHORT ${code}`,
-    titleTh: `นักศึกษา ${code}`,
-    subTitleEn: gen ? `CE GENERATION ${gen}` : code,
-    subTitleTh: gen ? `รุ่นที่ ${gen}` : code,
-  };
+  if (gen) {
+    // ponytail: compute academic year level dynamically (Thai academic year starts June)
+    const now = new Date();
+    const currentAcademicBE = (now.getMonth() >= 5 ? now.getFullYear() : now.getFullYear() - 1) + 543;
+    const currentAcademicPrefix = currentAcademicBE % 100;
+    const entryPrefix = gen + 63;
+    const yearLevel = currentAcademicPrefix - entryPrefix + 1;
+
+    const yearNames: Record<number, { titleEn: string; titleTh: string; subTitleEn: string }> = {
+      1: { titleEn: "FIRST YEAR", titleTh: "นักศึกษาชั้นปีที่ 1", subTitleEn: "FRESHMAN" },
+      2: { titleEn: "SECOND YEAR", titleTh: "นักศึกษาชั้นปีที่ 2", subTitleEn: "SOPHOMORE" },
+      3: { titleEn: "THIRD YEAR", titleTh: "นักศึกษาชั้นปีที่ 3", subTitleEn: "JUNIOR" },
+      4: { titleEn: "FOURTH YEAR", titleTh: "นักศึกษาชั้นปีที่ 4", subTitleEn: "SENIOR" },
+    };
+
+    if (yearLevel in yearNames) {
+      info = {
+        ...yearNames[yearLevel],
+        subTitleTh: `รุ่นที่ ${gen} (${code})`,
+      };
+    } else if (yearLevel > 4) {
+      info = {
+        titleEn: "ALUMNI",
+        titleTh: "ศิษย์เก่า",
+        subTitleEn: "GRADUATED",
+        subTitleTh: `รุ่นที่ ${gen} (${code})`,
+      };
+    } else {
+      info = {
+        titleEn: `COHORT ${code}`,
+        titleTh: `นักศึกษา ${code}`,
+        subTitleEn: `CE GENERATION ${gen}`,
+        subTitleTh: `รุ่นที่ ${gen} (${code})`,
+      };
+    }
+  } else {
+    info = {
+      titleEn: `COHORT ${code}`,
+      titleTh: `นักศึกษา ${code}`,
+      subTitleEn: code,
+      subTitleTh: code,
+    };
+  }
 
   return {
     ...info,
