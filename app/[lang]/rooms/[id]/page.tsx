@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
 import RoomImageGallery from "@/components/rooms/room-image-gallery";
 import Room3DViewer from "@/components/rooms/room-3d-viewer";
+import { ArrowLeft } from "lucide-react";
 
 export async function generateStaticParams() {
   return [
@@ -105,7 +107,18 @@ export default async function RoomDetailPage({
 
   return (
     <div className="min-h-screen bg-[#cad9f0]/40 dark:bg-[#0a192f]/40 transition-colors duration-300 py-12 md:py-16">
-      <section className="mx-auto max-w-5xl px-6 md:px-12 space-y-12">
+      <section className="mx-auto max-w-5xl px-6 md:px-12 space-y-8">
+        {/* Back Button */}
+        <div>
+          <Link
+            href={`/${lang}/rooms`}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-sm font-semibold text-zinc-900 dark:text-white transition-all shadow-xs backdrop-blur-md"
+          >
+            <ArrowLeft className="w-4 h-4 text-blue-600 dark:text-sky-400" />
+            <span>{isTh ? "กลับสู่หน้าข้อมูลห้องเรียน" : "Back to Rooms Overview"}</span>
+          </Link>
+        </div>
+
         {/* 1. TOP SECTION: Photos / Images Gallery (Rendered only if images are provided from DB) */}
         {room.images && room.images.length > 0 ? (
           <div className="space-y-4">

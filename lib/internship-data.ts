@@ -7,6 +7,8 @@ export interface InternStudent {
   position_en: string;
   track: string;
   photo: string;
+  bg_image?: string;
+  logo?: string;
   period_th: string;
   period_en: string;
   summary_th: string;

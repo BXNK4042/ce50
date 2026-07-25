@@ -255,7 +255,8 @@ export const api = {
   saveExamSchedule: (year: number, exams: ExamSlot[], term: number = 1) =>
     postAuth<{ status: string }>("/schedule/exam", { year, term, exams }),
   rooms: () => get<Room[]>("/rooms"),
-  internshipStudents: () => get<any[]>("/internship/students"),
+  internshipStudents: (year?: number) =>
+    get<any[]>("/internship/students" + (year ? `?year=${year}` : "")),
   getInternshipStudent: (id: string) => get<any>("/internship/students/" + id),
   videos: () => get<Video[]>("/videos"),
 };

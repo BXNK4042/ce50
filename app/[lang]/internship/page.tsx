@@ -33,7 +33,7 @@ export default async function InternshipPage({
         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-white">{renderTitle(titleText)}</h1>
         <div className="w-1/2 h-1 bg-blue-600 dark:bg-sky-500 mt-2.5 rounded-full" />
       </div>
-      <p className="mt-4 text-zinc-600 dark:text-zinc-400 whitespace-pre-line leading-relaxed">{dict.internship.subtitle}</p>
+      {/* <p className="mt-4 text-zinc-600 dark:text-zinc-400 whitespace-pre-line leading-relaxed">{dict.internship.subtitle}</p> */}
       
       {/* Student Internship Slider Carousel */}
       <InternshipSlider lang={lang} initialStudents={students} />

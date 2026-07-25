@@ -130,6 +130,8 @@ CREATE TABLE IF NOT EXISTS internship_students (
   welfare_th TEXT,
   welfare_en TEXT,
   rating REAL DEFAULT 5.0,
+  bg_image TEXT,
+  logo TEXT,
   created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -17,6 +17,8 @@ class StudentInternshipCreate(BaseModel):
     position_en: str | None = None
     track: str | None = None
     photo: str | None = None
+    bg_image: str | None = None
+    logo: str | None = None
     period_th: str | None = None
     period_en: str | None = None
     summary_th: str | None = None
@@ -33,8 +35,16 @@ class StudentInternshipCreate(BaseModel):
     rating: float = 5.0
 
 
+def _clean_image_url(url: str | None) -> str | None:
+    if not url:
+        return url
+    if "/server/image/" in url:
+        return "/image/" + url.split("/server/image/", 1)[1]
+    return url
+
+
 @router.get("/students")
-def list_student_internships():
+def list_student_internships(year: int | None = Query(None)):
     conn = get_db()
     cursor = conn.cursor()
     query = """
@@ -45,6 +55,7 @@ def list_student_internships():
             COALESCE(s.name_en, '') AS name_en,
             COALESCE(s.photo, '') AS photo,
             COALESCE(s.track, '') AS track,
+            COALESCE(s.year, 3) AS year,
             i.company,
             i.position_th,
             i.position_en,
@@ -62,12 +73,19 @@ def list_student_internships():
             i.welfare_th,
             i.welfare_en,
             i.rating,
+            i.bg_image,
+            i.logo,
             i.created_at
         FROM internship_students i
         LEFT JOIN students s ON i.student_id = s.student_id
-        ORDER BY i.created_at ASC
     """
-    cursor.execute(query)
+    params = []
+    if year is not None:
+        query += " WHERE s.year = ?"
+        params.append(year)
+
+    query += " ORDER BY i.created_at ASC"
+    cursor.execute(query, params)
     rows = cursor.fetchall()
     students = []
     for row in rows:
@@ -75,6 +93,8 @@ def list_student_internships():
         item["tech"] = json.loads(item["tech"]) if item["tech"] else []
         item["welfare_th"] = json.loads(item["welfare_th"]) if item["welfare_th"] else []
         item["welfare_en"] = json.loads(item["welfare_en"]) if item["welfare_en"] else []
+        item["bg_image"] = _clean_image_url(item.get("bg_image"))
+        item["logo"] = _clean_image_url(item.get("logo"))
         students.append(item)
     conn.close()
     return students
@@ -111,6 +131,8 @@ def get_student_internship(id: str):
             i.welfare_th,
             i.welfare_en,
             i.rating,
+            i.bg_image,
+            i.logo,
             i.created_at
         FROM internship_students i
         LEFT JOIN students s ON i.student_id = s.student_id
@@ -125,6 +147,8 @@ def get_student_internship(id: str):
     item["tech"] = json.loads(item["tech"]) if item["tech"] else []
     item["welfare_th"] = json.loads(item["welfare_th"]) if item["welfare_th"] else []
     item["welfare_en"] = json.loads(item["welfare_en"]) if item["welfare_en"] else []
+    item["bg_image"] = _clean_image_url(item.get("bg_image"))
+    item["logo"] = _clean_image_url(item.get("logo"))
     return item
 
 
@@ -137,8 +161,8 @@ def create_student_internship(payload: StudentInternshipCreate, admin: dict = De
                 """INSERT INTO internship_students 
                 (id, student_id, company, position_th, position_en, period_th, period_en,
                  summary_th, summary_en, description_th, description_en, tech, advice_th, advice_en,
-                 stipend_th, stipend_en, welfare_th, welfare_en, rating) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                 stipend_th, stipend_en, welfare_th, welfare_en, rating, bg_image, logo) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
                     payload.id,
                     payload.student_id,
@@ -159,6 +183,8 @@ def create_student_internship(payload: StudentInternshipCreate, admin: dict = De
                     json.dumps(payload.welfare_th, ensure_ascii=False),
                     json.dumps(payload.welfare_en, ensure_ascii=False),
                     payload.rating,
+                    _clean_image_url(payload.bg_image),
+                    _clean_image_url(payload.logo),
                 ),
             )
             return {"status": "success", "id": payload.id}

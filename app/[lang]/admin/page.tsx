@@ -96,7 +96,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           endpoint = `/works?year=${selectedYear}`;
           break;
         case "internship":
-          endpoint = `/internship/students`;
+          endpoint = `/internship/students?year=${selectedYear}`;
           break;
         case "videos":
           endpoint = `/videos?year=${selectedYear}`;
