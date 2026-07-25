@@ -57,7 +57,7 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
 
     const userYear = parseInt(userYearStr, 10) || 1;
 
-    if (!userToken && !userRole) {
+    if (!userToken || !userRole) {
       router.push(`/${lang}/admin/login`);
       return;
     }
@@ -73,10 +73,14 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
   // Fetch Data on Tab / Year / Auth change
   useEffect(() => {
     if (!isLoggedIn) return;
+    if (role !== "superadmin" && (activeTab === "teachers" || activeTab === "rooms" || activeTab === "users")) {
+      setActiveTab("schedules_class");
+      return;
+    }
     if (activeTab !== "schedules_class" && activeTab !== "schedules_exam") {
       fetchData();
     }
-  }, [activeTab, selectedYear, isLoggedIn]);
+  }, [activeTab, selectedYear, isLoggedIn, role]);
 
   const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -462,6 +466,46 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
         return "Admin View";
     }
   };
+
+  if (role === "writer") {
+    return (
+      <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col items-center justify-center p-6 text-center">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-8 rounded-2xl max-w-md shadow-xl space-y-4">
+          <div className="w-12 h-12 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto text-xl font-mono font-bold">
+            ✍️
+          </div>
+          <h2 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+            {isTh ? "บัญชีประเภทผู้เขียน (Writer Account)" : "Writer Account Notice"}
+          </h2>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+            {isTh
+              ? "สิทธิ์ประเภท Writer ไม่สามารถเข้าถึง Dashboard การจัดการระบบ (ตารางเรียน/สอบ นิสิต อาจารย์ ห้องเรียน) ได้"
+              : "Writer accounts do not have access to the Administrative Dashboard management features."}
+          </p>
+          <div className="flex flex-col gap-2 pt-2">
+            <button
+              type="button"
+              onClick={() => {
+                document.cookie = "admin_token=; path=/; max-age=0";
+                document.cookie = "admin_role=; path=/; max-age=0";
+                document.cookie = "admin_year=; path=/; max-age=0";
+                router.push(`/${lang}/admin/login`);
+              }}
+              className="w-full py-2.5 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold text-xs rounded-xl shadow-xs hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all cursor-pointer"
+            >
+              {isTh ? "ออกจากระบบ (Log Out)" : "Log Out"}
+            </button>
+            <Link
+              href={`/${lang}`}
+              className="text-xs text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors pt-1"
+            >
+              {isTh ? "← กลับสู่หน้าหลัก" : "← Return to Homepage"}
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <AdminShell

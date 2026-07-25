@@ -71,10 +71,14 @@ export default function AdminShell({
     { key: "schedules_exam", labelEn: "Exam Schedule", labelTh: "ตารางสอบ", icon: Calendar, group: "schedules" },
     { key: "students", labelEn: "Students", labelTh: "นิสิต", icon: GraduationCap, group: "entities" },
     { key: "works", labelEn: "Student Works", labelTh: "ผลงานนิสิต", icon: Briefcase, group: "entities" },
-    { key: "teachers", labelEn: "Teachers", labelTh: "คณาจารย์", icon: ChalkboardTeacher, group: "entities" },
-    { key: "rooms", labelEn: "Rooms", labelTh: "ห้องเรียน", icon: Door, group: "entities" },
     { key: "internship", labelEn: "Internships", labelTh: "ฝึกงาน", icon: BuildingOffice, group: "entities" },
-    { key: "users", labelEn: "Admin Accounts", labelTh: "ผู้ดูแลระบบ", icon: Users, group: "system" },
+    ...(role === "superadmin"
+      ? [
+          { key: "teachers", labelEn: "Teachers", labelTh: "คณาจารย์", icon: ChalkboardTeacher, group: "entities" },
+          { key: "rooms", labelEn: "Rooms", labelTh: "ห้องเรียน", icon: Door, group: "entities" },
+          { key: "users", labelEn: "Admin Accounts", labelTh: "ผู้ดูแลระบบ", icon: Users, group: "system" },
+        ]
+      : []),
   ];
 
   return (

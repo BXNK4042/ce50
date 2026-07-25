@@ -34,8 +34,15 @@ def get_current_admin(token: str = Depends(oauth2_scheme)) -> dict:
 
     return dict(admin)
 
-def check_admin_auth(admin: dict, required_year: int = None, min_role: str = "writer"):
+def check_admin_auth(admin: dict, required_year: int = None, min_role: str = "admin"):
     role = admin["role"]
+
+    # 0. Writers are disabled from admin dashboard actions
+    if role == "writer":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Writer role is not permitted to access the admin dashboard"
+        )
     
     # 1. Super admin can do everything, globally
     if role == "superadmin":
@@ -49,7 +56,7 @@ def check_admin_auth(admin: dict, required_year: int = None, min_role: str = "wr
             detail="Operation not allowed with your role level"
         )
         
-    # 3. Restrict admin and writer to their assigned academic year
+    # 3. Restrict admin to their assigned academic year
     if required_year is not None and admin["year"] != required_year:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
