@@ -1,6 +1,8 @@
-export default async function NewsByCategoryPage({
+export default async function NewsCategoryPage({
   params,
-}: PageProps<"/[lang]/news/[category]">) {
+}: {
+  params: Promise<{ lang: string; category: string }>;
+}) {
   const { category } = await params;
   return (
     <section className="mx-auto max-w-5xl px-12 md:px-16 py-12 md:py-16">

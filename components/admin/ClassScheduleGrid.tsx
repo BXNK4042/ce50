@@ -176,8 +176,10 @@ export default function ClassScheduleGrid({
     }
   };
 
-  const handleDragLeave = () => {
-    setDragOverKey(null);
+  const handleDragLeave = (e: React.DragEvent) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setDragOverKey(null);
+    }
   };
 
   const handleDrop = (
@@ -378,12 +380,12 @@ export default function ClassScheduleGrid({
         <div className="p-12 text-center text-zinc-500 dark:text-zinc-400 font-mono text-xs">Loading interactive schedule grid...</div>
       ) : (
         <div className="overflow-x-auto border border-zinc-200 dark:border-zinc-800 rounded-2xl bg-white dark:bg-zinc-900/80 shadow-sm">
-          <table className="w-full text-xs text-left border-collapse select-none">
+          <table className="w-full table-fixed min-w-[900px] text-xs text-left border-collapse select-none">
             <thead>
               <tr className="bg-zinc-50 dark:bg-zinc-950/80 border-b border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 font-mono uppercase text-[10.5px]">
-                <th className="p-3 font-bold border-r border-zinc-200 dark:border-zinc-800 w-28 text-center">Time Slot</th>
+                <th className="p-3 font-bold border-r border-zinc-200 dark:border-zinc-800 w-28 text-center shrink-0">Time Slot</th>
                 {DAYS.map((d) => (
-                  <th key={d.key} className="p-3 font-bold text-center border-r border-zinc-200 dark:border-zinc-800 min-w-[140px]">
+                  <th key={d.key} className="p-3 font-bold text-center border-r border-zinc-200 dark:border-zinc-800 w-1/6">
                     {d.label}
                   </th>
                 ))}
@@ -413,12 +415,11 @@ export default function ClassScheduleGrid({
                         rowSpan={spanInfo.rowSpan}
                         data-day={d.key}
                         data-slot={slot}
-                        style={{ height: "100%" }}
                         onDragOver={(e) => handleDragOver(e, key)}
                         onDragLeave={handleDragLeave}
                         onDrop={(e) => handleDrop(e, d.key, slot)}
                         onClick={() => handleCellClick(d.key, spanInfo.blockKeys, spanInfo.startSlot, spanInfo.endSlot, cell)}
-                        className={`p-1 border-r border-zinc-200 dark:border-zinc-800/80 transition-all relative h-full ${
+                        className={`p-1 border-r border-zinc-200 dark:border-zinc-800/80 transition-colors relative ${
                           isDragOver
                             ? "bg-blue-500/20 ring-2 ring-blue-500/80 ring-inset"
                             : "hover:bg-zinc-100/60 dark:hover:bg-zinc-800/50"
@@ -428,14 +429,14 @@ export default function ClassScheduleGrid({
                           <div
                             draggable
                             onDragStart={(e) => handleDragStart(e, spanInfo.blockKeys, cell)}
-                            className={`h-full min-h-full flex-1 p-2.5 rounded-xl border relative text-center flex flex-col justify-between group/card cursor-grab active:cursor-grabbing transition-all shadow-xs ${d.color}`}
+                            className={`h-full w-full p-2 rounded-xl border relative text-center flex flex-col justify-between group/card cursor-grab active:cursor-grabbing transition-colors shadow-xs ${d.color}`}
                           >
                             <div className="space-y-1">
                               {/* Header & Duration */}
                               <div className="flex items-center justify-between gap-1 text-[10px] text-zinc-500 dark:text-zinc-400">
-                                <DotsSixVertical size={14} className="opacity-60 group-hover/card:opacity-100 pointer-events-none" />
+                                <DotsSixVertical size={14} className="opacity-60 group-hover/card:opacity-100 pointer-events-none shrink-0" />
                                 {timeRangeText ? (
-                                  <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-200/80 dark:bg-zinc-950/40 text-zinc-800 dark:text-zinc-300 pointer-events-none">
+                                  <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-200/80 dark:bg-zinc-950/40 text-zinc-800 dark:text-zinc-300 pointer-events-none truncate">
                                     {timeRangeText}
                                   </span>
                                 ) : (
@@ -448,21 +449,21 @@ export default function ClassScheduleGrid({
                                     e.stopPropagation();
                                     handleDeleteBlock(spanInfo.blockKeys);
                                   }}
-                                  className="opacity-0 group-hover/card:opacity-100 p-0.5 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 rounded transition-all cursor-pointer"
+                                  className="opacity-0 group-hover/card:opacity-100 p-0.5 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 rounded transition-colors cursor-pointer shrink-0"
                                 >
                                   <Trash className="w-3 h-3" />
                                 </button>
                               </div>
-                              <div className="font-extrabold text-sm tracking-tight pointer-events-none">{cell.code}</div>
+                              <div className="font-extrabold text-sm tracking-tight pointer-events-none truncate">{cell.code}</div>
                               <div className="text-[10.5px] font-medium truncate pointer-events-none">{cell.name_th || cell.name_en}</div>
                             </div>
 
                             {cell.room && (
-                              <div className="text-[9.5px] font-mono opacity-80 pointer-events-none pt-1">📍 {cell.room}</div>
+                              <div className="text-[9.5px] font-mono opacity-80 pointer-events-none pt-1 truncate">📍 {cell.room}</div>
                             )}
                           </div>
                         ) : (
-                          <div className="h-14 border border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-xs">
+                          <div className="h-12 border border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl flex flex-col items-center justify-center text-zinc-400 dark:text-zinc-600 hover:text-zinc-700 dark:hover:text-zinc-300 hover:border-zinc-400 dark:hover:border-zinc-700 transition-colors text-xs">
                             <span className="text-sm font-semibold">+</span>
                           </div>
                         )}

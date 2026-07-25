@@ -10,7 +10,9 @@ export const dynamic = "force-dynamic";
 
 export default async function HomePage({
   params,
-}: PageProps<"/[lang]">) {
+}: {
+  params: Promise<{ lang: string }>;
+}) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
 

@@ -1,6 +1,8 @@
-export default async function WorksByYearPage({
+export default async function WorksYearPage({
   params,
-}: PageProps<"/[lang]/works/[year]">) {
+}: {
+  params: Promise<{ lang: string; year: string }>;
+}) {
   const { year } = await params;
   return (
     <section className="mx-auto max-w-5xl px-12 md:px-16 py-12 md:py-16">
