@@ -1,5 +1,6 @@
 import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
 import Link from "next/link";
+import { fetchRooms } from "@/lib/api";
 
 export default async function RoomsPage({
   params,
@@ -9,19 +10,9 @@ export default async function RoomsPage({
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
   const isTh = lang === "th";
+  const dbRooms = await fetchRooms();
 
-  const roomsList: Array<{
-    id: string;
-    titleTh: string;
-    titleEn: string;
-    locationTh: string;
-    locationEn: string;
-    tagTh: string;
-    tagEn: string;
-    descTh: string;
-    descEn: string;
-    image?: string | null;
-  }> = [
+  const baseRooms = [
     {
       id: "113",
       titleTh: "ห้องเรียน 113",
@@ -32,7 +23,7 @@ export default async function RoomsPage({
       tagEn: "Lecture & Lab",
       descTh: "ห้องปฏิบัติการคอมพิวเตอร์และห้องเรียนสำหรับการเรียนการสอน พร้อมอุปกรณ์ครบครัน",
       descEn: "Computer engineering laboratory and lecture room equipped with modern workstations.",
-      image: null, // ดึง URL รูปภาพจาก Database/API ในอนาคต
+      image: null as string | null,
     },
     {
       id: "server-room",
@@ -44,9 +35,40 @@ export default async function RoomsPage({
       tagEn: "Data Center",
       descTh: "ศูนย์ข้อมูลและโครงสร้างพื้นฐานเครือข่ายความเร็วสูงของภาควิชาวิศวกรรมคอมพิวเตอร์",
       descEn: "Departmental data center housing core servers, high-performance compute nodes, and network systems.",
-      image: null, // ดึง URL รูปภาพจาก Database/API ในอนาคต
+      image: null as string | null,
     },
   ];
+
+  const parseRoomImages = (raw?: string | null): string[] => {
+    if (!raw) return [];
+    if (raw.trim().startsWith("[")) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed.map((s) => String(s).trim()).filter(Boolean);
+      } catch {
+        // ponytail: fallback to comma split if json parse fails
+      }
+    }
+    if (raw.includes(",")) {
+      return raw.split(",").map((s) => s.trim()).filter(Boolean);
+    }
+    return [raw.trim()];
+  };
+
+  const roomsList = baseRooms.map((room) => {
+    const matchingDbRoom = dbRooms.find(
+      (r) =>
+        r.name.toLowerCase() === room.id.toLowerCase() ||
+        String(r.id) === room.id ||
+        (room.id === "113" && r.name.includes("113")) ||
+        (room.id === "server-room" && r.name.toLowerCase().includes("server"))
+    );
+    const dbImages = parseRoomImages(matchingDbRoom?.image);
+    return {
+      ...room,
+      image: dbImages[0] || room.image,
+    };
+  });
 
   return (
     <div className="min-h-screen bg-[#cad9f0]/40 dark:bg-[#0a192f]/40 transition-colors duration-300 py-12 md:py-16">

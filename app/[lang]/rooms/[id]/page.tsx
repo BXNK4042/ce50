@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
+import { fetchRooms } from "@/lib/api";
 import RoomImageGallery from "@/components/rooms/room-image-gallery";
 import Room3DViewer from "@/components/rooms/room-3d-viewer";
 import { ArrowLeft } from "lucide-react";
@@ -99,6 +100,39 @@ export default async function RoomDetailPage({
   const dict = await getDictionary(lang as Locale);
   const isTh = lang === "th";
 
+  const dbRooms = await fetchRooms();
+  const dbRoom = dbRooms.find(
+    (r) =>
+      r.name.toLowerCase() === id.toLowerCase() ||
+      String(r.id) === id ||
+      (id === "113" && r.name.includes("113")) ||
+      (id === "server-room" && r.name.toLowerCase().includes("server"))
+  );
+
+  const parseRoomImages = (raw?: string | null): string[] => {
+    if (!raw) return [];
+    if (raw.trim().startsWith("[")) {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed.map((s) => String(s).trim()).filter(Boolean);
+      } catch {
+        // ponytail: fallback to comma split if json parse fails
+      }
+    }
+    if (raw.includes(",")) {
+      return raw.split(",").map((s) => s.trim()).filter(Boolean);
+    }
+    return [raw.trim()];
+  };
+
+  const images: string[] = [];
+  if (dbRoom?.image) {
+    images.push(...parseRoomImages(dbRoom.image));
+  }
+  if (images.length === 0 && room.images && room.images.length > 0) {
+    images.push(...room.images);
+  }
+
   const title = isTh ? room.titleTh : room.titleEn;
   const location = isTh ? room.locationTh : room.locationEn;
   const tag = isTh ? room.tagTh : room.tagEn;
@@ -119,13 +153,13 @@ export default async function RoomDetailPage({
           </Link>
         </div>
 
-        {/* 1. TOP SECTION: Photos / Images Gallery (Rendered only if images are provided from DB) */}
-        {room.images && room.images.length > 0 ? (
+        {/* 1. TOP SECTION: Photos / Images Gallery */}
+        {images.length > 0 ? (
           <div className="space-y-4">
             <h2 className="text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-sky-400">
               {isTh ? "รูปภาพบรรยากาศภายในห้อง" : "Room Image Gallery"}
             </h2>
-            <RoomImageGallery images={room.images} title={title} tag={tag} location={location} />
+            <RoomImageGallery images={images} title={title} tag={tag} location={location} />
           </div>
         ) : null}
 

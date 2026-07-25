@@ -287,3 +287,15 @@ export async function fetchInternshipStudentById(id: string): Promise<InternStud
   return undefined;
 }
 
+export async function fetchRooms(): Promise<Room[]> {
+  try {
+    const data = await api.rooms();
+    if (Array.isArray(data)) {
+      return data as Room[];
+    }
+  } catch (err) {
+    // ponytail: return empty array on API failure
+  }
+  return [];
+}
+
