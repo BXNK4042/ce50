@@ -147,7 +147,14 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
   // Open Edit Form
   const handleEdit = (item: any) => {
     setEditingItem(item);
-    setFormData({ ...item });
+    const itemCopy = { ...item };
+    if (Array.isArray(itemCopy.advise_years)) {
+      itemCopy.advise_years = itemCopy.advise_years.join(", ");
+    }
+    if (Array.isArray(itemCopy.author_ids)) {
+      itemCopy.author_ids = itemCopy.author_ids.join(", ");
+    }
+    setFormData(itemCopy);
     setIsDrawerOpen(true);
   };
 
@@ -214,6 +221,22 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
 
       if (["students", "works", "videos"].includes(activeTab)) {
         payload.year = Number(payload.year || selectedYear);
+      }
+
+      if (activeTab === "teachers" && typeof payload.advise_years === "string") {
+        const raw = payload.advise_years.trim();
+        if (raw) {
+          payload.advise_years = raw.startsWith("[")
+            ? raw
+            : raw.split(",").map((s: string) => s.trim()).filter(Boolean);
+        } else {
+          payload.advise_years = null;
+        }
+      }
+
+      if (activeTab === "works" && typeof payload.author_ids === "string") {
+        const raw = payload.author_ids.trim();
+        payload.author_ids = raw ? raw : null;
       }
 
       switch (activeTab) {
@@ -352,12 +375,16 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
             ],
           },
           { name: "description", labelEn: "Description", labelTh: "รายละเอียด", type: "textarea" as const },
+          { name: "author_ids", labelEn: "Author Student IDs", labelTh: "รหัสนิสิตผู้สร้าง (JSON/Comma)", placeholderEn: "e.g. 1, 2, 3" },
           { name: "image", labelEn: "Cover Image", labelTh: "รูปหน้าปก", type: "image" as const },
         ];
       case "teachers":
         return [
           { name: "name_th", labelEn: "Name (TH)", labelTh: "ชื่อภาษาไทย", required: true },
           { name: "name_en", labelEn: "Name (EN)", labelTh: "ชื่อภาษาอังกฤษ" },
+          { name: "role_th", labelEn: "Role (TH)", labelTh: "ตำแหน่ง (ไทย)" },
+          { name: "role_en", labelEn: "Role (EN)", labelTh: "ตำแหน่ง (อังกฤษ)" },
+          { name: "advise_years", labelEn: "Advise Years", labelTh: "ชั้นปีที่ดูแล (Comma/JSON)", placeholderEn: "e.g. 1, 2, 3" },
           { name: "contact", labelEn: "Contact", labelTh: "การติดต่อ" },
           { name: "photo", labelEn: "Photo", labelTh: "รูปถ่าย", type: "image" as const },
         ];
@@ -387,11 +414,26 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
         ];
       case "internship":
         return [
+          { name: "student_id", labelEn: "Student ID", labelTh: "รหัสนิสิต" },
           { name: "company", labelEn: "Company", labelTh: "บริษัทที่ฝึกงาน", required: true },
           { name: "position_th", labelEn: "Position (TH)", labelTh: "ตำแหน่ง (ไทย)", required: true },
           { name: "position_en", labelEn: "Position (EN)", labelTh: "ตำแหน่ง (อังกฤษ)" },
           { name: "period_th", labelEn: "Period (TH)", labelTh: "ระยะเวลา (ไทย)" },
-          { name: "advice_th", labelEn: "Advice", labelTh: "คำแนะนำ", type: "textarea" as const },
+          { name: "period_en", labelEn: "Period (EN)", labelTh: "ระยะเวลา (อังกฤษ)" },
+          { name: "summary_th", labelEn: "Summary (TH)", labelTh: "สรุป (ไทย)", type: "textarea" as const },
+          { name: "summary_en", labelEn: "Summary (EN)", labelTh: "สรุป (อังกฤษ)", type: "textarea" as const },
+          { name: "description_th", labelEn: "Description (TH)", labelTh: "รายละเอียด (ไทย)", type: "textarea" as const },
+          { name: "description_en", labelEn: "Description (EN)", labelTh: "รายละเอียด (อังกฤษ)", type: "textarea" as const },
+          { name: "tech", labelEn: "Technologies", labelTh: "เทคโนโลยีที่ใช้" },
+          { name: "advice_th", labelEn: "Advice (TH)", labelTh: "คำแนะนำ (ไทย)", type: "textarea" as const },
+          { name: "advice_en", labelEn: "Advice (EN)", labelTh: "คำแนะนำ (อังกฤษ)", type: "textarea" as const },
+          { name: "stipend_th", labelEn: "Stipend (TH)", labelTh: "ค่าตอบแทน (ไทย)" },
+          { name: "stipend_en", labelEn: "Stipend (EN)", labelTh: "ค่าตอบแทน (อังกฤษ)" },
+          { name: "welfare_th", labelEn: "Welfare (TH)", labelTh: "สวัสดิการ (ไทย)" },
+          { name: "welfare_en", labelEn: "Welfare (EN)", labelTh: "สวัสดิการ (อังกฤษ)" },
+          { name: "rating", labelEn: "Rating", labelTh: "คะแนนรีวิว (1-5)", type: "number" as const },
+          { name: "bg_image", labelEn: "Background Image", labelTh: "รูปพื้นหลัง", type: "image" as const },
+          { name: "logo", labelEn: "Company Logo", labelTh: "โลโก้บริษัท", type: "image" as const },
         ];
       default:
         return [];

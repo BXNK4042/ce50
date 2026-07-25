@@ -17,6 +17,7 @@ class UserCreate(BaseModel):
 
 
 class UserUpdate(BaseModel):
+    username: str | None = None
     password: str | None = None
     email: str | None = None
     full_name: str | None = None
@@ -94,6 +95,8 @@ def update_user(id: int, payload: UserUpdate, admin: dict = Depends(get_current_
     except HTTPException:
         raise
     except Exception as e:
+        if "UNIQUE" in str(e):
+            raise HTTPException(status_code=400, detail="Username or email already exists")
         raise HTTPException(status_code=500, detail=str(e))
 
 

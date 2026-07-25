@@ -28,15 +28,17 @@ export default async function InternshipPage({
   };
 
   return (
-    <section className="w-full px-12 md:px-16 py-12 md:py-16">
-      <div className="inline-flex flex-col items-start">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-white">{renderTitle(titleText)}</h1>
-        <div className="w-1/2 h-1 bg-blue-600 dark:bg-sky-500 mt-2.5 rounded-full" />
-      </div>
-      {/* <p className="mt-4 text-zinc-600 dark:text-zinc-400 whitespace-pre-line leading-relaxed">{dict.internship.subtitle}</p> */}
-      
-      {/* Student Internship Slider Carousel */}
-      <InternshipSlider lang={lang} initialStudents={students} />
-    </section>
+    <div className="min-h-screen bg-[#cad9f0]/40 dark:bg-[#0a192f]/40 transition-colors duration-300 py-12 md:py-16">
+      <section className="mx-6 max-w-5xl px-12 md:px-16">
+        <div className="inline-flex flex-col items-start">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-white">{renderTitle(titleText)}</h1>
+          <div className="w-1/2 h-1 bg-blue-600 dark:bg-sky-500 mt-2.5 rounded-full" />
+        </div>
+        <p className="mt-4 mb-10 text-zinc-600 dark:text-zinc-400 whitespace-pre-line leading-relaxed">{dict.internship.subtitle}</p>
+        
+        {/* ponytail: render student cards grid */}
+        <InternshipSlider lang={lang} initialStudents={students} />
+      </section>
+    </div>
   );
 }
