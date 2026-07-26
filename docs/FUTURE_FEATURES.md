@@ -12,7 +12,7 @@ Proposals, feature tracking, and architectural enhancements for the project.
 
 - **Category**: `Core | UI/UX`
 - **Priority**: `High`
-- **Status**: `Proposed`
+- **Status**: `Completed`
 - **Estimated Effort**: `Medium`
 - **Target Version/Milestone**: `v1.2.0`
 
@@ -41,10 +41,10 @@ Proposals, feature tracking, and architectural enhancements for the project.
 - Job tracking / career portal integration for alumni.
 
 #### 5. Acceptance Criteria
-- [ ] Cohorts older than 4 academic years automatically default to "Graduated / Alumni" status.
-- [ ] UI displays distinct visual tags/badges for active vs. graduated cohorts.
-- [ ] `/people/students` splits cohorts into active and alumni sections.
-- [ ] Student detail grid displays graduation year if applicable.
+- [x] Cohorts older than 4 academic years automatically default to "Graduated / Alumni" status.
+- [x] UI displays distinct visual tags/badges for active vs. graduated cohorts.
+- [x] `/people/students` splits cohorts into active and alumni sections.
+- [x] Student detail grid displays graduation year if applicable.
 
 ---
 
@@ -91,5 +91,5 @@ Proposals, feature tracking, and architectural enhancements for the project.
 
 | Feature ID | Title | Category | Priority | Status | Target |
 |------------|-------|----------|----------|--------|--------|
-| `FEAT-001` | Graduated Students & Alumni Support | Core / UI | High | Proposed | v1.2.0 |
+| `FEAT-001` | Graduated Students & Alumni Support | Core / UI | High | Completed | v1.2.0 |
 | `FEAT-002` | Automatic English Translation Engine | Core / DX | High | Proposed | v1.3.0 |

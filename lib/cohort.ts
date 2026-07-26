@@ -150,3 +150,68 @@ export function getCohortHeroData(cohortCode: string): CohortHeroData {
   };
 }
 
+/**
+ * ponytail: dynamic year level calculation relative to Thai academic calendar (starts June)
+ */
+export function getCohortYearLevel(cohortCode: string): number | null {
+  const gen = getCohortNumber(cohortCode);
+  if (!gen) return null;
+  const now = new Date();
+  const currentAcademicBE = (now.getMonth() >= 5 ? now.getFullYear() : now.getFullYear() - 1) + 543;
+  const currentAcademicPrefix = currentAcademicBE % 100;
+  const entryPrefix = gen + 63;
+  return currentAcademicPrefix - entryPrefix + 1;
+}
+
+/**
+ * ponytail: boolean check if cohort completed 4 academic years
+ */
+export function isCohortGraduated(cohortCode: string): boolean {
+  const yearLevel = getCohortYearLevel(cohortCode);
+  return yearLevel !== null && yearLevel > 4;
+}
+
+export interface CohortStatus {
+  isGraduated: boolean;
+  yearLevel: number | null;
+  generation: number | null;
+  graduationYearBE: number | null;
+  labelTh: string;
+  labelEn: string;
+}
+
+/**
+ * ponytail: unified status object for cohort badge tags & alumni filtering
+ */
+export function getCohortStatus(cohortCode: string): CohortStatus {
+  const gen = getCohortNumber(cohortCode);
+  const yearLevel = getCohortYearLevel(cohortCode);
+  const isGraduated = yearLevel !== null && yearLevel > 4;
+  const entryBE = gen ? gen + 63 + 2500 : null;
+  const graduationYearBE = entryBE ? entryBE + 4 : null;
+
+  let labelTh = "";
+  let labelEn = "";
+
+  if (isGraduated) {
+    labelTh = "ศิษย์เก่า (จบการศึกษา)";
+    labelEn = "Alumni (Graduated)";
+  } else if (yearLevel && yearLevel >= 1 && yearLevel <= 4) {
+    labelTh = `ชั้นปีที่ ${yearLevel}`;
+    labelEn = `Year ${yearLevel}`;
+  } else {
+    labelTh = formatCohortLabel(cohortCode, "th");
+    labelEn = formatCohortLabel(cohortCode, "en");
+  }
+
+  return {
+    isGraduated,
+    yearLevel,
+    generation: gen,
+    graduationYearBE,
+    labelTh,
+    labelEn,
+  };
+}
+
+

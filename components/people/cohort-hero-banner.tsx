@@ -22,6 +22,11 @@ export function CohortHeroBanner({ cohortUpper, heroData, isTh }: CohortHeroBann
       <div className="relative z-20 mx-auto max-w-7xl px-12 md:px-16 pt-8 w-full" />
 
       <div className="relative z-20 mx-auto max-w-7xl px-12 md:px-16 w-full text-left drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] [text-shadow:_0_2px_4px_rgba(0,0,0,0.8)]">
+        {heroData.titleEn === "ALUMNI" && (
+          <span className="inline-block mb-3 px-3 py-1 text-xs font-extrabold tracking-wider uppercase bg-purple-600/90 text-white rounded-full border border-purple-400/50 backdrop-blur-xs">
+            {isTh ? "ทำเนียบศิษย์เก่า / Alumni Archive" : "Alumni Archive"}
+          </span>
+        )}
         <h1 className="text-4xl font-extrabold text-white tracking-tight select-none">
           {isTh ? heroData.titleTh : heroData.titleEn}
         </h1>
