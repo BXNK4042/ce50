@@ -1,0 +1,16 @@
+node_modules
+.next
+.venv
+.git
+.gitignore
+README.md
+Dockerfile*
+docker-compose*.yml
+server/__pycache__
+server/*.pyc
+server/*.db
+server/*.db-shm
+server/*.db-wal
+server/*.db-journal
+server/static/uploads/*
+!server/static/uploads/.gitkeep
