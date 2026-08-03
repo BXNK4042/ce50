@@ -12,9 +12,25 @@ from config import CORS_ORIGINS, UPLOAD_DIR
 from db import init_db
 from routers import auth, internship, news, people, rooms, schedule, users, works
 
+import shutil
+
+def seed_initial_images():
+    initial_dir = Path("/app/initial_images")
+    if not initial_dir.exists():
+        initial_dir = Path(__file__).resolve().parent / "image"
+    if initial_dir.exists():
+        for src_path in initial_dir.rglob("*"):
+            if src_path.is_file():
+                rel = src_path.relative_to(initial_dir)
+                dest_path = UPLOAD_DIR / rel
+                dest_path.parent.mkdir(parents=True, exist_ok=True)
+                if not dest_path.exists():
+                    shutil.copy2(src_path, dest_path)
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    seed_initial_images()
     yield
 
 

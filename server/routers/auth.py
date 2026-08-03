@@ -1,6 +1,7 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, Response, status
 from db import get_db
 from auth_utils import verify_password, create_access_token, hash_password
+from config import IS_PRODUCTION
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/admin", tags=["auth"])
@@ -18,7 +19,7 @@ class RegisterRequest(BaseModel):
     year: int = 1
 
 @router.post("/login")
-def login(payload: LoginRequest):
+def login(payload: LoginRequest, response: Response):
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("SELECT password_hash, role, year FROM users WHERE username = ?", (payload.username,))
@@ -43,12 +44,26 @@ def login(payload: LoginRequest):
         "year": admin["year"]
     })
     
+    response.set_cookie(
+        key="admin_token",
+        value=access_token,
+        httponly=True,
+        samesite="lax",
+        secure=IS_PRODUCTION,
+        path="/"
+    )
+
     return {
         "access_token": access_token,
         "token_type": "bearer",
         "role": admin["role"],
         "year": admin["year"]
     }
+
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie(key="admin_token", path="/")
+    return {"detail": "Logged out successfully"}
 
 @router.post("/register")
 def register(payload: RegisterRequest):

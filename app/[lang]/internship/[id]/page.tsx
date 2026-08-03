@@ -4,16 +4,7 @@ import { notFound } from "next/navigation";
 import { fetchInternshipStudentById, fetchInternshipStudents } from "@/lib/api";
 import { ArrowLeft, Building2, Briefcase, GraduationCap, Calendar, Cpu, MessageSquareQuote, CheckCircle2, User, Coins, Gift, Star } from "lucide-react";
 
-export async function generateStaticParams() {
-  // ponytail: pre-render static paths for th and en locales
-  const students = await fetchInternshipStudents();
-  return ["th", "en"].flatMap((lang) =>
-    students.map((student) => ({
-      lang,
-      id: student.id,
-    }))
-  );
-}
+export const dynamic = "force-dynamic";
 
 export default async function InternshipDetailPage({
   params,

@@ -240,52 +240,57 @@ export function examItemToSlot(e: ExamItem): ExamSlot {
   };
 }
 
-const BASE =
-  process.env.NEXT_PUBLIC_API_URL ||
-  (typeof window !== "undefined"
-    ? window.location.origin
-    : "http://localhost:3000");
+function getBaseUrl(): string {
+  if (typeof window !== "undefined") {
+    // Client-side: Use relative URL or NEXT_PUBLIC_API_URL
+    return process.env.NEXT_PUBLIC_API_URL || window.location.origin;
+  }
+  // Server-side (SSR / Next.js server): Use internal Docker network URL or local server URL
+  return process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+}
+
+function buildUrl(path: string): URL {
+  const base = getBaseUrl();
+  // Ensure path is combined properly with base
+  if (base.startsWith("http://") || base.startsWith("https://")) {
+    return new URL(path, base);
+  }
+  // Relative base (e.g. "/api")
+  const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
+  const fullPath = base.endsWith("/") ? `${base.slice(0, -1)}${path}` : `${base}${path}`;
+  return new URL(fullPath, origin);
+}
 
 async function get<T>(path: string, params?: Record<string, string>): Promise<T> {
-  const url = new URL(path, BASE);
+  const url = buildUrl(path);
   if (params) Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-  const res = await fetch(url, { cache: "no-store" });
+  const res = await fetch(url, { cache: "no-store", credentials: "same-origin" });
   if (!res.ok) throw new Error(`${res.status} ${url.toString()}`);
   return res.json() as Promise<T>;
 }
 
 async function post<T>(path: string, body: any): Promise<T> {
-  const url = new URL(path, BASE);
+  const url = buildUrl(path);
   const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+    credentials: "same-origin",
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(`${res.status} ${url.toString()}`);
   return res.json() as Promise<T>;
 }
 
-function adminToken(): string | null {
-  if (typeof document === "undefined") return null;
-  return (
-    document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("admin_token="))
-      ?.split("=")[1] ?? null
-  );
-}
-
 async function postAuth<T>(path: string, body: any): Promise<T> {
-  const url = new URL(path, BASE);
-  const token = adminToken();
+  const url = buildUrl(path);
   const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
+    credentials: "same-origin",
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(`${res.status} ${url.toString()}`);
@@ -293,14 +298,13 @@ async function postAuth<T>(path: string, body: any): Promise<T> {
 }
 
 async function putAuth<T>(path: string, body: any): Promise<T> {
-  const url = new URL(path, BASE);
-  const token = adminToken();
+  const url = buildUrl(path);
   const res = await fetch(url, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
+    credentials: "same-origin",
     body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error(`${res.status} ${url.toString()}`);
@@ -308,28 +312,22 @@ async function putAuth<T>(path: string, body: any): Promise<T> {
 }
 
 async function deleteAuth<T>(path: string): Promise<T> {
-  const url = new URL(path, BASE);
-  const token = adminToken();
+  const url = buildUrl(path);
   const res = await fetch(url, {
     method: "DELETE",
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
+    credentials: "same-origin",
   });
   if (!res.ok) throw new Error(`${res.status} ${url.toString()}`);
   return res.json() as Promise<T>;
 }
 
 async function uploadFileAuth<T>(path: string, file: File): Promise<T> {
-  const url = new URL(path, BASE);
-  const token = adminToken();
+  const url = buildUrl(path);
   const formData = new FormData();
   formData.append("file", file);
   const res = await fetch(url, {
     method: "POST",
-    headers: {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
+    credentials: "same-origin",
     body: formData,
   });
   if (!res.ok) throw new Error(`${res.status} ${url.toString()}`);

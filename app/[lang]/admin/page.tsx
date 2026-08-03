@@ -78,11 +78,10 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
     const cookies = document.cookie.split("; ");
     const userRole = cookies.find((r) => r.startsWith("admin_role="))?.split("=")[1] || "";
     const userYearStr = cookies.find((r) => r.startsWith("admin_year="))?.split("=")[1] || "1";
-    const userToken = cookies.find((r) => r.startsWith("admin_token="))?.split("=")[1] || "";
 
     const userYear = parseInt(userYearStr, 10) || 1;
 
-    if (!userToken || !userRole) {
+    if (!userRole) {
       router.push(`/${lang}/admin/login`);
       return;
     }
@@ -90,7 +89,6 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
     setIsLoggedIn(true);
     setRole(userRole || "admin");
     setAdminYear(userYear);
-    setToken(userToken);
     setSelectedYear(userRole === "superadmin" ? 1 : userYear);
     setAuthLoading(false);
   }, [lang, router]);
@@ -560,8 +558,8 @@ export default function CentralAdminPage({ params, searchParams }: AdminPageProp
           <div className="flex flex-col gap-2 pt-2">
             <button
               type="button"
-              onClick={() => {
-                document.cookie = "admin_token=; path=/; max-age=0";
+              onClick={async () => {
+                await fetch(`/${lang}/api/admin/logout`, { method: "POST" }).catch(() => {});
                 document.cookie = "admin_role=; path=/; max-age=0";
                 document.cookie = "admin_year=; path=/; max-age=0";
                 router.push(`/${lang}/admin/login`);

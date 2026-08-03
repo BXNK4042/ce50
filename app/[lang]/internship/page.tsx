@@ -2,6 +2,8 @@ import { getDictionary, Locale } from "@/app/[lang]/dictionaries";
 import InternshipSlider from "@/components/internship/internship-slider";
 import { fetchInternshipStudents } from "@/lib/api";
 
+export const dynamic = "force-dynamic";
+
 export default async function InternshipPage({
   params,
 }: {

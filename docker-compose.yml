@@ -1,4 +1,18 @@
 services:
+  nginx:
+    image: nginx:alpine
+    container_name: ce50-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - uploads_data:/var/www/uploads:ro
+      - ./server/video:/var/www/video:ro
+    depends_on:
+      - api
+      - web
+
   api:
     build:
       context: ./server
@@ -10,18 +24,19 @@ services:
     environment:
       - JWT_SECRET=${JWT_SECRET:-dev-jwt-secret-change-in-production}
       - DB_PATH=/app/ce50.db
-      - UPLOAD_DIR=static/uploads
+      - UPLOAD_DIR=/app/static/uploads
       - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,http://localhost}
     volumes:
       - sqlite_data:/app/dbdata
       - uploads_data:/app/static/uploads
+      - ./server/image:/app/initial_images:ro
 
   web:
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
     container_name: ce50-web
     restart: unless-stopped
     ports:
@@ -29,10 +44,12 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-/api}
+      - INTERNAL_API_URL=http://api:8000
     depends_on:
       - api
 
 volumes:
   sqlite_data:
   uploads_data:
+

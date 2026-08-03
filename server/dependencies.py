@@ -1,12 +1,19 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from auth_utils import decode_access_token
 from db import get_db
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/admin/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/admin/login", auto_error=False)
 
-def get_current_admin(token: str = Depends(oauth2_scheme)) -> dict:
-    payload = decode_access_token(token)
+def get_current_admin(request: Request, token: str = Depends(oauth2_scheme)) -> dict:
+    jwt_token = token or request.cookies.get("admin_token")
+    if not jwt_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication required"
+        )
+
+    payload = decode_access_token(jwt_token)
     if not payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

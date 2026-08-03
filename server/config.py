@@ -16,9 +16,14 @@ _db_env = os.getenv("DB_PATH", "server/ce50.db")
 _db_path = Path(_db_env)
 DB_PATH = _db_path if _db_path.is_absolute() else (BASE_DIR.parent / _db_path).resolve()
 
-_upload_env = os.getenv("UPLOAD_DIR", "server/image")
+_upload_env = os.getenv("UPLOAD_DIR", "image")
 _upload_path = Path(_upload_env)
-UPLOAD_DIR = _upload_path if _upload_path.is_absolute() else (BASE_DIR.parent / _upload_path).resolve()
+if _upload_path.is_absolute():
+    UPLOAD_DIR = _upload_path
+elif (BASE_DIR / _upload_path).exists() or _upload_env.startswith("image") or _upload_env.startswith("static"):
+    UPLOAD_DIR = (BASE_DIR / _upload_path).resolve()
+else:
+    UPLOAD_DIR = (BASE_DIR.parent / _upload_path).resolve()
 CORS_ORIGINS = [
     o.strip()
     for o in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")

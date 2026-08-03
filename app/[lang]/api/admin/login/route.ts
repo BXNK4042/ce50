@@ -9,8 +9,10 @@ export async function POST(
     const body = await request.json();
     const { username, password } = body;
 
+    const rawApiUrl = process.env.NEXT_PUBLIC_API_URL;
     const backendUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      process.env.INTERNAL_API_URL ||
+      (rawApiUrl && rawApiUrl.startsWith("http") ? rawApiUrl : "http://localhost:8000");
 
     const response = await fetch(`${backendUrl}/admin/login`, {
       method: "POST",
@@ -33,9 +35,9 @@ export async function POST(
 
     const res = NextResponse.json({ success: true, role, year });
 
-    // Set cookie for JWT token (accessible to client JS for admin page & API calls)
+    // Set HttpOnly cookie for JWT token (protected from client JS XSS theft)
     res.cookies.set("admin_token", access_token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 24, // 24 hours
