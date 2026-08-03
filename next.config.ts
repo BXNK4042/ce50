@@ -4,7 +4,7 @@ const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  allowedDevOrigins: ['192.168.56.1', '*.ngrok-free.dev', '*.trycloudflare.com'],
+  allowedDevOrigins: ['192.168.56.1', 'ce50.theyell.dev'],
   images: {
     unoptimized: true,
   },
@@ -62,6 +62,10 @@ const nextConfig: NextConfig = {
       {
         source: "/news/:path*",
         destination: `${backendUrl}/news/:path*`,
+      },
+      {
+        source: "/:lang(th|en)/people/cohorts",
+        destination: `${backendUrl}/people/cohorts`,
       },
       {
         source: "/people/:path*",
