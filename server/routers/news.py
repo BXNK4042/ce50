@@ -28,6 +28,7 @@ class NewsUpdate(BaseModel):
     published_at: str | None = None
 
 
+@router.get("", response_model=None)
 @router.get("/")
 def list_news(category: str | None = Query(None)):
     """List all news. Auto-syncs from GNews if a key is set and the interval elapsed."""

@@ -43,7 +43,7 @@ export default function NewsSlider({ lang, title }: NewsSliderProps) {
     const fetchNews = async () => {
       try {
         const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-        const res = await fetch(`${backendUrl}/news`);
+        const res = await fetch(`${backendUrl}/news/`);
         if (res.ok) {
           const data: NewsItem[] = await res.json();
           const filtered = (data ?? []).filter(item => item.category === "other").slice(0, 6);

@@ -73,7 +73,7 @@ export default function NewsModal({
     setError("");
 
     try {
-      const endpoint = articleToEdit ? `/news/${articleToEdit.id}` : `/news`;
+      const endpoint = articleToEdit ? `/news/${articleToEdit.id}` : `/news/`;
       const method = articleToEdit ? "PUT" : "POST";
 
       const res = await fetch(`${backendUrl}${endpoint}`, {

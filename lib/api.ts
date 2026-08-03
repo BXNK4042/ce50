@@ -350,7 +350,7 @@ export const api = {
   works: (year?: number) =>
     get<Work[]>("/works", year ? { year: String(year) } : undefined),
   news: (category?: NewsCategory) =>
-    get<never[]>("/news", category ? { category } : undefined),
+    get<never[]>("/news/", category ? { category } : undefined),
   classSchedule: (year: number, term: number = 1) =>
     get<ClassCell[]>("/schedule/class", { year: String(year), term: String(term) }),
   examSchedule: (year: number, term: number = 1) =>
