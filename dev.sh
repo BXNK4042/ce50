@@ -15,7 +15,7 @@ tmux new-session -d -s "$SESSION" -n "dev-tunnel" "npm run dev; exec \$SHELL"
 tmux split-window -h -t "$SESSION" "ngrok http 3000; exec \$SHELL"
 
 # Split window vertically for backend server
-tmux split-window -v -t "$SESSION" "cd server && uvicorn main:app --reload --port 8000; exec \$SHELL"
+tmux split-window -v -t "$SESSION" "cd server && ( [ -f ../.venv/bin/activate ] && source ../.venv/bin/activate ); python3 -m uvicorn main:app --reload --port 8000; exec \$SHELL"
 
 # Evenly space panes & attach
 tmux select-layout -t "$SESSION" tiled
