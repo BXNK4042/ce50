@@ -55,6 +55,42 @@ const nextConfig: NextConfig = {
         source: "/professors/:path*",
         destination: `${backendUrl}/image/professors/:path*`,
       },
+      {
+        source: "/Video/:path*",
+        destination: `${backendUrl}/Video/:path*`,
+      },
+      {
+        source: "/news/:path*",
+        destination: `${backendUrl}/news/:path*`,
+      },
+      {
+        source: "/people/:path*",
+        destination: `${backendUrl}/people/:path*`,
+      },
+      {
+        source: "/internship/:path*",
+        destination: `${backendUrl}/internship/:path*`,
+      },
+      {
+        source: "/rooms/:path*",
+        destination: `${backendUrl}/rooms/:path*`,
+      },
+      {
+        source: "/schedule/:path*",
+        destination: `${backendUrl}/schedule/:path*`,
+      },
+      {
+        source: "/users/:path*",
+        destination: `${backendUrl}/users/:path*`,
+      },
+      {
+        source: "/works/:path*",
+        destination: `${backendUrl}/works/:path*`,
+      },
+      {
+        source: "/health",
+        destination: `${backendUrl}/health`,
+      },
     ];
   },
 };

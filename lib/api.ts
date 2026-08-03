@@ -240,7 +240,11 @@ export function examItemToSlot(e: ExamItem): ExamSlot {
   };
 }
 
-const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const BASE =
+  process.env.NEXT_PUBLIC_API_URL ||
+  (typeof window !== "undefined"
+    ? window.location.origin
+    : "http://localhost:3000");
 
 async function get<T>(path: string, params?: Record<string, string>): Promise<T> {
   const url = new URL(path, BASE);

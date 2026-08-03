@@ -76,7 +76,7 @@ export default function ImageUploader({
     const formData = new FormData();
     formData.append("file", file);
 
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
     const fullUrl = uploadEndpoint.startsWith("http")
       ? uploadEndpoint
       : `${baseUrl}${uploadEndpoint.startsWith("/") ? "" : "/"}${uploadEndpoint}`;
@@ -171,7 +171,7 @@ export default function ImageUploader({
     }
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
 
   const getDisplayUrl = (url: string) =>
     url.startsWith("http") || url.startsWith("data:")

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
@@ -9,16 +8,6 @@ import HomeBackgroundVideo from "@/components/layout/hero-video";
 import { getDictionary, Locale } from "./dictionaries";
 import { cookies } from "next/headers";
 import { api } from "@/lib/api";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export async function generateStaticParams() {
   return [{ lang: "th" }, { lang: "en" }];
@@ -49,12 +38,12 @@ export default async function LangLayout({
     // ponytail: empty navbar cohort list on backend hiccup — page still renders
   }
 
-  const videoSrc = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/Video/ce_hero_footage.mp4`;
+  const videoSrc = `${process.env.NEXT_PUBLIC_API_URL ?? ""}/Video/ce_hero_footage.mp4`;
 
   return (
     <html
       lang={lang}
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased ${theme === "dark" ? "dark" : ""}`}
+      className={`h-full antialiased ${theme === "dark" ? "dark" : ""}`}
       suppressHydrationWarning
     >
       <head>

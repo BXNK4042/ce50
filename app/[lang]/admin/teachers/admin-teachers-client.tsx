@@ -127,7 +127,7 @@ export default function AdminTeachersClient({ lang }: AdminTeachersClientProps) 
     setUploading(true);
     try {
       const res = await api.uploadTeacherImage(file);
-      const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
       const fullUrl = res.url.startsWith("http") ? res.url : `${backendUrl}${res.url}`;
       setFormPhoto(fullUrl);
       showToast(isTh ? "อัปโหลดรูปภาพสำเร็จ" : "Image uploaded successfully");
