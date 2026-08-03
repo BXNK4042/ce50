@@ -68,3 +68,7 @@ server/video/*_original.mp4
 # editor / agent tooling artifacts
 /.zcode/
 .agents/
+
+# nginx logs
+docker/logs/*
+!docker/logs/.gitkeep
