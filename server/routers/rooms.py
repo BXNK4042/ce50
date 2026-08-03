@@ -43,6 +43,7 @@ class RoomUpdate(BaseModel):
     features_en: str | None = None
 
 
+@router.get("", response_model=None)
 @router.get("/")
 def list_rooms():
     conn = get_db()
@@ -71,6 +72,7 @@ def get_room(identifier: str):
     return dict(row)
 
 
+@router.post("", response_model=None)
 @router.post("/")
 def create_room(payload: RoomCreate, admin: dict = Depends(get_current_admin)):
     check_admin_auth(admin, min_role="superadmin")

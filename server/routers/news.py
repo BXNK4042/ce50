@@ -68,6 +68,7 @@ def get_news_item(id: int):
     return dict(row)
 
 
+@router.post("", response_model=None)
 @router.post("/")
 def create_news(payload: NewsCreate, admin: dict = Depends(get_current_admin)):
     if payload.category not in ("competition", "scholarship", "other"):

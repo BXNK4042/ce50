@@ -25,6 +25,7 @@ class UserUpdate(BaseModel):
     year: int | None = None
 
 
+@router.get("", response_model=None)
 @router.get("/")
 def list_users(admin: dict = Depends(get_current_admin)):
     check_admin_auth(admin, min_role="superadmin")
@@ -36,6 +37,7 @@ def list_users(admin: dict = Depends(get_current_admin)):
     return users
 
 
+@router.post("", response_model=None)
 @router.post("/")
 def create_user(payload: UserCreate, admin: dict = Depends(get_current_admin)):
     check_admin_auth(admin, min_role="superadmin")

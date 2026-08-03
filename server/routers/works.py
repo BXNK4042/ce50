@@ -27,6 +27,7 @@ class WorkUpdate(BaseModel):
     author_ids: str | None = None
 
 
+@router.get("", response_model=None)
 @router.get("/")
 def list_works(year: int = Query(None)):
     conn = get_db()
@@ -52,6 +53,7 @@ def get_work(id: int):
     return dict(row)
 
 
+@router.post("", response_model=None)
 @router.post("/")
 def create_work(payload: WorkCreate, admin: dict = Depends(get_current_admin)):
     check_admin_auth(admin, required_year=payload.year, min_role="admin")
