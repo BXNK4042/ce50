@@ -73,7 +73,9 @@ export default function LoginForm({ lang }: LoginFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {/* Quick Test Sign-In Buttons */}
+      {/*
       <div className="flex flex-col gap-2.5 p-4 bg-zinc-100/70 dark:bg-zinc-900/70 border border-dashed border-zinc-300 dark:border-zinc-800 rounded-xl">
+        
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-bold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
             ⚡ {isTh ? "ทดสอบเข้าสู่ระบบด่วน" : "Quick Test Sign-In"}
@@ -109,7 +111,8 @@ export default function LoginForm({ lang }: LoginFormProps) {
             Writer (Y1)
           </button>
         </div>
-      </div>
+        
+      </div>*/}
 
       {showSuccess && (
         <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center">
