@@ -12,8 +12,13 @@ load_dotenv(BASE_DIR.parent / ".env")
 APP_ENV = os.getenv("APP_ENV", os.getenv("NODE_ENV", "development")).lower()
 IS_PRODUCTION = APP_ENV == "production"
 
-DB_PATH = Path(os.getenv("DB_PATH", BASE_DIR / "ce50.db"))
-UPLOAD_DIR = Path(os.getenv("UPLOAD_DIR", BASE_DIR / "image"))
+_db_env = os.getenv("DB_PATH", "server/ce50.db")
+_db_path = Path(_db_env)
+DB_PATH = _db_path if _db_path.is_absolute() else (BASE_DIR.parent / _db_path).resolve()
+
+_upload_env = os.getenv("UPLOAD_DIR", "server/image")
+_upload_path = Path(_upload_env)
+UPLOAD_DIR = _upload_path if _upload_path.is_absolute() else (BASE_DIR.parent / _upload_path).resolve()
 CORS_ORIGINS = [
     o.strip()
     for o in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
