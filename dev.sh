@@ -2,9 +2,6 @@
 
 SESSION="dev"
 
-# Kill lingering ngrok processes
-pkill -f ngrok 2>/dev/null || true
-
 # Attach if session exists
 if tmux has-session -t "$SESSION" 2>/dev/null; then
   echo "Attaching to existing tmux session '$SESSION'..."
