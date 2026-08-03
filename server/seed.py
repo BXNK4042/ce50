@@ -57,12 +57,6 @@ def main() -> None:
                     (username, password_hash, email, full_name, role, year)
                 )
 
-        # Seed rooms
-        conn.executemany(
-            "INSERT OR IGNORE INTO rooms(name, description) VALUES (?,?)",
-            [("113", "ห้องเรียน CE"), ("Server Room", "ห้องเซิร์ฟเวอร์สาขา")],
-        )
-
         # Seed teachers
         teachers_data = [
             ("อาจารย์อรรถศาสตร์ นาคเทวัญ", "Athasart Narkthewan", "athasart.webp", '["1"]', "athasart.na@kmitl.ac.th", "อาจารย์ประจำสาขา", "Faculty Member"),

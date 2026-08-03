@@ -4,7 +4,7 @@ const backendUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  allowedDevOrigins: ['192.168.56.1', 'https://legacy-tidal-hangout.ngrok-free.dev/'],
+  allowedDevOrigins: ['192.168.56.1', 'legacy-tidal-hangout.ngrok-free.dev'],
   images: {
     unoptimized: true,
   },
