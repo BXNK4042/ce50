@@ -1,0 +1,165 @@
+// DBML for CE50 Department Site Database (SQLite 3)
+// Generated for KMITL CE50 Project
+
+Project CE50 {
+  database_type: 'SQLite'
+  Note: 'CE Department Site Database Schema (DSDLC)'
+}
+
+Table teachers {
+  id integer [primary key, increment]
+  name_th text [not null]
+  name_en text
+  photo text
+  advise_years text [note: 'JSON array e.g. ["1","2","3"]']
+  contact text
+  role_th text [note: 'e.g. อาจารย์ประจำสาขา']
+  role_en text [note: 'e.g. Faculty Member']
+  created_at text [default: `CURRENT_TIMESTAMP`]
+}
+
+Table students {
+  id integer [primary key, increment]
+  student_id text [unique, not null]
+  name_th text [not null]
+  name_en text
+  photo text
+  year integer [not null, note: '1..4']
+  class_role text
+  track text
+  contact text
+  created_at text [default: `CURRENT_TIMESTAMP`]
+}
+
+Table works {
+  id integer [primary key, increment]
+  year integer [not null]
+  scope text [not null, note: "CHECK (scope IN ('branch','group','solo'))"]
+  title text [not null]
+  description text
+  image text
+  author_ids text [note: 'JSON array of student ids']
+  created_at text [default: `CURRENT_TIMESTAMP`]
+}
+
+Table news_items {
+  id integer [primary key, increment]
+  title text [not null]
+  category text [not null, note: "CHECK (category IN ('competition','scholarship','other'))"]
+  body text
+  link text
+  image text
+  published_at text
+  author_username text
+  created_at text [default: `CURRENT_TIMESTAMP`]
+}
+
+Table class_schedules {
+  id integer [primary key, increment]
+  year integer [not null]
+  term integer [not null, default: 1]
+  day text [not null, note: "CHECK (day IN ('monday','tuesday','wednesday','thursday','friday','saturday'))"]
+  start_time text [not null, note: 'e.g. 09:00']
+  end_time text [not null, note: 'e.g. 12:00']
+  code text [not null]
+  name_en text
+  name_th text
+  room text
+  instructor_en text
+  instructor_th text
+  description_en text
+  description_th text
+  created_at text [default: `CURRENT_TIMESTAMP`]
+}
+
+Table exam_schedules {
+  id integer [primary key, increment]
+  year integer [not null, note: '1..4']
+  term integer [not null, default: 1]
+  code text [not null]
+  name_th text [not null]
+  name_en text
+
+  midterm_type text [default: 'scheduled', note: "'scheduled' | 'arranged' | 'none'"]
+  midterm_date text
+  midterm_start_time text
+  midterm_end_time text
+  midterm_room text
+  midterm_note_th text
+  midterm_note_en text
+
+  finals_type text [default: 'scheduled', note: "'scheduled' | 'arranged' | 'none'"]
+  finals_date text
+  finals_start_time text
+  finals_end_time text
+  finals_room text
+  finals_note_th text
+  finals_note_en text
+
+  created_at text [default: `CURRENT_TIMESTAMP`]
+
+  indexes {
+    (year, term, code) [unique]
+  }
+}
+
+Table users {
+  id integer [primary key, increment]
+  username text [unique, not null]
+  password_hash text [not null]
+  email text [unique, not null]
+  full_name text
+  role text [default: 'writer', note: "'superadmin' | 'admin' | 'writer'"]
+  year integer [not null, default: 1]
+  created_at text [default: `CURRENT_TIMESTAMP`]
+}
+
+Table rooms {
+  id integer [primary key, increment]
+  name text [not null, note: 'Legacy name / slug']
+  slug text [unique]
+  title_th text [not null]
+  title_en text [not null]
+  location_th text
+  location_en text
+  tag_th text
+  tag_en text
+  desc_th text
+  desc_en text
+  image text
+  features_th text [note: 'JSON array string']
+  features_en text [note: 'JSON array string']
+  created_at text [default: `CURRENT_TIMESTAMP`]
+}
+
+Table internship_students {
+  id text [primary key]
+  student_id text
+  company text [not null]
+  position_th text [not null]
+  position_en text
+  period_th text
+  period_en text
+  summary_th text
+  summary_en text
+  description_th text
+  description_en text
+  tech text
+  advice_th text
+  advice_en text
+  stipend_th text
+  stipend_en text
+  welfare_th text
+  welfare_en text
+  rating real [default: 5.0]
+  bg_image text
+  logo text
+  created_at text [default: `CURRENT_TIMESTAMP`]
+}
+
+// Relationships
+Ref: internship_students.student_id > students.student_id [delete: cascade]
+Ref: news_items.author_username > users.username
+Ref: class_schedules.room > rooms.slug
+Ref: exam_schedules.midterm_room > rooms.slug
+Ref: exam_schedules.finals_room > rooms.slug

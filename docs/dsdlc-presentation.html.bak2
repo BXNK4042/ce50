@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSDLC & Database Architecture — KMITL CE50</title>
+
+  <!-- Google Font: Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Reveal.js CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+
+  <style>
+    /* Blue Base & Orange Accent Theme Tokens */
+    :root {
+      --bg-plain: #ffffff;
+      --text-primary: #0f172a;
+      --text-muted: #64748b;
+      --color-blue-base: #1e40af;
+      --color-blue-light: #2563eb;
+      --color-blue-bg: #eff6ff;
+      --accent-orange: #ea580c;
+      --accent-orange-light: #fff7ed;
+      --border-subtle: #cbd5e1;
+      --card-bg: #ffffff;
+      --font-serif: 'Outfit', sans-serif;
+      --font-sans: 'Outfit', sans-serif;
+      --font-mono: 'Outfit', monospace;
+    }
+
+    body, .reveal-viewport {
+      background-color: var(--bg-plain) !important;
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+    }
+
+    .reveal {
+      font-family: var(--font-sans);
+      color: var(--text-primary);
+    }
+
+    /* Headings */
+    .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+      font-family: var(--font-serif);
+      font-weight: 600;
+      color: var(--text-primary);
+      text-transform: none;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5em;
+      font-style: normal;
+    }
+
+    .reveal h1 { font-size: 3.2rem; line-height: 1.1; color: var(--color-blue-base); }
+    .reveal h2 { font-size: 2.4rem; line-height: 1.2; color: var(--color-blue-base); }
+    .reveal h3 { font-size: 1.8rem; color: var(--color-blue-light); }
+
+    .reveal p, .reveal li {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-top: -0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Custom Layout Components */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      text-align: left;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 4px rgba(30, 64, 175, 0.05);
+    }
+
+    .card-title {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      background: #ffedd5;
+      color: var(--accent-orange);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+    }
+
+    .badge-amber, .badge-orange {
+      background: #ffedd5;
+      color: var(--accent-orange);
+    }
+
+    .badge-blue {
+      background: #dbeafe;
+      color: var(--color-blue-base);
+    }
+
+    .badge-green {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    /* SVG Graphics Container */
+    .diagram-box {
+      background: #ffffff;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* Comparison Table */
+    .comp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+    }
+
+    .comp-table th {
+      background: var(--color-blue-base);
+      color: #ffffff;
+      font-family: var(--font-serif);
+      font-size: 1.2rem;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      font-weight: 500;
+    }
+
+    .comp-table td {
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.75rem 1rem;
+      background: #ffffff;
+    }
+
+    .comp-table tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    .code-block {
+      font-family: var(--font-mono);
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      text-align: left;
+      overflow-x: auto;
+    }
+
+    .footer-tag {
+      position: absolute;
+      bottom: -3rem;
+      left: 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1: Title -->
+      <section>
+        <div style="text-align: left; max-width: 900px; margin: 0 auto; position: relative;">
+          <img src="../public/ce_logo.webp" alt="CE Logo" style="position: absolute; top: -40px; right: -20px; height: 320px; width: auto; object-fit: contain; opacity: 0.18; z-index: 0; pointer-events: none;">
+          <div style="position: relative; z-index: 1;">
+            <span class="badge">Database Systems</span>
+            <h1 style="margin-top: 0.5rem;">CE50 — <span style="color: #60a5fa; opacity: 0.75;">การออกแบบระบบฐานข้อมูล DSDLC</span></h1>
+            <p class="subtitle">Database System Development Life Cycle for Computer Engineering KMTIL PCC Portal</p>
+            <div style="display: flex; gap: 2rem; border-top: 1px solid var(--border-subtle); padding-top: 1.5rem; margin-top: 2rem;">
+              <div>
+                <small style="color: var(--text-muted); font-family: var(--font-mono);">DATABASE</small>
+                <br><strong>SQLite 3 (WAL Mode)</strong>
+              </div>
+              <div>
+                <small style="color: var(--text-muted); font-family: var(--font-mono);">FRAMEWORK</small>
+                <br><strong>FastAPI + Next.js</strong>
+              </div>
+              <div>
+                <small style="color: var(--text-muted); font-family: var(--font-mono);">ARCHITECTURE</small>
+                <br><strong>Docker + Nginx Proxy</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 2: Problem Statement -->
+      <section>
+        <div style="text-align: left;">
+          <h2>1.1 & 1.2 ปัญหาของระบบเดิม (Current Pain Points)</h2>
+          <p class="subtitle">วิเคราะห์สภาพการณ์เดิมก่อนการพัฒนาระบบฐานข้อมูลกลาง</p>
+
+          <div class="grid-4">
+            <div class="card">
+              <span class="badge">01</span>
+              <div class="card-title">Data Fragmentation</div>
+              <p>ข้อมูลแยกเก็บใน Excel, เอกสารกระดาษ, PDF Drive และโซเชียลมีเดีย</p>
+            </div>
+            <div class="card">
+              <span class="badge">02</span>
+              <div class="card-title">Redundancy</div>
+              <p>ข้อมูลนักศึกษา อาจารย์ ขัดแย้งกัน ขาดการเชื่อมโยงระบบกลาง</p>
+            </div>
+            <div class="card">
+              <span class="badge">03</span>
+              <div class="card-title">Access Control</div>
+              <p>ไม่มีระบบพิสูจน์ตัวตน แบ่งสิทธิ์ไม่ชัดเจน เสี่ยงต่อการแก้ไขข้อมูล</p>
+            </div>
+            <div class="card">
+              <span class="badge">04</span>
+              <div class="card-title">Maintenance</div>
+              <p>ภาระการอัปเดตตารางเรียน/สอบด้วยมือ เกิดความผิดพลาดสูง</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3: System Objectives -->
+      <section>
+        <div style="text-align: left;">
+          <h2>1.3 วัตถุประสงค์ระบบใหม่ (System Objectives)</h2>
+          <p class="subtitle">เป้าหมายหลักของการออกแบบและติดตั้งระบบฐานข้อมูล</p>
+
+          <div class="grid-2">
+            <div class="card">
+              <span class="badge badge-blue">CENTRAL DATABASE</span>
+              <div class="card-title">รวมข้อมูลเป็นหนึ่งเดียว</div>
+              <p>จัดเก็บข้อมูล 9 เอนทิตีหลัก (ผู้ใช้ นักศึกษา อาจารย์ ผลงาน ข่าวสาร ตารางเรียน ตารางสอบ ห้อง ฝึกงาน) ในฐานข้อมูลเดียว</p>
+            </div>
+            <div class="card">
+              <span class="badge badge-blue">SECURITY & RBAC</span>
+              <div class="card-title">ควบคุมสิทธิ์เข้มงวด</div>
+              <p>ยืนยันตัวตนด้วย HttpOnly Cookie Token + Role-Based Access Control (Superadmin, Admin, Writer, Public)</p>
+            </div>
+            <div class="card">
+              <span class="badge badge-blue">PORTAL & DASHBOARD</span>
+              <div class="card-title">Public Portal & Admin</div>
+              <p>แสดงตารางเรียน ตารางสอบ ข่าวสาร ทุนการศึกษา ผลงาน</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4: DSDLC 6-Phase Pipeline -->
+      <section>
+        <div style="text-align: left;">
+          <h2>วงจรพัฒนาระบบฐานข้อมูล DSDLC (6 Phases)</h2>
+          <p class="subtitle">กระบวนการพัฒนา 6 ระยะตามมาตรฐาน Database Systems Life Cycle</p>
+
+          <div class="diagram-box">
+            <svg viewBox="0 0 900 240" style="width: 100%; height: auto;">
+              <!-- Arrows -->
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="#ea580c"/>
+                </marker>
+              </defs>
+
+              <!-- Phase 1 -->
+              <rect x="10" y="20" width="130" height="180" rx="6" fill="#ffffff" stroke="#1e40af" stroke-width="2"/>
+              <text x="75" y="50" font-family="Outfit" font-size="20" fill="#ea580c" text-anchor="middle">Phase 1</text>
+              <text x="75" y="80" font-family="Outfit" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Initial Study</text>
+              <text x="75" y="110" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">วิเคราะห์ปัญหา</text>
+              <text x="75" y="130" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">กำหนดเป้าหมาย</text>
+              <text x="75" y="150" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">กำหนดขอบเขต</text>
+
+              <!-- Line 1-2 -->
+              <line x1="140" y1="110" x2="155" y2="110" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow)"/>
+
+              <!-- Phase 2 -->
+              <rect x="160" y="20" width="130" height="180" rx="6" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+              <text x="225" y="50" font-family="Outfit" font-size="20" fill="#1e40af" text-anchor="middle">Phase 2</text>
+              <text x="225" y="80" font-family="Outfit" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">DB Design</text>
+              <text x="225" y="110" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Conceptual (ERD)</text>
+              <text x="225" y="130" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">DBMS Selection</text>
+              <text x="225" y="150" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Logical 3NF Schema</text>
+
+              <!-- Line 2-3 -->
+              <line x1="290" y1="110" x2="305" y2="110" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow)"/>
+
+              <!-- Phase 3 -->
+              <rect x="310" y="20" width="130" height="180" rx="6" fill="#ffffff" stroke="#1e40af" stroke-width="2"/>
+              <text x="375" y="50" font-family="Outfit" font-size="20" fill="#ea580c" text-anchor="middle">Phase 3</text>
+              <text x="375" y="80" font-family="Outfit" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Build & Load</text>
+              <text x="375" y="110" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">FastAPI Endpoints</text>
+              <text x="375" y="130" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">DB Migration Script</text>
+              <text x="375" y="150" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Seed Master Data</text>
+
+              <!-- Line 3-4 -->
+              <line x1="440" y1="110" x2="455" y2="110" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow)"/>
+
+              <!-- Phase 4 -->
+              <rect x="460" y="20" width="130" height="180" rx="6" fill="#ffffff" stroke="#1e40af" stroke-width="2"/>
+              <text x="525" y="50" font-family="Outfit" font-size="20" fill="#ea580c" text-anchor="middle">Phase 4</text>
+              <text x="525" y="80" font-family="Outfit" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Testing</text>
+              <text x="525" y="110" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Unit & Integration</text>
+              <text x="525" y="130" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">FK Constraints Test</text>
+              <text x="525" y="150" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Response &lt;200ms</text>
+
+              <!-- Line 4-5 -->
+              <line x1="590" y1="110" x2="605" y2="110" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow)"/>
+
+              <!-- Phase 5 -->
+              <rect x="610" y="20" width="130" height="180" rx="6" fill="#ffffff" stroke="#1e40af" stroke-width="2"/>
+              <text x="675" y="50" font-family="Outfit" font-size="20" fill="#ea580c" text-anchor="middle">Phase 5</text>
+              <text x="675" y="80" font-family="Outfit" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Deployment</text>
+              <text x="675" y="110" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Docker Container</text>
+              <text x="675" y="130" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Nginx Proxy</text>
+              <text x="675" y="150" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Enable WAL Mode</text>
+
+              <!-- Line 5-6 -->
+              <line x1="740" y1="110" x2="755" y2="110" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow)"/>
+
+              <!-- Phase 6 -->
+              <rect x="760" y="20" width="130" height="180" rx="6" fill="#ffffff" stroke="#1e40af" stroke-width="2"/>
+              <text x="825" y="50" font-family="Outfit" font-size="20" fill="#ea580c" text-anchor="middle">Phase 6</text>
+              <text x="825" y="80" font-family="Outfit" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Maintenance</text>
+              <text x="825" y="110" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Backup Database</text>
+              <text x="825" y="130" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Monitor Health</text>
+              <text x="825" y="150" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Schema Updates</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide: ER Diagram Image Card -->
+      <section>
+        <div style="text-align: left;">
+          <h2>2.1  ผังความสัมพันธ์เอนทิตี (ER Diagram)</h2>
+          <p class="subtitle">ภาพรวม Entity Relationship Diagram สำหรับระบบฐานข้อมูล CE50</p>
+          <div class="diagram-box" style="display: flex; justify-content: center; align-items: center; padding: 0.75rem;">
+            <img src="er-diagram_2.png" alt="ER Diagram" style="width: 100%; max-height: 510px; object-fit: contain; border-radius: 4px;">
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5: Conceptual Schema (ERD) -->
+      <section>
+        <div style="text-align: left;">
+          <h2>2.2 การออกแบบเชิงแนวคิด (Entity Relationships)</h2>
+          <p class="subtitle">เอนทิตีหลัก 9 ตารางและความสัมพันธ์ Cardinaility 1:N</p>
+
+          <div class="diagram-box">
+            <svg viewBox="0 0 850 260" style="width: 100%; height: auto;">
+              <!-- Users -->
+              <rect x="20" y="30" width="120" height="70" rx="6" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+              <text x="80" y="60" font-family="Outfit" font-size="14" font-weight="bold" fill="#1e40af" text-anchor="middle">Users</text>
+              <text x="80" y="80" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">id (PK), role</text>
+
+              <!-- Relation Users -> News -->
+              <line x1="140" y1="65" x2="200" y2="65" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+              <text x="170" y="58" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">1 : N</text>
+
+              <!-- News -->
+              <rect x="200" y="30" width="130" height="70" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+              <text x="265" y="60" font-family="Outfit" font-size="14" font-weight="bold" fill="#0f172a" text-anchor="middle">News</text>
+              <text x="265" y="80" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">author_username (FK)</text>
+
+              <!-- Teachers -->
+              <rect x="400" y="30" width="130" height="70" rx="6" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+              <text x="465" y="60" font-family="Outfit" font-size="14" font-weight="bold" fill="#1e40af" text-anchor="middle">Teachers</text>
+              <text x="465" y="80" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">id (PK), contact</text>
+
+              <!-- Relation Teachers -> Students -->
+              <line x1="465" y1="100" x2="465" y2="150" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+              <text x="480" y="128" font-family="Outfit" font-size="10" fill="#64748b">1 : N</text>
+
+              <!-- Students -->
+              <rect x="400" y="150" width="130" height="70" rx="6" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+              <text x="465" y="180" font-family="Outfit" font-size="14" font-weight="bold" fill="#1e40af" text-anchor="middle">Students</text>
+              <text x="465" y="200" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">student_id (PK/UQ)</text>
+
+              <!-- Relation Students -> Works -->
+              <line x1="400" y1="185" x2="330" y2="185" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+              <text x="365" y="178" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">1 : N</text>
+
+              <!-- Works -->
+              <rect x="200" y="150" width="130" height="70" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+              <text x="265" y="180" font-family="Outfit" font-size="14" font-weight="bold" fill="#0f172a" text-anchor="middle">Works</text>
+              <text x="265" y="200" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">author_ids (JSON)</text>
+
+              <!-- Relation Students -> Internships -->
+              <line x1="530" y1="185" x2="600" y2="185" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+              <text x="565" y="178" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">1 : N</text>
+
+              <!-- Internships -->
+              <rect x="600" y="150" width="130" height="70" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+              <text x="665" y="180" font-family="Outfit" font-size="14" font-weight="bold" fill="#0f172a" text-anchor="middle">Internships</text>
+              <text x="665" y="200" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">student_id (FK)</text>
+
+              <!-- Schedules & Rooms -->
+              <rect x="740" y="30" width="90" height="190" rx="6" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+              <text x="785" y="60" font-family="Outfit" font-size="12" font-weight="bold" fill="#ea580c" text-anchor="middle">Schedules</text>
+              <text x="785" y="90" font-family="Outfit" font-size="10" fill="#0f172a" text-anchor="middle">ClassSched</text>
+              <text x="785" y="120" font-family="Outfit" font-size="10" fill="#0f172a" text-anchor="middle">ExamSched</text>
+              <text x="785" y="150" font-family="Outfit" font-size="10" fill="#ea580c" text-anchor="middle">Rooms (FK)</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6: DBMS Selection -->
+      <section>
+        <div style="text-align: left;">
+          <h2>2.3 คัดเลือกซอฟต์แวร์ DBMS (SQLite 3)</h2>
+          <p class="subtitle">เหตุผลทางสถาปัตยกรรมในการเลือก File-Based Engine สำหรับ CE Portal</p>
+
+          <div class="grid-2">
+            <div class="card">
+              <span class="badge badge-green">LIGHTWEIGHT</span>
+              <div class="card-title">Embedded File Engine</div>
+              <p>ไม่ต้องรัน Background Service แยก ประหยัด RAM/CPU บน Server ประสิทธิภาพสูงสำหรับการจัดเก็บข้อมูลภาควิชา</p>
+            </div>
+            <div class="card">
+              <span class="badge badge-green">WAL MODE</span>
+              <div class="card-title">Write-Ahead Logging</div>
+              <p>เปิดใช้ <code>PRAGMA journal_mode = WAL;</code> ทำให้อ่านและเขียนข้อมูลพร้อมกันได้โดยไม่เกิด DB Lock</p>
+            </div>
+            <div class="card">
+              <span class="badge badge-green">INTEGRITY</span>
+              <div class="card-title">Foreign Key Enforcement</div>
+              <p>เปิดใช้ <code>PRAGMA foreign_keys = ON;</code> บังคับ Referential Integrity ป้องกันข้อมูลกำพร้าในระบบ</p>
+            </div>
+            <div class="card">
+              <span class="badge badge-green">CONTAINER READY</span>
+              <div class="card-title">Docker Volume Integration</div>
+              <p>Mount ไฟล์ <code>.db</code> ผ่าน Docker Volume ทำการสำรองข้อมูล (Online Backup) และ Migration ได้สะดวกรวดเร็ว</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7: 3NF Schema -->
+      <section>
+        <div style="text-align: left;">
+          <h2>2.4 ตารางฐานข้อมูล 3NF (Logical Schema)</h2>
+          <p class="subtitle">โครงสร้างตารางที่ผ่านการปรับบรรทัดฐาน 3NF ลดความซ้ำซ้อนข้อมูล</p>
+
+          <table class="comp-table">
+            <thead>
+              <tr>
+                <th>Table Name</th>
+                <th>Primary Key</th>
+                <th>Foreign Keys & Constraints</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>users</code></td>
+                <td><code>id</code> (INTEGER)</td>
+                <td><code>username</code> (UNIQUE), <code>role</code> CHECK</td>
+                <td>สิทธิ์ผู้ใช้งาน (superadmin, admin, writer)</td>
+              </tr>
+              <tr>
+                <td><code>students</code></td>
+                <td><code>id</code> (INTEGER)</td>
+                <td><code>student_id</code> (UNIQUE), Advisor FK</td>
+                <td>ข้อมูลนักศึกษา ชั้นปี สายรหัส สาขา</td>
+              </tr>
+              <tr>
+                <td><code>class_schedules</code></td>
+                <td><code>id</code> (INTEGER)</td>
+                <td><code>room</code> FK → <code>rooms.slug</code></td>
+                <td>ตารางเรียนประจำภาคการศึกษา</td>
+              </tr>
+              <tr>
+                <td><code>exam_schedules</code></td>
+                <td><code>id</code> (INTEGER)</td>
+                <td><code>room</code> FK → <code>rooms.slug</code></td>
+                <td>ตารางสอบกลางภาค และปลายภาค</td>
+              </tr>
+              <tr>
+                <td><code>internships</code></td>
+                <td><code>id</code> (INTEGER)</td>
+                <td><code>student_id</code> FK → <code>students.id</code></td>
+                <td>ประวัติและรีวิวการฝึกงานนักศึกษา</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Slide 8: System Topology -->
+      <section>
+        <div style="text-align: left;">
+          <h2>สถาปัตยกรรมระบบ (System Architecture)</h2>
+          <p class="subtitle">การเชื่อมโยงระบบระหว่าง Next.js, FastAPI, SQLite และ Docker Nginx Proxy</p>
+
+          <div class="diagram-box">
+            <svg viewBox="0 0 850 200" style="width: 100%; height: auto;">
+              <!-- Client -->
+              <rect x="20" y="60" width="120" height="80" rx="8" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+              <text x="80" y="95" font-family="Outfit" font-size="14" font-weight="bold" fill="#1e40af" text-anchor="middle">Client Browser</text>
+              <text x="80" y="115" font-family="Outfit" font-size="11" fill="#64748b" text-anchor="middle">Public & Admin UI</text>
+
+              <line x1="140" y1="100" x2="200" y2="100" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow)"/>
+
+              <!-- Nginx Container -->
+              <rect x="205" y="40" width="140" height="120" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+              <text x="275" y="75" font-family="Outfit" font-size="14" font-weight="bold" fill="#0f172a" text-anchor="middle">Nginx Proxy</text>
+              <text x="275" y="100" font-family="Outfit" font-size="11" fill="#ea580c" text-anchor="middle">Port 80 / 443</text>
+              <text x="275" y="120" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">SSL & Static Cache</text>
+
+              <line x1="345" y1="100" x2="405" y2="100" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow)"/>
+
+              <!-- FastAPI Backend -->
+              <rect x="410" y="40" width="150" height="120" rx="8" fill="#eff6ff" stroke="#1e40af" stroke-width="2"/>
+              <text x="485" y="75" font-family="Outfit" font-size="14" font-weight="bold" fill="#1e40af" text-anchor="middle">FastAPI Backend</text>
+              <text x="485" y="100" font-family="Outfit" font-size="11" fill="#0f172a" text-anchor="middle">RESTful Endpoints</text>
+              <text x="485" y="120" font-family="Outfit" font-size="10" fill="#64748b" text-anchor="middle">Argon2 / Auth Token</text>
+
+              <line x1="560" y1="100" x2="620" y2="100" stroke="#ea580c" stroke-width="2" marker-end="url(#arrow)"/>
+
+              <!-- SQLite DBMS -->
+              <rect x="625" y="40" width="180" height="120" rx="8" fill="#1e3a8a" stroke="#1e3a8a" stroke-width="2"/>
+              <text x="715" y="75" font-family="Outfit" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">SQLite 3 DBMS</text>
+              <text x="715" y="100" font-family="Outfit" font-size="11" fill="#ffedd5" text-anchor="middle">WAL Journal Mode</text>
+              <text x="715" y="125" font-family="Outfit" font-size="10" fill="#cbd5e1" text-anchor="middle">Mounted Docker Vol</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10: Conclusion & Q&A -->
+      <section>
+        <div style="text-align: center; max-width: 850px; margin: 0 auto;">
+          <h2>Thank You</h2>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- Reveal.js Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+  <script>
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      center: true,
+      hash: true,
+      transition: 'fade', // minimal transition
+      width: 1100,
+      height: 700,
+      margin: 0.08
+    });
+  </script>
+</body>
+</html>

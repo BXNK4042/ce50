@@ -72,3 +72,5 @@ server/video/*_original.mp4
 # nginx logs
 docker/logs/*
 !docker/logs/.gitkeep
+/backups/
+
