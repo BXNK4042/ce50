@@ -14,9 +14,9 @@ export async function generateStaticParams() {
 }
 
 export const metadata: Metadata = {
-  title: "WE ARE CE | Computer Engineering KMITL PCC",
+  title: "CE50 | Computer Engineering KMITL PCC",
   description:
-    "เว็บไซต์ประชาสัมพันธ์และสารสนเทศ WE ARE CE — Public information site for the Computer Engineering program.",
+    "เว็บไซต์ประชาสัมพันธ์และสารสนเทศ CE50 — Public information site for the KMITL PCC Computer Engineering program.",
 };
 
 export default async function LangLayout({
