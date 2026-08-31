@@ -26,3 +26,6 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Mandatory Pre-Flight (Step 0)**: BEFORE any code view/edit, MUST read `~/.vault/00-core/profile.md` & `~/.vault/_index.md`.
 - **Mandatory Post-Completion (Final Step)**: BEFORE ending turn, MUST update `~/.vault/01-projects/<project>.md` & `~/.vault/_index.md` with synthesized changes.
 
+## Knowledge Base Integration (.vault)
+- **Startup**: Auto-read `.vault/00-core/profile.md` & `.vault/_index.md` for context.
+- **Task Completion**: Synthesize work done → update `.vault/01-projects/<project>.md` & `.vault/_index.md`.
