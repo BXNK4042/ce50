@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Software Architecture: CE50</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: #f4f6f8;
+      color: #172033;
+      font-family: Arial, sans-serif;
+    }
+    main { width: min(900px, 100%); }
+    h2 { margin: 0 0 20px; text-align: center; }
+    .node {
+      width: min(320px, 100%);
+      margin: 0 auto;
+      padding: 20px;
+      border: 2px solid #667085;
+      background: #fff;
+      text-align: center;
+      font-weight: 700;
+    }
+    .connector {
+      height: 48px;
+      display: grid;
+      place-items: center;
+      font-size: 2rem;
+      line-height: 1;
+    }
+    .architecture {
+      display: grid;
+      gap: 18px;
+      padding: 24px;
+      border: 3px solid #172033;
+      background: #fff;
+    }
+    .docker {
+      padding: 18px;
+      border: 2px solid #2496ed;
+    }
+    .tiers { display: grid; gap: 18px; }
+    .tier {
+      min-height: 130px;
+      padding: 18px;
+      border: 2px solid #667085;
+    }
+    .tier h3 { margin: 0; font-size: 1rem; }
+    .component {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid #98a2b3;
+      text-align: center;
+      font-weight: 700;
+    }
+    .system-label { margin: 14px 0 0; text-align: center; font-weight: 700; }
+    .system-flow {
+      display: grid;
+      grid-template-columns: 180px 64px minmax(0, 1fr);
+      align-items: center;
+    }
+    .external { width: 100%; }
+    .horizontal-connector { text-align: center; font-size: 2rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h2>Software Architecture: CE50</h2>
+    <div class="node">Desktop Web Browser</div>
+    <div class="connector" aria-hidden="true">&darr;</div>
+    <div class="node">Reverse Proxy</div>
+    <div class="connector" aria-hidden="true">&darr;</div>
+    <div class="system-flow">
+      <div class="node external">3rd Party</div>
+      <div class="horizontal-connector" aria-hidden="true">&larr;</div>
+      <div>
+        <section class="architecture" aria-label="CE50 software architecture">
+          <div class="docker">
+            <div class="tiers">
+              <article class="tier">
+                <h3>App Tier</h3>
+                <div class="component">UI</div>
+                <div class="component">Server Side Rendering, Auth Proxyq</div>
+              </article>
+              <article class="tier">
+                <h3>Service Tier</h3>
+                <div class="component">REST API</div>
+                <div class="component">Authentication / Authorization</div>
+              </article>
+              <article class="tier">
+                <h3>Data Tier</h3>
+                <div class="component">Database</div>
+              </article>
+            </div>
+          </div>
+        </section>
+        <p class="system-label">OUR SYSTEM</p>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
